@@ -1,0 +1,59 @@
+<nav class="bg-white shadow-md sticky top-0 z-50 py-4">
+  <div class="container mx-auto px-4 flex flex-wrap justify-between items-center">
+    <!-- Logo y Titulo -->
+    <a
+      routerLink="/"
+      class="flex items-center gap-3 font-serif text-xl font-bold text-[var(--azul)]"
+    >
+      <img src="/images/logo.png" alt="Logo Hotel Macondo" class="w-12 h-auto object-contain" />
+      Hotel Macondo
+    </a>
+
+    <!-- Enlaces Centrales -->
+    <ul class="hidden md:flex gap-6 font-sans text-[var(--texto)]">
+      <li>
+        <a routerLink="/" class="font-medium hover:text-[var(--azul)] transition">Inicio</a>
+      </li>
+      <li>
+        <a routerLink="/habitaciones" class="font-medium hover:text-[var(--azul)] transition"
+          >Habitaciones</a
+        >
+      </li>
+      <li>
+        <a routerLink="/servicios" class="font-medium hover:text-[var(--azul)] transition"
+          >Servicios</a
+        >
+      </li>
+      <li>
+        <a href="#contacto" class="font-medium hover:text-[var(--azul)] transition">Contacto</a>
+      </li>
+    </ul>
+
+    <!-- Botones de Accion -->
+    <div class="hidden md:flex items-center gap-3 font-sans text-sm">
+      <a
+        routerLink="/login"
+        class="border-2 border-[var(--azul)] text-[var(--azul)] font-semibold px-4 py-2 rounded-md hover:bg-[var(--azul)] hover:text-white transition"
+      >
+        Iniciar Sesión
+      </a>
+      <a
+        routerLink="/registro"
+        class="border border-gray-300 text-[var(--texto)] font-medium px-4 py-2 rounded-md hover:bg-gray-100 transition"
+      >
+        Registrarse
+      </a>
+      <a
+        routerLink="/habitaciones"
+        class="bg-[var(--dorado)] text-[var(--azul-oscuro)] font-semibold px-4 py-2 rounded-md border-2 border-[var(--dorado)] shadow hover:bg-[var(--dorado-oscuro)] hover:border-[var(--dorado-oscuro)] transition"
+      >
+        Reservar
+      </a>
+    </div>
+
+    <!-- Boton Menu Movil -->
+    <button class="md:hidden text-2xl text-[var(--azul-oscuro)] focus:outline-none">
+      <i class="bi bi-list"></i>
+    </button>
+  </div>
+</nav>

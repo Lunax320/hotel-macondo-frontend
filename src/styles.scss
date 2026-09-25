@@ -1,1 +1,26 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --azul: #1a6d92;
+  --azul-oscuro: #0e2a3f;
+  --dorado: #f5cd63;
+  --dorado-oscuro: #e0b03f;
+  --crema: #f7e7d3;
+  --crema-claro: #fdf6ec;
+  --texto: #4a4a4a;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Questrial", sans-serif;
+  color: var(--texto);
+  background-color: #ffffff;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5, .titulo {
+  font-family: "Playfair Display", serif !important;
+  font-weight: 700;
+}
