@@ -1,59 +1,78 @@
-# HotelMacondo
+# Hotel Macondo — Frontend (Angular)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.0.
+Aplicación web frontend para la gestión de reservas, catálogo de hospedaje y experiencias temáticas del **Hotel Macondo**, inspirada en el universo literario de _Cien años de soledad_ y situada frente al mar Caribe en Cartagena de Indias.
 
-## Development server
+Este repositorio corresponde a la capa de presentación desacoplada del sistema, desarrollada en **Angular v19** como Single Page Application.
 
-To start a local development server, run:
+---
+
+## Stack Tecnológico
+
+- **Framework:** [Angular v19](https://angular.dev/) (Standalone Components, Signals y Control Flow moderno: `@if`, `@for`).
+- **Lenguaje:** [TypeScript](https://www.typescriptlang.org/) (modelado estricto con `interface`).
+- **Estilos:** Sass / SCSS con la paleta de identidad oficial de Macondo (Azul Caribe, Dorado Colonial y Crema Arena).
+- **Gestor de Paquetes:** npm / Node.js (LTS).
+- **Herramientas de Desarrollo:** Angular CLI.
+
+---
+
+## Requisitos Previos
+
+Antes de ejecutar el proyecto, asegúrate de tener instalado en tu entorno local:
+
+- **Node.js** (versión 18.19+ o 20+ recomendada).
+- **npm** (incluido habitualmente con Node.js).
+- **Angular CLI** instalado globalmente:
+
+```bash
+npm install -g @angular/cli@19
+```
+
+---
+
+## Instalación y Ejecución
+
+1. Clonar el repositorio:
+
+```bash
+git clone https://github.com/TU-USUARIO/hotel-macondo-frontend.git
+cd hotel-macondo-frontend
+```
+
+2. Instalar las dependencias del proyecto:
+
+```bash
+npm install
+```
+
+3. Levantar el servidor de desarrollo:
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+4. Abrir en el navegador:
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```
+http://localhost:4200
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+El servidor recargará automáticamente al detectar cambios en los archivos fuente.
 
-```bash
-ng generate --help
+---
+
+## Estructura del Proyecto
+
 ```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
+src/
+├── app/
+│   ├── app.ts             # Componente raíz (standalone)
+│   ├── app.html           # Plantilla raíz
+│   ├── app.scss           # Estilos del componente raíz
+│   ├── app.config.ts      # Configuración de providers
+│   └── app.routes.ts      # Definición de rutas
+├── public/                # Recursos estáticos (favicon, imágenes)
+├── index.html             # Documento HTML principal
+├── main.ts                # Punto de entrada de la aplicación
+└── styles.scss            # Estilos globales
 ```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
