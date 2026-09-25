@@ -30,22 +30,7 @@ export class TestimonioService {
       estrellas: 5,
       imagen: '/images/IconoP3.avif'
     },
-    {
-      id: 4,
-      texto: 'La calidez de la atención y la arquitectura colonial te transportan en el tiempo. Cada rincón tiene un encanto inigualable.',
-      nombre: 'Camilo Echeverry',
-      ciudad: 'Medellín, Colombia',
-      estrellas: 5,
-      imagen: '/images/IconoP1.avif'
-    },
-    {
-      id: 5,
-      texto: 'La tranquilidad de la playa privada y el sabor del pescado fresco en la cena hicieron de nuestro aniversario algo inolvidable.',
-      nombre: 'Lucía Fernández',
-      ciudad: 'Buenos Aires, Argentina',
-      estrellas: 5,
-      imagen: '/images/IconoP2.avif'
-    }
+
   ];
 
   obtenerTodos(): Testimonio[] {
