@@ -1,0 +1,64 @@
+@if (tipoHabitacion(); as tipo) {
+  <aside
+    class="rounded-lg bg-white p-6 shadow-[0_18px_45px_rgba(30,58,70,0.12)] lg:sticky lg:top-24"
+    aria-labelledby="informacion-reserva"
+  >
+    <h2 class="font-serif text-2xl font-bold text-[var(--azul-oscuro)]" id="informacion-reserva">
+      Información de reserva
+    </h2>
+    <div class="mt-5 rounded-lg border border-[#c9e0e9] bg-[#eef6f9] p-5">
+      <span class="text-[11px] font-bold uppercase tracking-[1px] text-[var(--azul)]">
+        Precio por noche
+      </span>
+      <strong class="mt-2 block font-serif text-2xl leading-8 text-[var(--azul)]">
+        Desde ${{ tipo.precioNoche.toLocaleString('es-CO') }} COP
+      </strong>
+    </div>
+    <dl class="mt-6 divide-y divide-gray-200 text-sm">
+      <div class="flex items-center justify-between py-4">
+        <dt class="text-gray-500">Tipo</dt>
+        <dd class="font-semibold">{{ tipo.nombre }}</dd>
+      </div>
+      <div class="flex items-center justify-between py-4">
+        <dt class="text-gray-500">Capacidad</dt>
+        <dd class="font-semibold">{{ tipo.capacidadPersonas }} personas</dd>
+      </div>
+      <div class="flex items-center justify-between py-4">
+        <dt class="text-gray-500">Unidad</dt>
+        <dd class="font-semibold text-[#218b83]">Según disponibilidad</dd>
+      </div>
+    </dl>
+
+    @if (hayDisponibilidad() && clienteId() !== null) {
+      <a
+        class="mt-6 block rounded-md bg-[var(--dorado)] px-5 py-3.5 text-center font-bold text-[var(--azul-oscuro)] shadow-[0_8px_20px_rgba(245,205,99,0.30)] transition hover:bg-[var(--dorado-oscuro)]"
+        [routerLink]="['/cliente', clienteId(), 'reservas', 'nueva']"
+        [queryParams]="{ tipoId: tipo.id }"
+      >
+        Continuar reserva
+      </a>
+    } @else if (hayDisponibilidad()) {
+      <a
+        class="mt-6 block rounded-md bg-[var(--dorado)] px-5 py-3.5 text-center font-bold text-[var(--azul-oscuro)] shadow-[0_8px_20px_rgba(245,205,99,0.30)] transition hover:bg-[var(--dorado-oscuro)]"
+        routerLink="/login"
+        [queryParams]="{ tipoId: tipo.id }"
+      >
+        Continuar reserva
+      </a>
+    } @else {
+      <span
+        class="mt-6 block cursor-not-allowed rounded-md bg-gray-200 px-5 py-3.5 text-center font-bold text-gray-500"
+      >
+        Sin unidades disponibles
+      </span>
+    }
+
+    <a
+      class="mt-5 block text-center font-semibold text-[var(--azul)] hover:underline"
+      routerLink="/habitaciones"
+      [queryParams]="clienteId() !== null ? { clienteId: clienteId() } : null"
+    >
+      Ver todas las habitaciones
+    </a>
+  </aside>
+}

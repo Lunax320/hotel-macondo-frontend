@@ -1,0 +1,126 @@
+@if (tipoHabitacion; as tipo) {
+  <header
+    class="relative flex min-h-[390px] items-center justify-center overflow-hidden px-5 py-16 md:min-h-[440px]"
+    [attr.aria-label]="tipo.nombre"
+  >
+    <img
+      class="absolute inset-0 h-full w-full object-cover"
+      [src]="tipo.imagen"
+      [alt]="tipo.nombre"
+    />
+    <div class="absolute inset-0 bg-[rgba(14,42,63,0.60)]" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-4xl text-center text-white">
+      <span
+        class="inline-flex rounded-full bg-[var(--dorado)] px-5 py-2 text-xs font-bold uppercase tracking-[1px] text-[var(--azul-oscuro)]"
+      >
+        Tipo de habitación
+      </span>
+      <h1 class="mt-6 font-serif text-5xl font-bold !text-white md:text-6xl">
+        {{ tipo.nombre }}
+      </h1>
+      <div class="mt-6 flex flex-col items-center justify-center gap-3 text-sm md:flex-row">
+        <span
+          class="flex items-center gap-2 rounded-full border border-white/40 bg-black/20 px-5 py-2.5"
+        >
+          <i class="bi bi-people" aria-hidden="true"></i>
+          <span>Hasta {{ tipo.capacidadPersonas }} huéspedes</span>
+        </span>
+        <strong
+          class="rounded-full border border-[var(--dorado)] bg-[rgba(245,205,99,0.18)] px-5 py-2.5 text-[#ffe18b]"
+        >
+          Desde ${{ tipo.precioNoche.toLocaleString('es-CO') }} COP / noche
+        </strong>
+      </div>
+    </div>
+  </header>
+
+  <nav class="border-b border-gray-200 bg-white" aria-label="Migas de pan">
+    <div class="mx-auto flex max-w-[1180px] items-center gap-2 px-5 py-4 text-sm">
+      <a class="text-[var(--azul)] hover:underline" routerLink="/">Inicio</a>
+      <i class="bi bi-chevron-right text-[10px] text-gray-400" aria-hidden="true"></i>
+      <a
+        class="text-[var(--azul)] hover:underline"
+        routerLink="/habitaciones"
+        [queryParams]="clienteId !== null ? { clienteId: clienteId } : null"
+      >
+        Habitaciones
+      </a>
+      <i class="bi bi-chevron-right text-[10px] text-gray-400" aria-hidden="true"></i>
+      <span class="text-[var(--texto)]">{{ tipo.nombre }}</span>
+    </div>
+  </nav>
+
+  <section
+    class="mx-auto grid max-w-[1180px] grid-cols-1 gap-10 px-5 py-12 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start lg:py-16"
+  >
+    <div>
+      <blockquote
+        class="border-l-4 border-[var(--dorado)] pl-5 font-serif text-2xl italic leading-9 text-[#7a3f2f]"
+      >
+        {{ tipo.descripcion }}
+      </blockquote>
+
+      <section class="mt-12" aria-labelledby="detalle-habitacion">
+        <h2 class="font-serif text-3xl font-bold text-[var(--azul-oscuro)]" id="detalle-habitacion">
+          Detalles del tipo
+        </h2>
+        <div class="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <article class="flex min-h-14 items-center gap-4 rounded-lg bg-white px-5 py-4 shadow-sm">
+            <i class="bi bi-people text-2xl text-[var(--azul)]" aria-hidden="true"></i>
+            <div>
+              <p class="text-xs font-bold uppercase tracking-[1px] text-gray-500">Capacidad</p>
+              <p class="mt-1 font-semibold">{{ tipo.capacidadPersonas }} huéspedes</p>
+            </div>
+          </article>
+          <article class="flex min-h-14 items-center gap-4 rounded-lg bg-white px-5 py-4 shadow-sm">
+            <i class="bi bi-door-open text-2xl text-[#218b83]" aria-hidden="true"></i>
+            <div>
+              <p class="text-xs font-bold uppercase tracking-[1px] text-gray-500">Asignación</p>
+              <p class="mt-1 font-semibold">Habitación disponible al confirmar</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section
+        class="mt-16 overflow-hidden rounded-lg bg-white shadow-[0_10px_25px_rgba(30,58,70,0.10)]"
+        aria-labelledby="imagen-habitacion"
+      >
+        <img
+          class="h-[300px] w-full object-cover md:h-[390px]"
+          [src]="tipo.imagen"
+          [alt]="tipo.nombre"
+        />
+        <div class="p-6">
+          <h2
+            class="font-serif text-2xl font-bold text-[var(--azul-oscuro)]"
+            id="imagen-habitacion"
+          >
+            {{ tipo.nombre }}
+          </h2>
+          <p class="mt-2 leading-7">{{ tipo.descripcion }}</p>
+        </div>
+      </section>
+    </div>
+
+    <app-resumen-reserva-habitacion
+      [tipoHabitacion]="tipo"
+      [hayDisponibilidad]="hayDisponibilidad"
+      [clienteId]="clienteId"
+    ></app-resumen-reserva-habitacion>
+  </section>
+} @else {
+  <section class="mx-auto max-w-[1180px] px-5 py-24 text-center">
+    <i class="bi bi-door-closed text-5xl text-[var(--azul)]" aria-hidden="true"></i>
+    <h1 class="mt-6 font-serif text-4xl font-bold text-[var(--azul-oscuro)]">
+      Tipo de habitación no encontrado
+    </h1>
+    <p class="mt-4 text-lg">La habitación solicitada no existe en el catálogo.</p>
+    <a
+      class="mt-8 inline-flex rounded-md bg-[var(--azul)] px-6 py-3 font-bold text-white"
+      routerLink="/habitaciones"
+    >
+      Ver todas las habitaciones
+    </a>
+  </section>
+}
