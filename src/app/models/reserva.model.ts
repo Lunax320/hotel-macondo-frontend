@@ -12,5 +12,6 @@ export interface Reserva {
   total: number;
   clienteId?: number;
   cliente?: Cliente;
-  habitaciones?: Habitacion[];
+  habitacionId?: number;
+  habitacion?: Habitacion;
 }

@@ -1,0 +1,35 @@
+<aside class="w-full shrink-0 bg-[var(--azul-oscuro)] p-6 text-white md:min-h-screen md:w-64">
+  <a class="mb-10 flex items-center gap-3" routerLink="/">
+    <img class="h-auto w-10" src="/images/logo.png" alt="Logo Hotel Macondo" />
+    <span class="font-serif text-xl font-bold text-[var(--dorado)]">Macondo</span>
+  </a>
+
+  <p class="mb-4 text-[0.7rem] uppercase tracking-[3px] text-white/50">Administración</p>
+
+  <nav class="flex flex-col gap-1" aria-label="Administración">
+    <span
+      class="flex cursor-not-allowed items-center rounded-lg px-4 py-3 text-white/35"
+      aria-disabled="true"
+      title="Disponible en una próxima implementación"
+    >
+      <i class="bi bi-tag mr-3" aria-hidden="true"></i>
+      Tipo Habitación
+    </span>
+
+    <a
+      class="flex items-center rounded-lg px-4 py-3 transition hover:bg-white/10"
+      [class.bg-[var(--dorado)]]="seccionActiva() === 'habitaciones'"
+      [class.font-bold]="seccionActiva() === 'habitaciones'"
+      [class.text-[var(--azul-oscuro)]]="seccionActiva() === 'habitaciones'"
+      routerLink="/admin/habitaciones"
+    >
+      <i class="bi bi-door-closed mr-3" aria-hidden="true"></i>
+      Habitaciones
+    </a>
+  </nav>
+
+  <a class="mt-10 block text-sm text-white/60 hover:text-[var(--dorado)]" routerLink="/">
+    <i class="bi bi-arrow-left mr-1" aria-hidden="true"></i>
+    Volver al sitio
+  </a>
+</aside>

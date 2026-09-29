@@ -8,9 +8,7 @@ export interface Habitacion {
   capacidad: number;
   precio: number;
   etiqueta?: string;
-  descripcion?: string;
-  imagen?: string;
   piso?: number;
-  tipoHabitacionId?: number;
+  tipoHabitacionId: number;
   tipoHabitacion?: TipoHabitacion;
 }

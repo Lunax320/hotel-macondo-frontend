@@ -5,6 +5,8 @@ import { Habitaciones } from './pages/habitaciones/habitaciones';
 import { Landing } from './pages/landing/landing';
 import { Login } from './pages/login/login';
 import { Servicios } from './pages/servicios/servicios';
+import { AdminHabitaciones } from './pages/admin-habitaciones/admin-habitaciones';
+import { AdminHabitacionForm } from './pages/admin-habitacion-form/admin-habitacion-form';
 
 export const routes: Routes = [
   {
@@ -30,5 +32,17 @@ export const routes: Routes = [
   {
     path: 'servicios/:id',
     component: DetalleServicio,
+  },
+  {
+    path: 'admin/habitaciones/nueva',
+    component: AdminHabitacionForm,
+  },
+  {
+    path: 'admin/habitaciones/editar/:id',
+    component: AdminHabitacionForm,
+  },
+  {
+    path: 'admin/habitaciones',
+    component: AdminHabitaciones,
   },
 ];
