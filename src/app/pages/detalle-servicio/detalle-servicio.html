@@ -1,0 +1,125 @@
+@if (servicio; as servicioActual) {
+  <header
+    class="relative flex min-h-[390px] items-center justify-center overflow-hidden px-5 py-16 md:min-h-[440px]"
+    [attr.aria-label]="servicioActual.nombre"
+  >
+    <img
+      class="absolute inset-0 h-full w-full object-cover"
+      [src]="servicioActual.imagen"
+      [alt]="servicioActual.nombre"
+    />
+    <div class="absolute inset-0 bg-black/50" aria-hidden="true"></div>
+
+    <div class="relative z-10 mx-auto max-w-4xl text-center text-white">
+      <span
+        class="inline-flex rounded-full bg-[#ffc94d] px-5 py-2 text-xs font-bold uppercase text-[#624800]"
+      >
+        {{ servicioActual.categoria }}
+      </span>
+      <h1 class="mt-6 font-['Playfair_Display'] text-5xl font-bold !text-white md:text-6xl">
+        {{ servicioActual.nombre }}
+      </h1>
+      <div class="mt-6 flex flex-col items-center justify-center gap-3 text-sm md:flex-row">
+        <span
+          class="flex items-center gap-2 rounded-full border border-white/40 bg-black/20 px-5 py-2.5"
+        >
+          <i class="bi bi-clock" aria-hidden="true"></i>
+          <span>{{ servicioActual.horario }}</span>
+        </span>
+        <strong
+          class="rounded-full border border-[#ffc94d] bg-[#ffc94d]/20 px-5 py-2.5 text-[#ffd76f]"
+        >
+          Desde ${{ servicioActual.precio.toLocaleString('es-CO') }} COP
+        </strong>
+      </div>
+    </div>
+  </header>
+
+  <nav class="border-b border-gray-200 bg-white" aria-label="Migas de pan">
+    <div class="mx-auto flex max-w-[1180px] items-center gap-2 px-5 py-4 text-sm">
+      <a class="text-[#147ba5] hover:underline" routerLink="/">Inicio</a>
+      <i class="bi bi-chevron-right text-[10px] text-gray-400" aria-hidden="true"></i>
+      <a class="text-[#147ba5] hover:underline" routerLink="/servicios">Servicios</a>
+      <i class="bi bi-chevron-right text-[10px] text-gray-400" aria-hidden="true"></i>
+      <span class="text-[#343434]">{{ servicioActual.nombre }}</span>
+    </div>
+  </nav>
+
+  <section
+    class="mx-auto grid max-w-[1180px] grid-cols-1 gap-10 px-5 py-12 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start lg:py-16"
+  >
+    <div>
+      <blockquote
+        class="border-l-4 border-[#ffc94d] pl-5 font-['Playfair_Display'] text-2xl italic leading-9 text-[#7a3f2f]"
+      >
+        {{ servicioActual.descripcion }}
+      </blockquote>
+      <p class="mt-7 text-[17px] leading-8 text-[#3f3f3f]">
+        {{ servicioActual.descripcionDetalle }}
+      </p>
+
+      <section class="mt-12" aria-labelledby="incluye-servicio">
+        <h2
+          class="font-['Playfair_Display'] text-3xl font-bold text-[#162f3b]"
+          id="incluye-servicio"
+        >
+          ¿Qué incluye?
+        </h2>
+        <ul class="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          @for (incluido of servicioActual.incluidos; track incluido) {
+            <li class="flex min-h-12 items-center gap-3 rounded-lg bg-white px-5 py-3 shadow-sm">
+              <i class="bi bi-check-circle text-[#1683b0]" aria-hidden="true"></i>
+              <span>{{ incluido }}</span>
+            </li>
+          }
+        </ul>
+      </section>
+
+      <div class="mt-10 flex flex-wrap gap-2" aria-label="Etiquetas del servicio">
+        @for (etiqueta of servicioActual.etiquetas; track etiqueta) {
+          <span
+            class="rounded-full border border-[#b8d6e2] bg-[#edf6f9] px-4 py-2 text-sm font-semibold text-[#147ba5]"
+          >
+            {{ etiqueta }}
+          </span>
+        }
+      </div>
+
+      <section class="mt-16" aria-labelledby="otros-servicios">
+        <h2
+          class="font-['Playfair_Display'] text-3xl font-bold text-[#162f3b]"
+          id="otros-servicios"
+        >
+          Otros servicios
+        </h2>
+        <div class="mt-7 grid grid-cols-1 gap-6 md:grid-cols-2">
+          @for (servicioRelacionado of serviciosRelacionados; track servicioRelacionado.id) {
+            <app-servicio-relacionado-card
+              [servicio]="servicioRelacionado"
+            ></app-servicio-relacionado-card>
+          }
+        </div>
+      </section>
+    </div>
+
+    <app-resumen-servicio
+      [servicio]="servicioActual"
+      [agregado]="servicioAgregado"
+      (alternarAgregado)="alternarServicio($event)"
+    ></app-resumen-servicio>
+  </section>
+} @else {
+  <section class="mx-auto max-w-[1180px] px-5 py-24 text-center">
+    <i class="bi bi-stars text-5xl text-[#147ba5]" aria-hidden="true"></i>
+    <h1 class="mt-6 font-['Playfair_Display'] text-4xl font-bold text-[#162f3b]">
+      Servicio no encontrado
+    </h1>
+    <p class="mt-4 text-lg">El servicio solicitado no está disponible en el catálogo.</p>
+    <a
+      class="mt-8 inline-flex rounded-md bg-[#1d82a8] px-6 py-3 font-bold text-white"
+      routerLink="/servicios"
+    >
+      Ver todos los servicios
+    </a>
+  </section>
+}

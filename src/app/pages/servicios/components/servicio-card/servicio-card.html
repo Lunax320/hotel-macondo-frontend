@@ -1,0 +1,76 @@
+@if (servicio(); as servicioActual) {
+  <article
+    class="flex h-full flex-col overflow-hidden rounded-lg bg-white shadow-[0_12px_30px_rgba(30,58,70,0.10)]"
+  >
+    <div class="relative h-[240px] overflow-hidden md:h-[270px]">
+      <img
+        class="h-full w-full object-cover transition duration-500 hover:scale-105"
+        [src]="servicioActual.imagen"
+        [alt]="servicioActual.nombre"
+      />
+      <span
+        class="absolute left-4 top-4 rounded-full bg-white px-3 py-1 text-[11px] font-bold uppercase text-[#147ba5] shadow-sm"
+      >
+        {{ servicioActual.categoria }}
+      </span>
+      @if (servicioActual.destacado) {
+        <span
+          class="absolute right-4 top-4 rounded-full bg-[#ffc94d] px-3 py-1 text-xs font-bold text-[#624800]"
+        >
+          Más popular
+        </span>
+      }
+      <span
+        class="absolute bottom-3 right-0 rounded-l-md bg-[#ffc94d] px-5 py-2 text-sm font-bold text-[#5a4200]"
+      >
+        {{ servicioActual.categoria === 'Gastronomía' ? 'Menú desde $' : 'Desde $'
+        }}{{ servicioActual.precio.toLocaleString('es-CO') }}
+      </span>
+    </div>
+
+    <div class="flex flex-1 flex-col p-6 md:p-7">
+      <div class="flex items-start justify-between gap-5">
+        <h2 class="font-['Playfair_Display'] text-2xl font-bold text-[#172f3b]">
+          {{ servicioActual.nombre }}
+        </h2>
+        <span class="shrink-0 pt-1 text-xs text-gray-500">{{ servicioActual.duracion }}</span>
+      </div>
+
+      <p class="mt-3 min-h-[72px] text-[15px] leading-6 text-[#5d5d5d]">
+        {{ servicioActual.descripcion }}
+      </p>
+
+      <section
+        class="mt-5 rounded-lg border border-[#efd28d] bg-[#fff5d8] p-4"
+        aria-label="Incluye"
+      >
+        <h3 class="mb-3 text-[11px] font-bold uppercase text-[#147ba5]">Incluye</h3>
+        <ul class="grid grid-cols-1 gap-x-5 gap-y-2 text-sm sm:grid-cols-2">
+          @for (incluido of servicioActual.incluidos; track incluido) {
+            <li class="flex items-center gap-2">
+              <i class="bi bi-check-circle text-[#218b83]" aria-hidden="true"></i>
+              <span>{{ incluido }}</span>
+            </li>
+          }
+        </ul>
+      </section>
+
+      <div class="mt-5 grid grid-cols-[minmax(0,1fr)_auto] gap-3">
+        <a
+          class="flex min-h-11 items-center justify-center gap-2 rounded-md bg-[#1d82a8] px-5 py-3 font-bold text-white transition hover:bg-[#156b8d]"
+          [routerLink]="['/servicios', servicioActual.id]"
+        >
+          Ver detalle <i class="bi bi-arrow-right" aria-hidden="true"></i>
+        </a>
+        <button
+          class="min-h-11 rounded-md border border-[#ffc94d] bg-[#ffc94d] px-5 py-3 font-bold text-[#624800] transition hover:bg-[#efb630] aria-pressed:border-emerald-600 aria-pressed:bg-emerald-600 aria-pressed:text-white"
+          type="button"
+          [attr.aria-pressed]="agregado()"
+          (click)="alternar()"
+        >
+          {{ agregado() ? 'Añadido' : 'Agregar' }}
+        </button>
+      </div>
+    </div>
+  </article>
+}
