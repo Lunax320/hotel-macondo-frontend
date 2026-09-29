@@ -1,0 +1,86 @@
+<header
+  class="relative flex min-h-[360px] items-center justify-center overflow-hidden px-5 py-20 md:min-h-[420px]"
+>
+  <img
+    class="absolute inset-0 h-full w-full object-cover"
+    src="/images/PlayaPriv.avif"
+    alt="Playa del Hotel Macondo"
+  />
+  <div class="absolute inset-0 bg-black/45" aria-hidden="true"></div>
+  <div class="relative z-10 mx-auto max-w-3xl text-center text-white">
+    <p class="mb-5 text-xs font-bold uppercase text-[#ffc94d]">Hotel Macondo</p>
+    <h1 class="font-['Playfair_Display'] text-5xl font-bold !text-white md:text-6xl">
+      Nuestros Servicios
+    </h1>
+    <p class="mx-auto mt-5 max-w-2xl text-lg leading-8 text-white/95">
+      Cada experiencia diseñada para que tu estadía en el Caribe colombiano sea verdaderamente
+      inolvidable.
+    </p>
+  </div>
+</header>
+
+<section class="mx-auto max-w-[1180px] px-5 py-12 md:py-16" aria-labelledby="catalogo-servicios">
+  <h2 class="sr-only" id="catalogo-servicios">Catálogo de servicios</h2>
+
+  <div
+    class="mb-12 flex flex-wrap justify-center gap-3"
+    role="group"
+    aria-label="Filtrar servicios por categoría"
+  >
+    <button
+      class="rounded-full border-2 border-[#147ba5] bg-white px-7 py-2.5 font-bold text-[#147ba5] transition hover:bg-[#e8f4f8] aria-pressed:border-[#147ba5] aria-pressed:bg-[#147ba5] aria-pressed:text-white"
+      type="button"
+      [attr.aria-pressed]="categoriaSeleccionada === 'Todos'"
+      (click)="seleccionarCategoria('Todos')"
+    >
+      Todos
+    </button>
+    @for (categoria of categorias; track categoria) {
+      <button
+        class="rounded-full border-2 border-[#147ba5] bg-white px-7 py-2.5 font-bold text-[#147ba5] transition hover:bg-[#e8f4f8] aria-pressed:border-[#147ba5] aria-pressed:bg-[#147ba5] aria-pressed:text-white"
+        type="button"
+        [attr.aria-pressed]="categoriaSeleccionada === categoria"
+        (click)="seleccionarCategoria(categoria)"
+      >
+        {{ categoria }}
+      </button>
+    }
+  </div>
+
+  <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
+    @for (servicio of serviciosFiltrados; track servicio.id) {
+      <app-servicio-card
+        [servicio]="servicio"
+        [agregado]="estaAgregado(servicio.id)"
+        (alternarAgregado)="alternarServicio($event)"
+      ></app-servicio-card>
+    }
+  </div>
+
+  <section
+    class="mt-16 rounded-lg bg-[#176f91] px-6 py-14 text-center text-white shadow-[0_20px_40px_rgba(23,111,145,0.20)] md:px-12 md:py-16"
+    aria-labelledby="llamado-reserva-servicio"
+  >
+    <div
+      class="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-[#ffc94d]/60 bg-white/10 text-2xl text-[#ffc94d]"
+    >
+      <i class="bi bi-star" aria-hidden="true"></i>
+    </div>
+    <h2
+      class="mt-6 font-['Playfair_Display'] text-3xl font-bold !text-white md:text-4xl"
+      id="llamado-reserva-servicio"
+    >
+      ¿Listo para vivir la experiencia Macondo?
+    </h2>
+    <p class="mx-auto mt-4 max-w-2xl text-lg leading-7 text-white/90">
+      Reserva tu estadía ahora y agrega cualquiera de nuestros servicios para una experiencia
+      completa.
+    </p>
+    <a
+      class="mt-8 inline-flex rounded-md bg-[#ffc94d] px-10 py-3.5 font-bold text-[#624800] transition hover:bg-[#efb630]"
+      routerLink="/habitaciones"
+    >
+      Reservar ahora
+    </a>
+  </section>
+</section>
