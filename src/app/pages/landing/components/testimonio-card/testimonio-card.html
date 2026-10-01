@@ -1,0 +1,29 @@
+@if (testimonio(); as testimonioActual) {
+  <article class="bg-white rounded-[16px] p-8 shadow-[0_8px_24px_rgba(0,0,0,0.07)] relative">
+    <span class="font-serif text-[3rem] leading-none text-[var(--dorado)] absolute top-4 left-6"
+      >&rdquo;</span
+    >
+    <p class="italic text-[var(--texto)] mb-6 mt-6 relative z-10">
+      {{ testimonioActual.texto }}
+    </p>
+
+    <div class="flex items-center gap-4 pt-4">
+      <img
+        class="w-[46px] h-[46px] rounded-full object-cover"
+        [src]="testimonioActual.imagen"
+        [alt]="testimonioActual.nombre"
+      />
+      <div>
+        <strong class="text-[var(--azul-oscuro)] block font-bold">{{
+          testimonioActual.nombre
+        }}</strong>
+        <small class="text-gray-500 block text-[0.8rem]">{{ testimonioActual.ciudad }}</small>
+        <div class="text-[var(--dorado)] text-sm mt-1">
+          @for (_ of [].constructor(testimonioActual.estrellas); track $index) {
+            <i class="bi bi-star-fill"></i>
+          }
+        </div>
+      </div>
+    </div>
+  </article>
+}

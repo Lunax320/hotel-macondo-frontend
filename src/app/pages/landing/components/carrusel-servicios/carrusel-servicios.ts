@@ -7,11 +7,11 @@ import { Servicio } from '../../../../models/servicio.model';
   imports: [RouterLink],
   selector: 'app-carrusel-servicios',
   templateUrl: './carrusel-servicios.html',
-  styleUrl: './carrusel-servicios.scss'
+  styleUrl: './carrusel-servicios.scss',
 })
 export class CarruselServicios implements OnInit, OnDestroy {
   private servicioService = inject(ServicioService);
-  
+
   servicios: Servicio[] = [];
   slideActual: number = 0;
   private intervaloAutoPlay: any;

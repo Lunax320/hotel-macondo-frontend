@@ -10,8 +10,6 @@ export interface Reserva {
   estado: string;
   precioNoche?: number;
   total: number;
-  clienteId?: number;
   cliente?: Cliente;
-  habitacionId?: number;
   habitacion?: Habitacion;
 }

@@ -1,3 +1,4 @@
+import { Cuenta } from './cuenta.model';
 import { Servicio } from './servicio.model';
 
 export interface DetalleCuenta {
@@ -5,7 +6,6 @@ export interface DetalleCuenta {
   cantidad: number;
   precio: number;
   fechaRegistro: string;
-  cuentaId?: number;
-  servicioId?: number;
+  cuenta?: Cuenta;
   servicio?: Servicio;
 }

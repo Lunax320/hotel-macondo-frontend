@@ -42,17 +42,17 @@
             <select
               class="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 focus:border-[var(--azul)] focus:outline-none"
               id="tipo-habitacion"
-              formControlName="tipoHabitacionId"
+              formControlName="tipoHabitacion"
               (change)="actualizarDatosTipo()"
             >
-              <option [ngValue]="null">Seleccionar tipo...</option>
+              <option value="">Seleccionar tipo...</option>
               @for (tipoHabitacion of tiposHabitacion; track tipoHabitacion.id) {
-                <option [ngValue]="tipoHabitacion.id">{{ tipoHabitacion.nombre }}</option>
+                <option [value]="tipoHabitacion.id">{{ tipoHabitacion.nombre }}</option>
               }
             </select>
             @if (
-              habitacionForm.controls.tipoHabitacionId.touched &&
-              habitacionForm.controls.tipoHabitacionId.invalid
+              habitacionForm.controls.tipoHabitacion.touched &&
+              habitacionForm.controls.tipoHabitacion.invalid
             ) {
               <small class="mt-1 block text-red-600">El tipo de habitación es obligatorio.</small>
             }

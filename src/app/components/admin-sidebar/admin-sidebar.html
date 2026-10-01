@@ -7,14 +7,16 @@
   <p class="mb-4 text-[0.7rem] uppercase tracking-[3px] text-white/50">Administración</p>
 
   <nav class="flex flex-col gap-1" aria-label="Administración">
-    <span
-      class="flex cursor-not-allowed items-center rounded-lg px-4 py-3 text-white/35"
-      aria-disabled="true"
-      title="Disponible en una próxima implementación"
+    <a
+      class="flex items-center rounded-lg px-4 py-3 transition hover:bg-white/10"
+      [class.bg-[var(--dorado)]]="seccionActiva() === 'tipos_habitacion'"
+      [class.font-bold]="seccionActiva() === 'tipos_habitacion'"
+      [class.text-[var(--azul-oscuro)]]="seccionActiva() === 'tipos_habitacion'"
+      routerLink="/admin/tipos_habitacion"
     >
       <i class="bi bi-tag mr-3" aria-hidden="true"></i>
       Tipo Habitación
-    </span>
+    </a>
 
     <a
       class="flex items-center rounded-lg px-4 py-3 transition hover:bg-white/10"

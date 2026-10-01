@@ -1,0 +1,71 @@
+<div class="flex flex-col bg-[var(--crema-claro)] md:flex-row">
+  <app-admin-sidebar seccionActiva="tipos_habitacion"></app-admin-sidebar>
+
+  <section class="min-w-0 flex-1 p-6 md:p-10">
+    <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <header>
+        <h1 class="font-serif text-3xl font-bold text-[var(--azul-oscuro)] md:text-4xl">
+          Tipos de Habitación
+        </h1>
+        <p class="mt-1 text-[var(--texto)]">
+          Catálogo de categorías, capacidades y tarifas base de hospedaje.
+        </p>
+      </header>
+
+      <button
+        class="flex shrink-0 items-center justify-center gap-2 rounded-lg bg-[var(--dorado)] px-5 py-2.5 text-sm font-bold text-[var(--azul-oscuro)] shadow-sm transition hover:bg-[var(--dorado-oscuro)]"
+        type="button"
+        (click)="abrirNuevoTipo()"
+      >
+        <i class="bi bi-plus-lg" aria-hidden="true"></i>
+        Nuevo Tipo
+      </button>
+    </div>
+
+    @if (errorTipo) {
+      <div
+        class="mb-4 rounded-lg border border-red-200 bg-red-50 px-5 py-4 text-red-700"
+        role="alert"
+      >
+        {{ errorTipo }}
+      </div>
+    }
+
+    @if (tipoHabitacionPendienteEliminar; as tipoHabitacion) {
+      <div class="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-5 py-4 text-amber-900">
+        <p class="font-bold">¿Eliminar {{ tipoHabitacion.nombre }}?</p>
+        <p class="mt-1 text-sm">Esta acción retirará el tipo de habitación durante esta sesión.</p>
+        <div class="mt-4 flex flex-wrap gap-3">
+          <button
+            class="rounded-lg bg-red-600 px-5 py-2 font-bold text-white hover:bg-red-700"
+            type="button"
+            (click)="confirmarEliminacion()"
+          >
+            Confirmar eliminación
+          </button>
+          <button
+            class="rounded-lg border border-[var(--azul)] px-5 py-2 font-bold text-[var(--azul)]"
+            type="button"
+            (click)="cancelarEliminacion()"
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+    }
+
+    <app-tipo-habitacion-table
+      [tiposHabitacion]="tiposHabitacion"
+      (edicionSolicitada)="abrirEdicion($event)"
+      (eliminacionSolicitada)="solicitarEliminacion($event)"
+    ></app-tipo-habitacion-table>
+  </section>
+</div>
+
+@if (formularioVisible) {
+  <app-tipo-habitacion-form
+    [tipoHabitacion]="tipoHabitacionSeleccionado"
+    (guardado)="guardarTipoHabitacion($event)"
+    (cancelado)="cerrarFormulario()"
+  ></app-tipo-habitacion-form>
+}

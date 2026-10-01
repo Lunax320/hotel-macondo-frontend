@@ -7,6 +7,7 @@ import { Login } from './pages/login/login';
 import { Servicios } from './pages/servicios/servicios';
 import { AdminHabitaciones } from './pages/admin-habitaciones/admin-habitaciones';
 import { AdminHabitacionForm } from './pages/admin-habitacion-form/admin-habitacion-form';
+import { AdminTiposHabitacion } from './pages/admin-tipos-habitacion/admin-tipos-habitacion';
 
 export const routes: Routes = [
   {
@@ -44,5 +45,9 @@ export const routes: Routes = [
   {
     path: 'admin/habitaciones',
     component: AdminHabitaciones,
+  },
+  {
+    path: 'admin/tipos_habitacion',
+    component: AdminTiposHabitacion,
   },
 ];

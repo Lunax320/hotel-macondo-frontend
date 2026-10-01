@@ -1,0 +1,169 @@
+<div
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="titulo-tipo-habitacion"
+>
+  <div class="relative w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl md:p-8">
+    <div class="mb-6 flex items-center justify-between">
+      <h2
+        class="font-serif text-2xl font-bold text-[var(--azul-oscuro)]"
+        id="titulo-tipo-habitacion"
+      >
+        @if (tipoHabitacion()) {
+          Editar Tipo de Habitación
+        } @else {
+          Nuevo Tipo de Habitación
+        }
+      </h2>
+      <button
+        class="text-2xl font-light leading-none text-gray-400 hover:text-gray-600"
+        type="button"
+        aria-label="Cerrar formulario"
+        (click)="cancelar()"
+      >
+        &times;
+      </button>
+    </div>
+
+    <form class="space-y-4" [formGroup]="tipoHabitacionForm" (ngSubmit)="guardar()">
+      <div>
+        <label
+          class="mb-1 block text-xs font-bold uppercase tracking-wider text-[var(--azul)]"
+          for="form-nombre"
+        >
+          Nombre
+        </label>
+        <input
+          class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm focus:border-[var(--azul)] focus:outline-none"
+          id="form-nombre"
+          type="text"
+          formControlName="nombre"
+          placeholder="Ej: Suite Presidencial"
+        />
+        @if (
+          tipoHabitacionForm.controls.nombre.touched && tipoHabitacionForm.controls.nombre.invalid
+        ) {
+          <small class="mt-1 block text-red-600">Ingresa un nombre de 3 a 100 caracteres.</small>
+        }
+      </div>
+
+      <div>
+        <label
+          class="mb-1 block text-xs font-bold uppercase tracking-wider text-[var(--azul)]"
+          for="form-descripcion"
+        >
+          Descripción
+        </label>
+        <textarea
+          class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm focus:border-[var(--azul)] focus:outline-none"
+          id="form-descripcion"
+          rows="3"
+          formControlName="descripcion"
+          placeholder="Detalla comodidades y características..."
+        ></textarea>
+        @if (
+          tipoHabitacionForm.controls.descripcion.touched &&
+          tipoHabitacionForm.controls.descripcion.invalid
+        ) {
+          <small class="mt-1 block text-red-600">La descripción es obligatoria.</small>
+        }
+      </div>
+
+      <div>
+        <label
+          class="mb-1 block text-xs font-bold uppercase tracking-wider text-[var(--azul)]"
+          for="form-imagen"
+        >
+          Imagen
+        </label>
+        <input
+          class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm focus:border-[var(--azul)] focus:outline-none"
+          id="form-imagen"
+          type="text"
+          list="imagenes-tipo-habitacion"
+          formControlName="imagen"
+          placeholder="/images/HabitacionVIP.avif"
+        />
+        <datalist id="imagenes-tipo-habitacion">
+          <option value="/images/HabitacionNormal.avif"></option>
+          <option value="/images/HabitacionExecutive.avif"></option>
+          <option value="/images/HabitacionVIP.avif"></option>
+          <option value="/images/HabitacionLuxury.avif"></option>
+        </datalist>
+        @if (
+          tipoHabitacionForm.controls.imagen.touched && tipoHabitacionForm.controls.imagen.invalid
+        ) {
+          <small class="mt-1 block text-red-600">La ruta de la imagen es obligatoria.</small>
+        }
+      </div>
+
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div>
+          <label
+            class="mb-1 block text-xs font-bold uppercase tracking-wider text-[var(--azul)]"
+            for="form-capacidad"
+          >
+            Capacidad (Personas)
+          </label>
+          <input
+            class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm focus:border-[var(--azul)] focus:outline-none"
+            id="form-capacidad"
+            type="number"
+            min="1"
+            max="10"
+            formControlName="capacidadPersonas"
+            placeholder="2"
+          />
+          @if (
+            tipoHabitacionForm.controls.capacidadPersonas.touched &&
+            tipoHabitacionForm.controls.capacidadPersonas.invalid
+          ) {
+            <small class="mt-1 block text-red-600">La capacidad debe estar entre 1 y 10.</small>
+          }
+        </div>
+
+        <div>
+          <label
+            class="mb-1 block text-xs font-bold uppercase tracking-wider text-[var(--azul)]"
+            for="form-precio"
+          >
+            Precio por Noche ($)
+          </label>
+          <input
+            class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm focus:border-[var(--azul)] focus:outline-none"
+            id="form-precio"
+            type="number"
+            min="0"
+            step="10000"
+            formControlName="precioNoche"
+            placeholder="500000"
+          />
+          @if (
+            tipoHabitacionForm.controls.precioNoche.touched &&
+            tipoHabitacionForm.controls.precioNoche.invalid
+          ) {
+            <small class="mt-1 block text-red-600">El precio debe ser mayor o igual a cero.</small>
+          }
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-3 border-t border-gray-100 pt-4">
+        <button
+          class="rounded-lg px-5 py-2.5 text-sm font-semibold text-gray-600 transition hover:bg-gray-100"
+          type="button"
+          (click)="cancelar()"
+        >
+          Cancelar
+        </button>
+        <button
+          class="rounded-lg bg-[var(--dorado)] px-6 py-2.5 text-sm font-bold text-[var(--azul-oscuro)] transition hover:bg-[var(--dorado-oscuro)] disabled:cursor-not-allowed disabled:opacity-50"
+          type="submit"
+          [disabled]="tipoHabitacionForm.invalid"
+        >
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

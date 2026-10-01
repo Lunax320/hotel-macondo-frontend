@@ -1,3 +1,4 @@
+import { Cliente } from './cliente.model';
 import { Rol } from './rol.model';
 
 export interface Usuario {
@@ -5,5 +6,5 @@ export interface Usuario {
   correo: string;
   contrasena?: string;
   rol: Rol;
-  clienteId?: number;
+  cliente?: Cliente;
 }

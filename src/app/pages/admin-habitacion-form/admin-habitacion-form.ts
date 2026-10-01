@@ -26,7 +26,7 @@ export class AdminHabitacionForm implements OnInit {
   errorHabitacion = '';
 
   habitacionForm = new FormGroup({
-    tipoHabitacionId: new FormControl<number | null>(null, [Validators.required]),
+    tipoHabitacion: new FormControl('', [Validators.required]),
     nombre: new FormControl('', [
       Validators.required,
       Validators.minLength(3),
@@ -50,9 +50,8 @@ export class AdminHabitacionForm implements OnInit {
   }
 
   actualizarDatosTipo(): void {
-    const tipoId = this.habitacionForm.controls.tipoHabitacionId.value;
-    const tipoHabitacion =
-      tipoId === null ? undefined : this.tipoHabitacionService.obtenerPorId(tipoId);
+    const tipoId = Number(this.habitacionForm.controls.tipoHabitacion.value);
+    const tipoHabitacion = this.tipoHabitacionService.obtenerPorId(tipoId);
 
     this.habitacionForm.patchValue({
       capacidad: tipoHabitacion?.capacidadPersonas ?? null,
@@ -71,7 +70,8 @@ export class AdminHabitacionForm implements OnInit {
     const valor = this.habitacionForm.getRawValue();
 
     if (
-      valor.tipoHabitacionId === null ||
+      valor.tipoHabitacion === null ||
+      valor.tipoHabitacion === '' ||
       valor.piso === null ||
       valor.capacidad === null ||
       valor.precio === null
@@ -79,9 +79,16 @@ export class AdminHabitacionForm implements OnInit {
       return;
     }
 
+    const tipoHabitacion = this.tipoHabitacionService.obtenerPorId(Number(valor.tipoHabitacion));
+
+    if (!tipoHabitacion) {
+      this.errorHabitacion = 'El tipo de habitación no existe.';
+      return;
+    }
+
     const habitacion: Habitacion = {
       id: this.habitacionId,
-      tipoHabitacionId: valor.tipoHabitacionId,
+      tipoHabitacion,
       nombre: valor.nombre ?? '',
       etiqueta: valor.etiqueta ?? '',
       numero: valor.numero ?? '',
@@ -124,7 +131,7 @@ export class AdminHabitacionForm implements OnInit {
     }
 
     this.habitacionForm.patchValue({
-      tipoHabitacionId: habitacion.tipoHabitacionId,
+      tipoHabitacion: habitacion.tipoHabitacion.id?.toString() ?? '',
       nombre: habitacion.nombre,
       etiqueta: habitacion.etiqueta ?? '',
       numero: habitacion.numero,

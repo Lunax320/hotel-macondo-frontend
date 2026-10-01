@@ -1,24 +1,66 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Habitacion } from '../models/habitacion.model';
 import { TipoHabitacion } from '../models/tipo-habitacion.model';
-import { TipoHabitacionService } from './tipo-habitacion.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HabitacionService {
-  private tipoHabitacionService = inject(TipoHabitacionService);
+  private tipoHabitacionArray: TipoHabitacion[] = [
+    {
+      id: 1,
+      nombre: 'Castaño Fundacional',
+      descripcion: 'Refugio íntimo con vista al gran patio de Macondo, cama queen y brisa fresca.',
+      imagen: '/images/HabitacionNormal.avif',
+      precioNoche: 280000,
+      capacidadPersonas: 2,
+    },
+    {
+      id: 2,
+      nombre: 'Orfebrería Buendía',
+      descripcion: 'Espacio distinguido con detalles artesanales en oro, balcón y sala de lectura.',
+      imagen: '/images/HabitacionExecutive.avif',
+      precioNoche: 450000,
+      capacidadPersonas: 3,
+    },
+    {
+      id: 3,
+      nombre: 'Mariposas Amarillas',
+      descripcion:
+        'Suite boutique luminosa decorada con motivos botánicos, cama king size y terraza caribeña.',
+      imagen: '/images/HabitacionVIP.avif',
+      precioNoche: 650000,
+      capacidadPersonas: 4,
+    },
+    {
+      id: 4,
+      nombre: 'Cuarto de Melquíades',
+      descripcion:
+        'Suite ejecutiva con estudio privado, selección de libros clásicos y vista al río.',
+      imagen: '/images/HabitacionExecutive.avif',
+      precioNoche: 980000,
+      capacidadPersonas: 2,
+    },
+    {
+      id: 5,
+      nombre: 'Cien Años Presidencial',
+      descripcion:
+        'Villa exclusiva frente al mar con piscina privada y atención personalizada 24 horas.',
+      imagen: '/images/HabitacionLuxury.avif',
+      precioNoche: 1900000,
+      capacidadPersonas: 6,
+    },
+  ];
 
   private habitacionArray: Habitacion[] = Array.from({ length: 50 }, (_, i) => {
     const id = i + 1;
     const piso = Math.floor(i / 10) + 1;
     const hab = (i % 10) + 1;
     const numero = `${piso}${hab < 10 ? '0' + hab : hab}`;
-    const tipoHabitacionId = piso;
-    const tipoHabitacion = this.tipoHabitacionService.obtenerPorId(tipoHabitacionId);
+    const tipoHabitacion = this.tipoHabitacionArray.find((tipo) => tipo.id === piso);
 
     if (!tipoHabitacion) {
-      throw new Error(`No existe el tipo de habitación ${tipoHabitacionId}.`);
+      throw new Error(`No existe el tipo de habitación ${piso}.`);
     }
 
     const etiquetas = ['ACOGEDORA', 'POPULAR', 'EXCLUSIVA', 'HISTÓRICA', 'ÚNICA'];
@@ -32,24 +74,22 @@ export class HabitacionService {
       precio: tipoHabitacion.precioNoche,
       etiqueta: etiquetas[piso - 1],
       piso,
-      tipoHabitacionId,
       tipoHabitacion,
     };
   });
 
   obtenerTodas(): Habitacion[] {
-    return this.habitacionArray.map((habitacion) => this.copiarHabitacion(habitacion));
+    return this.habitacionArray;
   }
 
   obtenerPorId(id: number): Habitacion | undefined {
-    const habitacion = this.habitacionArray.find((item) => item.id === id);
-    return habitacion ? this.copiarHabitacion(habitacion) : undefined;
+    return this.habitacionArray.find((habitacion) => habitacion.id === id);
   }
 
-  hayDisponibilidadPorTipo(tipoHabitacionId: number): boolean {
+  hayDisponibilidadPorTipo(tipoHabitacion: TipoHabitacion): boolean {
     return this.habitacionArray.some(
       (habitacion) =>
-        habitacion.tipoHabitacionId === tipoHabitacionId && habitacion.estado === 'DISPONIBLE',
+        habitacion.tipoHabitacion.id === tipoHabitacion.id && habitacion.estado === 'DISPONIBLE',
     );
   }
 
@@ -57,7 +97,7 @@ export class HabitacionService {
     const nuevaHabitacion = this.prepararHabitacion(habitacion);
     nuevaHabitacion.id = this.obtenerSiguienteId();
     this.habitacionArray.push(nuevaHabitacion);
-    return this.copiarHabitacion(nuevaHabitacion);
+    return nuevaHabitacion;
   }
 
   actualizarHabitacion(id: number, habitacion: Habitacion): Habitacion {
@@ -70,7 +110,7 @@ export class HabitacionService {
     const habitacionActualizada = this.prepararHabitacion(habitacion, id);
     habitacionActualizada.id = id;
     this.habitacionArray[indice] = habitacionActualizada;
-    return this.copiarHabitacion(habitacionActualizada);
+    return habitacionActualizada;
   }
 
   cambiarEstado(id: number): Habitacion | undefined {
@@ -81,7 +121,7 @@ export class HabitacionService {
     }
 
     habitacion.estado = habitacion.estado === 'DISPONIBLE' ? 'NO_DISPONIBLE' : 'DISPONIBLE';
-    return this.copiarHabitacion(habitacion);
+    return habitacion;
   }
 
   eliminarHabitacion(id: number): boolean {
@@ -90,9 +130,9 @@ export class HabitacionService {
     return this.habitacionArray.length < cantidadAnterior;
   }
 
-  existeHabitacionConTipo(tipoHabitacionId: number): boolean {
+  existeHabitacionConTipo(tipoHabitacion: TipoHabitacion): boolean {
     return this.habitacionArray.some(
-      (habitacion) => habitacion.tipoHabitacionId === tipoHabitacionId,
+      (habitacion) => habitacion.tipoHabitacion.id === tipoHabitacion.id,
     );
   }
 
@@ -102,21 +142,21 @@ export class HabitacionService {
     }
 
     this.habitacionArray
-      .filter((habitacion) => habitacion.tipoHabitacionId === tipoHabitacion.id)
+      .filter((habitacion) => habitacion.tipoHabitacion.id === tipoHabitacion.id)
       .forEach((habitacion) => {
         habitacion.capacidad = tipoHabitacion.capacidadPersonas;
         habitacion.precio = tipoHabitacion.precioNoche;
-        habitacion.tipoHabitacion = { ...tipoHabitacion };
+        habitacion.tipoHabitacion = tipoHabitacion;
       });
   }
 
   private prepararHabitacion(habitacion: Habitacion, idActual?: number): Habitacion {
-    const tipoHabitacion = this.tipoHabitacionService.obtenerPorId(habitacion.tipoHabitacionId);
+    const tipoHabitacion = habitacion.tipoHabitacion;
     const nombre = habitacion.nombre.trim();
     const numero = habitacion.numero.trim();
     const etiqueta = habitacion.etiqueta?.trim();
 
-    if (!tipoHabitacion) {
+    if (tipoHabitacion.id === undefined) {
       throw new Error('El tipo de habitación no existe.');
     }
 
@@ -145,15 +185,14 @@ export class HabitacionService {
       throw new Error('El estado de la habitación es inválido.');
     }
 
-    return {
-      ...habitacion,
-      numero,
-      nombre,
-      etiqueta,
-      capacidad: tipoHabitacion.capacidadPersonas,
-      precio: tipoHabitacion.precioNoche,
-      tipoHabitacion: { ...tipoHabitacion },
-    };
+    habitacion.numero = numero;
+    habitacion.nombre = nombre;
+    habitacion.etiqueta = etiqueta;
+    habitacion.capacidad = tipoHabitacion.capacidadPersonas;
+    habitacion.precio = tipoHabitacion.precioNoche;
+    habitacion.tipoHabitacion = tipoHabitacion;
+
+    return habitacion;
   }
 
   private obtenerSiguienteId(): number {
@@ -162,12 +201,5 @@ export class HabitacionService {
       .filter((id): id is number => id !== undefined);
 
     return Math.max(0, ...ids) + 1;
-  }
-
-  private copiarHabitacion(habitacion: Habitacion): Habitacion {
-    return {
-      ...habitacion,
-      tipoHabitacion: habitacion.tipoHabitacion ? { ...habitacion.tipoHabitacion } : undefined,
-    };
   }
 }

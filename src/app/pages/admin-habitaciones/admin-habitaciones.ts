@@ -43,7 +43,7 @@ export class AdminHabitaciones implements OnInit {
       return;
     }
 
-    this.reservasAsociadas = this.reservaService.obtenerPorHabitacionId(habitacion.id);
+    this.reservasAsociadas = this.reservaService.obtenerPorHabitacion(habitacion);
 
     if (this.reservasAsociadas.length > 0) {
       this.errorHabitacion = 'No se puede eliminar: la habitación tiene reservas asociadas.';

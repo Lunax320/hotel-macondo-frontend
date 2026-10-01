@@ -1,0 +1,26 @@
+<header
+  id="inicio"
+  class="min-h-screen flex flex-col justify-center items-center text-center relative bg-cover bg-center"
+  style="
+    background-image:
+      linear-gradient(rgba(10, 25, 45, 0.55), rgba(10, 25, 45, 0.85)), url('/images/Playa.avif');
+  "
+>
+  <div class="[&>img]:w-20 [&>img]:h-20 md:[&>img]:w-24 md:[&>img]:h-24 mb-4 mx-auto">
+    <img src="/images/logo.png" alt="Logo Hotel Macondo" class="w-20 h-auto object-contain" />
+  </div>
+
+  <h1 class="mb-3 text-6xl md:text-[6.5rem] font-serif font-bold !text-white tracking-wide">
+    Hotel Macondo
+  </h1>
+  <p class="font-serif italic text-2xl md:text-3xl text-[var(--dorado)] mb-10">
+    Donde el realismo mágico encuentra el mar
+  </p>
+
+  <a
+    routerLink="/habitaciones"
+    class="bg-[var(--dorado)] text-[var(--azul-oscuro)] font-bold px-8 py-3 rounded-lg border-2 border-[var(--dorado)] shadow-lg hover:bg-[var(--dorado-oscuro)] hover:border-[var(--dorado-oscuro)] transition text-lg"
+  >
+    Reservar Ahora
+  </a>
+</header>
