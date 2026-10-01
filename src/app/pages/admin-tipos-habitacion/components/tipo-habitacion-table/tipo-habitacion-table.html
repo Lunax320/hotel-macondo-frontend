@@ -1,0 +1,67 @@
+<div class="overflow-x-auto rounded-2xl bg-white shadow-sm">
+  <table class="w-full min-w-[760px] text-left">
+    <thead class="bg-[var(--crema)] text-sm uppercase tracking-wider text-[var(--azul-oscuro)]">
+      <tr>
+        <th class="px-6 py-4">ID</th>
+        <th class="px-6 py-4">Tipo</th>
+        <th class="px-6 py-4">Descripción</th>
+        <th class="px-6 py-4">Capacidad</th>
+        <th class="px-6 py-4">Precio / noche</th>
+        <th class="px-6 py-4 text-right">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (tipoHabitacion of tiposHabitacion(); track tipoHabitacion.id) {
+        <tr class="border-t border-gray-100">
+          <td class="px-6 py-4">{{ tipoHabitacion.id }}</td>
+          <td class="px-6 py-4">
+            <div class="flex items-center gap-3">
+              <img
+                class="h-12 w-12 rounded-lg bg-[var(--crema)] object-cover"
+                [src]="tipoHabitacion.imagen"
+                [alt]="tipoHabitacion.nombre"
+              />
+              <div>
+                <p class="font-medium text-[var(--azul-oscuro)]">
+                  {{ tipoHabitacion.nombre }}
+                </p>
+                <p class="text-sm text-[var(--texto)]">Categoría</p>
+              </div>
+            </div>
+          </td>
+          <td class="max-w-xs truncate px-6 py-4 text-sm text-[var(--texto)]">
+            {{ tipoHabitacion.descripcion }}
+          </td>
+          <td class="px-6 py-4">{{ tipoHabitacion.capacidadPersonas }} pers.</td>
+          <td class="px-6 py-4 font-medium">
+            $ {{ tipoHabitacion.precioNoche.toLocaleString('es-CO') }}
+          </td>
+          <td class="whitespace-nowrap px-6 py-4 text-right">
+            <button
+              class="mr-4 inline-flex items-center gap-1 text-sm font-medium text-[var(--azul)] hover:underline"
+              type="button"
+              (click)="editar(tipoHabitacion)"
+            >
+              <i class="bi bi-pencil-square" aria-hidden="true"></i>
+              Editar
+            </button>
+            <button
+              class="inline-flex items-center gap-1 text-sm font-medium text-red-500 hover:text-red-700 hover:underline"
+              type="button"
+              (click)="eliminar(tipoHabitacion)"
+            >
+              <i class="bi bi-trash" aria-hidden="true"></i>
+              Eliminar
+            </button>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td class="px-6 py-10 text-center" colspan="6">
+            Aún no hay tipos de habitación registrados.
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
