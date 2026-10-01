@@ -1,0 +1,22 @@
+<section class="bg-[var(--crema)] py-20 mt-16" id="habitaciones">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-16">
+      <p class="text-[var(--azul)] text-[0.8rem] font-bold tracking-[3px] uppercase block mb-2">
+        Hospedaje
+      </p>
+      <h2 class="text-4xl md:text-5xl font-serif font-bold text-[var(--azul-oscuro)] mb-4">
+        Nuestras Habitaciones
+      </h2>
+      <p class="max-w-2xl mx-auto text-[var(--texto)]">
+        Cada espacio es un portal a otro mundo, diseñado para que el tiempo se detenga y la magia
+        comience.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      @for (tipo of tiposHabitacion(); track tipo.id) {
+        <app-landing-habitacion-card [tipoHabitacion]="tipo"></app-landing-habitacion-card>
+      }
+    </div>
+  </div>
+</section>

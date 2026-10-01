@@ -1,0 +1,18 @@
+<section class="bg-[var(--crema)] py-20">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-16">
+      <p class="text-[var(--azul)] text-[0.8rem] font-bold tracking-[3px] uppercase block mb-2">
+        Nuestros huéspedes
+      </p>
+      <h2 class="text-4xl md:text-5xl font-serif font-bold text-[var(--azul-oscuro)]">
+        Historias que perduran
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
+      @for (testimonio of testimonios(); track testimonio.id) {
+        <app-testimonio-card [testimonio]="testimonio"></app-testimonio-card>
+      }
+    </div>
+  </div>
+</section>

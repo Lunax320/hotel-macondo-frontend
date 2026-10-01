@@ -1,0 +1,87 @@
+<section class="container mx-auto px-4">
+  <div
+    class="bg-white rounded-[18px] shadow-2xl -mt-[70px] relative z-10 p-6 lg:p-10 mx-auto max-w-6xl"
+  >
+    <p class="text-[var(--azul)] text-xs font-bold tracking-[1.5px] uppercase text-center mb-6">
+      Consultar disponibilidad
+    </p>
+
+    <form class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+      <div>
+        <label
+          class="text-[var(--azul)] text-[0.72rem] font-bold tracking-[1.5px] uppercase mb-2 block"
+          for="fechaEntrada"
+        >
+          Fecha de entrada
+        </label>
+        <input
+          class="w-full rounded-lg px-4 py-3 border border-gray-300 focus:outline-none focus:border-[var(--azul)] bg-gray-50 text-[var(--texto)]"
+          type="date"
+          id="fechaEntrada"
+          [min]="fechaEntradaMin"
+          (change)="onEntradaChange($event)"
+          required
+        />
+      </div>
+      <div>
+        <label
+          class="text-[var(--azul)] text-[0.72rem] font-bold tracking-[1.5px] uppercase mb-2 block"
+          for="fechaSalida"
+        >
+          Fecha de salida
+        </label>
+        <input
+          class="w-full rounded-lg px-4 py-3 border border-gray-300 focus:outline-none focus:border-[var(--azul)] bg-gray-50 text-[var(--texto)]"
+          type="date"
+          id="fechaSalida"
+          [min]="fechaSalidaMin"
+          required
+        />
+      </div>
+      <div>
+        <label
+          class="text-[var(--azul)] text-[0.72rem] font-bold tracking-[1.5px] uppercase mb-2 block"
+          for="tipoHabitacion"
+        >
+          Tipo de habitación
+        </label>
+        <select
+          class="w-full rounded-lg px-4 py-3 border border-gray-300 focus:outline-none focus:border-[var(--azul)] bg-gray-50 text-[var(--texto)]"
+          id="tipoHabitacion"
+        >
+          <option value="">Seleccionar...</option>
+          @for (tipo of tiposHabitacion(); track tipo.id) {
+            <option [value]="tipo.id">{{ tipo.nombre }}</option>
+          }
+        </select>
+      </div>
+      <div>
+        <label
+          class="text-[var(--azul)] text-[0.72rem] font-bold tracking-[1.5px] uppercase mb-2 block"
+          for="personas"
+        >
+          Personas
+        </label>
+        <select
+          class="w-full rounded-lg px-4 py-3 border border-gray-300 focus:outline-none focus:border-[var(--azul)] bg-gray-50 text-[var(--texto)]"
+          id="personas"
+        >
+          <option value="1">1 persona</option>
+          <option value="2">2 personas</option>
+          <option value="3">3 personas</option>
+          <option value="4">4 personas</option>
+          <option value="6">6 personas</option>
+        </select>
+      </div>
+      <div>
+        <button
+          class="w-full bg-[var(--azul)] text-white font-bold rounded-lg px-4 py-3 border-2 border-[var(--azul)] hover:bg-[var(--azul-oscuro)] hover:border-[var(--azul-oscuro)] transition"
+          type="button"
+          routerLink="/habitaciones"
+        >
+          Consultar Disponibilidad
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
