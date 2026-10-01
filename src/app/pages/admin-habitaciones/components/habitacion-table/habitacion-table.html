@@ -1,0 +1,91 @@
+<div class="overflow-x-auto rounded-2xl bg-white shadow-sm">
+  <table class="w-full min-w-[960px] text-left">
+    <thead class="bg-[var(--crema)] text-sm uppercase tracking-wider text-[var(--azul-oscuro)]">
+      <tr>
+        <th class="px-6 py-4">Habitación</th>
+        <th class="px-6 py-4">Tipo</th>
+        <th class="px-6 py-4">Número</th>
+        <th class="px-6 py-4">Piso</th>
+        <th class="px-6 py-4">Capacidad</th>
+        <th class="px-6 py-4">Precio / noche</th>
+        <th class="px-6 py-4">Estado</th>
+        <th class="px-6 py-4 text-right">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (habitacion of habitaciones(); track habitacion.id) {
+        <tr class="border-t border-gray-100">
+          <td class="px-6 py-4">
+            <div class="flex items-center gap-3">
+              <img
+                class="h-14 w-14 rounded-lg bg-[var(--crema)] object-cover"
+                [src]="habitacion.tipoHabitacion?.imagen ?? '/images/HabitacionNormal.avif'"
+                [alt]="habitacion.nombre"
+              />
+              <div>
+                <p class="font-medium text-[var(--azul-oscuro)]">{{ habitacion.nombre }}</p>
+                <p class="text-sm text-[var(--texto)]">{{ habitacion.etiqueta }}</p>
+              </div>
+            </div>
+          </td>
+          <td class="px-6 py-4">
+            <span
+              class="rounded-full bg-[var(--crema)] px-3 py-1 text-xs font-bold text-[var(--azul)]"
+            >
+              {{ habitacion.tipoHabitacion?.nombre ?? 'Sin tipo' }}
+            </span>
+          </td>
+          <td class="px-6 py-4">{{ habitacion.numero }}</td>
+          <td class="px-6 py-4">{{ habitacion.piso }}</td>
+          <td class="px-6 py-4">{{ habitacion.capacidad }} pers.</td>
+          <td class="px-6 py-4 font-medium">$ {{ habitacion.precio.toLocaleString('es-CO') }}</td>
+          <td class="px-6 py-4">
+            <span
+              class="rounded-full px-3 py-1 text-xs font-bold"
+              [class.bg-green-100]="habitacion.estado === 'DISPONIBLE'"
+              [class.text-green-700]="habitacion.estado === 'DISPONIBLE'"
+              [class.bg-gray-200]="habitacion.estado !== 'DISPONIBLE'"
+              [class.text-gray-600]="habitacion.estado !== 'DISPONIBLE'"
+            >
+              {{ habitacion.estado === 'DISPONIBLE' ? 'Disponible' : 'No disponible' }}
+            </span>
+          </td>
+          <td class="whitespace-nowrap px-6 py-4 text-right">
+            @if (habitacion.tipoHabitacionId) {
+              <a
+                class="font-medium text-[var(--azul)] hover:underline"
+                [routerLink]="['/habitaciones', habitacion.tipoHabitacionId]"
+              >
+                Ver
+              </a>
+            }
+            <a
+              class="ml-4 font-medium text-[var(--azul)] hover:underline"
+              [routerLink]="['/admin/habitaciones/editar', habitacion.id]"
+            >
+              Editar
+            </a>
+            <button
+              class="ml-4 font-medium text-[var(--azul)] hover:underline"
+              type="button"
+              (click)="cambiarEstado(habitacion)"
+            >
+              {{ habitacion.estado === 'DISPONIBLE' ? 'Deshabilitar' : 'Habilitar' }}
+            </button>
+            <button
+              class="ml-4 font-medium text-red-600 hover:underline"
+              type="button"
+              (click)="eliminar(habitacion)"
+            >
+              Eliminar
+            </button>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td class="px-6 py-10 text-center" colspan="8">Aún no hay habitaciones registradas.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

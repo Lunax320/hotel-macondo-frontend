@@ -1,0 +1,193 @@
+<div class="flex flex-col bg-[var(--crema-claro)] md:flex-row">
+  <app-admin-sidebar seccionActiva="habitaciones"></app-admin-sidebar>
+
+  <section class="min-w-0 flex-1 p-6 md:p-10">
+    <header class="mb-8">
+      <p class="text-xs font-bold uppercase tracking-[2px] text-[var(--azul)]">Inventario</p>
+      <h1 class="mt-2 font-serif text-3xl font-bold text-[var(--azul-oscuro)] md:text-4xl">
+        @if (esEdicion) {
+          Editar habitación
+        } @else {
+          Nueva habitación
+        }
+      </h1>
+      <p class="mt-1 text-[var(--texto)]">
+        La capacidad y el precio se asignan automáticamente desde el tipo de habitación.
+      </p>
+    </header>
+
+    @if (errorHabitacion) {
+      <div
+        class="mb-5 rounded-lg border border-red-200 bg-red-50 px-5 py-4 text-red-700"
+        role="alert"
+      >
+        {{ errorHabitacion }}
+      </div>
+    }
+
+    @if (habitacionEncontrada) {
+      <form
+        class="max-w-4xl rounded-2xl bg-white p-6 shadow-sm md:p-8"
+        [formGroup]="habitacionForm"
+        (ngSubmit)="guardar()"
+      >
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div>
+            <label
+              class="mb-2 block text-sm font-bold text-[var(--azul-oscuro)]"
+              for="tipo-habitacion"
+            >
+              Tipo de habitación
+            </label>
+            <select
+              class="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 focus:border-[var(--azul)] focus:outline-none"
+              id="tipo-habitacion"
+              formControlName="tipoHabitacionId"
+              (change)="actualizarDatosTipo()"
+            >
+              <option [ngValue]="null">Seleccionar tipo...</option>
+              @for (tipoHabitacion of tiposHabitacion; track tipoHabitacion.id) {
+                <option [ngValue]="tipoHabitacion.id">{{ tipoHabitacion.nombre }}</option>
+              }
+            </select>
+            @if (
+              habitacionForm.controls.tipoHabitacionId.touched &&
+              habitacionForm.controls.tipoHabitacionId.invalid
+            ) {
+              <small class="mt-1 block text-red-600">El tipo de habitación es obligatorio.</small>
+            }
+          </div>
+
+          <div>
+            <label class="mb-2 block text-sm font-bold text-[var(--azul-oscuro)]" for="nombre">
+              Etiqueta interna
+            </label>
+            <input
+              class="w-full rounded-lg border border-gray-200 px-4 py-3 focus:border-[var(--azul)] focus:outline-none"
+              id="nombre"
+              type="text"
+              formControlName="nombre"
+              placeholder="Habitación 301"
+            />
+            @if (habitacionForm.controls.nombre.touched && habitacionForm.controls.nombre.invalid) {
+              <small class="mt-1 block text-red-600"
+                >Ingresa un nombre de 3 a 100 caracteres.</small
+              >
+            }
+          </div>
+
+          <div>
+            <label class="mb-2 block text-sm font-bold text-[var(--azul-oscuro)]" for="etiqueta">
+              Etiqueta
+            </label>
+            <input
+              class="w-full rounded-lg border border-gray-200 px-4 py-3 focus:border-[var(--azul)] focus:outline-none"
+              id="etiqueta"
+              type="text"
+              formControlName="etiqueta"
+              placeholder="EXCLUSIVA"
+            />
+          </div>
+
+          <div>
+            <label class="mb-2 block text-sm font-bold text-[var(--azul-oscuro)]" for="numero">
+              Número
+            </label>
+            <input
+              class="w-full rounded-lg border border-gray-200 px-4 py-3 focus:border-[var(--azul)] focus:outline-none"
+              id="numero"
+              type="text"
+              formControlName="numero"
+              placeholder="301"
+            />
+            @if (habitacionForm.controls.numero.touched && habitacionForm.controls.numero.invalid) {
+              <small class="mt-1 block text-red-600"
+                >El número es obligatorio y admite hasta 10 caracteres.</small
+              >
+            }
+          </div>
+
+          <div>
+            <label class="mb-2 block text-sm font-bold text-[var(--azul-oscuro)]" for="piso"
+              >Piso</label
+            >
+            <input
+              class="w-full rounded-lg border border-gray-200 px-4 py-3 focus:border-[var(--azul)] focus:outline-none"
+              id="piso"
+              type="number"
+              min="1"
+              formControlName="piso"
+            />
+          </div>
+
+          <div>
+            <label class="mb-2 block text-sm font-bold text-[var(--azul-oscuro)]" for="capacidad">
+              Capacidad (personas)
+            </label>
+            <input
+              class="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-3"
+              id="capacidad"
+              type="number"
+              formControlName="capacidad"
+              readonly
+            />
+          </div>
+
+          <div>
+            <label class="mb-2 block text-sm font-bold text-[var(--azul-oscuro)]" for="precio">
+              Precio / noche (COP)
+            </label>
+            <input
+              class="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-3"
+              id="precio"
+              type="number"
+              formControlName="precio"
+              readonly
+            />
+          </div>
+
+          <div>
+            <label class="mb-2 block text-sm font-bold text-[var(--azul-oscuro)]" for="estado"
+              >Estado</label
+            >
+            <select
+              class="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 focus:border-[var(--azul)] focus:outline-none"
+              id="estado"
+              formControlName="estado"
+            >
+              <option value="DISPONIBLE">Disponible</option>
+              <option value="NO_DISPONIBLE">No disponible</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mt-8 flex flex-wrap gap-4">
+          <button
+            class="rounded-lg bg-[var(--dorado)] px-8 py-3 font-bold text-[var(--azul-oscuro)] transition hover:bg-[var(--dorado-oscuro)] disabled:cursor-not-allowed disabled:opacity-50"
+            type="submit"
+            [disabled]="habitacionForm.invalid"
+          >
+            @if (esEdicion) {
+              Guardar cambios
+            } @else {
+              Crear habitación
+            }
+          </button>
+          <a
+            class="rounded-lg border-2 border-[var(--azul)] px-8 py-3 font-bold text-[var(--azul)] transition hover:bg-[var(--azul)] hover:text-white"
+            routerLink="/admin/habitaciones"
+          >
+            Cancelar
+          </a>
+        </div>
+      </form>
+    } @else {
+      <a
+        class="inline-flex rounded-lg bg-[var(--azul)] px-6 py-3 font-bold text-white"
+        routerLink="/admin/habitaciones"
+      >
+        Volver al inventario
+      </a>
+    }
+  </section>
+</div>

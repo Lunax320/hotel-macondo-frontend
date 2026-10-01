@@ -1,0 +1,79 @@
+<div class="flex flex-col bg-[var(--crema-claro)] md:flex-row">
+  <app-admin-sidebar seccionActiva="habitaciones"></app-admin-sidebar>
+
+  <section class="min-w-0 flex-1 p-6 md:p-10">
+    <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <header>
+        <h1 class="font-serif text-3xl font-bold text-[var(--azul-oscuro)] md:text-4xl">
+          Habitaciones
+        </h1>
+        <p class="mt-1 text-[var(--texto)]">
+          Inventario del hotel: crear, editar, visualizar y retirar habitaciones.
+        </p>
+      </header>
+
+      <a
+        class="shrink-0 rounded-lg bg-[var(--dorado)] px-8 py-3 text-center font-bold text-[var(--azul-oscuro)] transition hover:bg-[var(--dorado-oscuro)]"
+        routerLink="/admin/habitaciones/nueva"
+      >
+        Nueva habitación
+      </a>
+    </div>
+
+    @if (errorHabitacion) {
+      <div
+        class="mb-4 rounded-lg border border-red-200 bg-red-50 px-5 py-4 text-red-700"
+        role="alert"
+      >
+        {{ errorHabitacion }}
+      </div>
+    }
+
+    @if (reservasAsociadas.length > 0) {
+      <div class="mb-4 rounded-lg border border-red-200 bg-red-50 px-5 py-4 text-red-700">
+        <p class="text-sm font-bold">
+          Reservas que ocupan la habitación ({{ reservasAsociadas.length }}):
+        </p>
+        <ul class="mt-2 list-disc pl-5 text-sm">
+          @for (reserva of reservasAsociadas; track reserva.id) {
+            <li>
+              <strong>{{ reserva.numeroReserva }}</strong>
+              — {{ reserva.fechaInicio }} → {{ reserva.fechaFin }} ({{ reserva.estado }})
+            </li>
+          }
+        </ul>
+      </div>
+    }
+
+    @if (habitacionPendienteEliminar; as habitacion) {
+      <div class="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-5 py-4 text-amber-900">
+        <p class="font-bold">¿Eliminar {{ habitacion.nombre }}?</p>
+        <p class="mt-1 text-sm">
+          Esta acción retirará la habitación del inventario durante esta sesión.
+        </p>
+        <div class="mt-4 flex flex-wrap gap-3">
+          <button
+            class="rounded-lg bg-red-600 px-5 py-2 font-bold text-white hover:bg-red-700"
+            type="button"
+            (click)="confirmarEliminacion()"
+          >
+            Confirmar eliminación
+          </button>
+          <button
+            class="rounded-lg border border-[var(--azul)] px-5 py-2 font-bold text-[var(--azul)]"
+            type="button"
+            (click)="cancelarEliminacion()"
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+    }
+
+    <app-habitacion-table
+      [habitaciones]="habitaciones"
+      (cambioEstadoSolicitado)="cambiarEstado($event)"
+      (eliminacionSolicitada)="solicitarEliminacion($event)"
+    ></app-habitacion-table>
+  </section>
+</div>

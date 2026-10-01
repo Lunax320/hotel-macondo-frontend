@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { Reserva } from '../models/reserva.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ReservaService {
-  data: Reserva[] = [
+  private reservaArray: Reserva[] = [
     {
       id: 1,
       numeroReserva: 'MHC-2025-001',
@@ -15,7 +15,8 @@ export class ReservaService {
       estado: 'ACTIVA',
       precioNoche: 280000,
       total: 840000,
-      clienteId: 1
+      clienteId: 1,
+      habitacionId: 2,
     },
     {
       id: 2,
@@ -26,7 +27,8 @@ export class ReservaService {
       estado: 'CONFIRMADA',
       precioNoche: 450000,
       total: 1350000,
-      clienteId: 2
+      clienteId: 2,
+      habitacionId: 12,
     },
     {
       id: 3,
@@ -37,7 +39,18 @@ export class ReservaService {
       estado: 'FINALIZADA',
       precioNoche: 280000,
       total: 840000,
-      clienteId: 3
-    }
+      clienteId: 3,
+      habitacionId: 22,
+    },
   ];
+
+  obtenerTodas(): Reserva[] {
+    return this.reservaArray.map((reserva) => ({ ...reserva }));
+  }
+
+  obtenerPorHabitacionId(habitacionId: number): Reserva[] {
+    return this.reservaArray
+      .filter((reserva) => reserva.habitacionId === habitacionId)
+      .map((reserva) => ({ ...reserva }));
+  }
 }

@@ -5,7 +5,7 @@ import { TipoHabitacion } from '../models/tipo-habitacion.model';
   providedIn: 'root',
 })
 export class TipoHabitacionService {
-  data: TipoHabitacion[] = [
+  private tipoHabitacionArray: TipoHabitacion[] = [
     {
       id: 1,
       nombre: 'Castaño Fundacional',
@@ -52,14 +52,57 @@ export class TipoHabitacionService {
   ];
 
   obtenerTodos(): TipoHabitacion[] {
-    return [...this.data];
+    return this.tipoHabitacionArray.map((tipoHabitacion) => ({ ...tipoHabitacion }));
   }
 
   obtenerPorId(id: number): TipoHabitacion | undefined {
-    return this.data.find((tipoHabitacion) => tipoHabitacion.id === id);
+    const tipoHabitacion = this.tipoHabitacionArray.find((tipo) => tipo.id === id);
+    return tipoHabitacion ? { ...tipoHabitacion } : undefined;
   }
 
   obtenerPorPersonas(personas: number): TipoHabitacion[] {
-    return this.data.filter((tipoHabitacion) => tipoHabitacion.capacidadPersonas >= personas);
+    return this.tipoHabitacionArray
+      .filter((tipoHabitacion) => tipoHabitacion.capacidadPersonas >= personas)
+      .map((tipoHabitacion) => ({ ...tipoHabitacion }));
+  }
+
+  agregarTipoHabitacion(tipoHabitacion: TipoHabitacion): TipoHabitacion {
+    const nuevoTipo: TipoHabitacion = {
+      ...tipoHabitacion,
+      id: this.obtenerSiguienteId(),
+    };
+
+    this.tipoHabitacionArray.push(nuevoTipo);
+    return { ...nuevoTipo };
+  }
+
+  actualizarTipoHabitacion(id: number, tipoHabitacion: TipoHabitacion): TipoHabitacion | undefined {
+    const indice = this.tipoHabitacionArray.findIndex((tipo) => tipo.id === id);
+
+    if (indice === -1) {
+      return undefined;
+    }
+
+    const tipoActualizado: TipoHabitacion = {
+      ...tipoHabitacion,
+      id,
+    };
+
+    this.tipoHabitacionArray[indice] = tipoActualizado;
+    return { ...tipoActualizado };
+  }
+
+  eliminarTipoHabitacion(id: number): boolean {
+    const cantidadAnterior = this.tipoHabitacionArray.length;
+    this.tipoHabitacionArray = this.tipoHabitacionArray.filter((tipo) => tipo.id !== id);
+    return this.tipoHabitacionArray.length < cantidadAnterior;
+  }
+
+  private obtenerSiguienteId(): number {
+    const ids = this.tipoHabitacionArray
+      .map((tipoHabitacion) => tipoHabitacion.id)
+      .filter((id): id is number => id !== undefined);
+
+    return Math.max(0, ...ids) + 1;
   }
 }
