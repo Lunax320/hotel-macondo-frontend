@@ -1,5 +1,7 @@
+import { Usuario } from './usuario.model';
+
 export interface Admin {
   id?: number;
   nombre: string;
-  usuarioId?: number;
+  usuario?: Usuario;
 }

@@ -9,6 +9,5 @@ export interface Habitacion {
   precio: number;
   etiqueta?: string;
   piso?: number;
-  tipoHabitacionId: number;
-  tipoHabitacion?: TipoHabitacion;
+  tipoHabitacion: TipoHabitacion;
 }

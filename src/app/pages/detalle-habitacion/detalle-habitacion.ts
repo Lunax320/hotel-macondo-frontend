@@ -35,10 +35,8 @@ export class DetalleHabitacion implements OnInit {
     this.tipoHabitacion = this.tipoHabitacionService.obtenerPorId(id);
     this.hayDisponibilidad = false;
 
-    if (this.tipoHabitacion?.id !== undefined) {
-      this.hayDisponibilidad = this.habitacionService.hayDisponibilidadPorTipo(
-        this.tipoHabitacion.id,
-      );
+    if (this.tipoHabitacion) {
+      this.hayDisponibilidad = this.habitacionService.hayDisponibilidadPorTipo(this.tipoHabitacion);
     }
   }
 

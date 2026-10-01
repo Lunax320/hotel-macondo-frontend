@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Habitacion } from '../models/habitacion.model';
 import { Reserva } from '../models/reserva.model';
 
 @Injectable({
@@ -15,8 +16,33 @@ export class ReservaService {
       estado: 'ACTIVA',
       precioNoche: 280000,
       total: 840000,
-      clienteId: 1,
-      habitacionId: 2,
+      cliente: {
+        id: 1,
+        nombre: 'Úrsula',
+        apellido: 'Iguarán',
+        cedula: '101',
+        telefono: '300101',
+        correo: 'ursula@macondo.com',
+      },
+      habitacion: {
+        id: 2,
+        numero: '102',
+        nombre: 'Habitación 102',
+        estado: 'DISPONIBLE',
+        capacidad: 2,
+        precio: 280000,
+        etiqueta: 'ACOGEDORA',
+        piso: 1,
+        tipoHabitacion: {
+          id: 1,
+          nombre: 'Castaño Fundacional',
+          descripcion:
+            'Refugio íntimo con vista al gran patio de Macondo, cama queen y brisa fresca.',
+          imagen: '/images/HabitacionNormal.avif',
+          precioNoche: 280000,
+          capacidadPersonas: 2,
+        },
+      },
     },
     {
       id: 2,
@@ -27,8 +53,33 @@ export class ReservaService {
       estado: 'CONFIRMADA',
       precioNoche: 450000,
       total: 1350000,
-      clienteId: 2,
-      habitacionId: 12,
+      cliente: {
+        id: 2,
+        nombre: 'José Arcadio',
+        apellido: 'Buendía',
+        cedula: '102',
+        telefono: '300102',
+        correo: 'josearcadio@macondo.com',
+      },
+      habitacion: {
+        id: 12,
+        numero: '202',
+        nombre: 'Habitación 202',
+        estado: 'DISPONIBLE',
+        capacidad: 3,
+        precio: 450000,
+        etiqueta: 'POPULAR',
+        piso: 2,
+        tipoHabitacion: {
+          id: 2,
+          nombre: 'Orfebrería Buendía',
+          descripcion:
+            'Espacio distinguido con detalles artesanales en oro, balcón y sala de lectura.',
+          imagen: '/images/HabitacionExecutive.avif',
+          precioNoche: 450000,
+          capacidadPersonas: 3,
+        },
+      },
     },
     {
       id: 3,
@@ -39,18 +90,41 @@ export class ReservaService {
       estado: 'FINALIZADA',
       precioNoche: 280000,
       total: 840000,
-      clienteId: 3,
-      habitacionId: 22,
+      cliente: {
+        id: 3,
+        nombre: 'Aureliano',
+        apellido: 'Buendía',
+        cedula: '103',
+        telefono: '300103',
+        correo: 'aureliano@macondo.com',
+      },
+      habitacion: {
+        id: 22,
+        numero: '302',
+        nombre: 'Habitación 302',
+        estado: 'DISPONIBLE',
+        capacidad: 4,
+        precio: 650000,
+        etiqueta: 'EXCLUSIVA',
+        piso: 3,
+        tipoHabitacion: {
+          id: 3,
+          nombre: 'Mariposas Amarillas',
+          descripcion:
+            'Suite boutique luminosa decorada con motivos botánicos, cama king size y terraza caribeña.',
+          imagen: '/images/HabitacionVIP.avif',
+          precioNoche: 650000,
+          capacidadPersonas: 4,
+        },
+      },
     },
   ];
 
   obtenerTodas(): Reserva[] {
-    return this.reservaArray.map((reserva) => ({ ...reserva }));
+    return this.reservaArray;
   }
 
-  obtenerPorHabitacionId(habitacionId: number): Reserva[] {
-    return this.reservaArray
-      .filter((reserva) => reserva.habitacionId === habitacionId)
-      .map((reserva) => ({ ...reserva }));
+  obtenerPorHabitacion(habitacion: Habitacion): Reserva[] {
+    return this.reservaArray.filter((reserva) => reserva.habitacion?.id === habitacion.id);
   }
 }
