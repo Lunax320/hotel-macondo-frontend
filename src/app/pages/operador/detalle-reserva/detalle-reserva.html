@@ -1,0 +1,19 @@
+<div class="flex min-h-screen flex-col bg-[var(--crema-claro)] text-[var(--texto)] md:flex-row">
+  <app-operador-sidebar></app-operador-sidebar>
+
+  <main class="min-w-0 flex-1 p-6 md:p-10">
+    @if (reserva; as reservaActual) {
+      <app-detalle-reserva-encabezado [reserva]="reservaActual"></app-detalle-reserva-encabezado>
+      <div class="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <app-detalle-reserva-resumen [reserva]="reservaActual"></app-detalle-reserva-resumen>
+        <app-detalle-reserva-cliente [cliente]="reservaActual.cliente"></app-detalle-reserva-cliente>
+        <app-detalle-reserva-habitacion
+          [habitacion]="reservaActual.habitacion"
+        ></app-detalle-reserva-habitacion>
+      </div>
+      <app-detalle-reserva-cuenta></app-detalle-reserva-cuenta>
+    } @else {
+      <app-detalle-reserva-no-encontrada></app-detalle-reserva-no-encontrada>
+    }
+  </main>
+</div>

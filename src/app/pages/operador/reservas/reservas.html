@@ -11,7 +11,10 @@
       </p>
     </header>
 
-    <app-reservas-estadisticas></app-reservas-estadisticas>
-    <app-reservas-tabla></app-reservas-tabla>
+    <app-reservas-estadisticas [reservas]="reservas"></app-reservas-estadisticas>
+    <app-reservas-tabla
+      [reservas]="reservas"
+      (cancelacionSolicitada)="cancelarReserva($event)"
+    ></app-reservas-tabla>
   </main>
 </div>

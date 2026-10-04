@@ -13,7 +13,11 @@
       />
     </label>
 
-    <div class="flex w-full flex-wrap justify-start gap-2 text-xs font-semibold lg:w-auto lg:justify-end" role="group" aria-label="Filtrar reservas">
+    <div
+      class="flex w-full flex-wrap justify-start gap-2 text-xs font-semibold lg:w-auto lg:justify-end"
+      role="group"
+      aria-label="Filtrar reservas"
+    >
       <button
         class="rounded-full bg-[var(--azul)] px-5 py-2 text-white shadow-sm"
         type="button"
@@ -45,75 +49,61 @@
         </tr>
       </thead>
       <tbody class="text-sm font-medium text-[var(--texto)]">
-        <tr class="border-t border-gray-100">
-          <td class="px-6 py-4 font-bold text-[var(--azul)]">RES-2026-001</td>
-          <td class="px-6 py-4 font-bold text-[var(--azul-oscuro)]">Úrsula Iguarán</td>
-          <td class="px-6 py-4 text-gray-600">301 — Castaño Fundacional</td>
-          <td class="px-6 py-4 text-gray-600">12 oct 2026</td>
-          <td class="px-6 py-4 text-gray-600">16 oct 2026</td>
-          <td class="px-6 py-4">
-            <span class="inline-block rounded-full border border-sky-200 bg-sky-50 px-4 py-1 text-xs font-semibold text-sky-600">
-              ACTIVA
-            </span>
-          </td>
-          <td class="whitespace-nowrap px-6 py-4 text-right">
-            <button class="font-medium text-[var(--azul)] hover:underline" type="button">Ver</button>
-            <button class="ml-4 font-medium text-red-600 hover:underline" type="button">
-              Cancelar
-            </button>
-          </td>
-        </tr>
-        <tr class="border-t border-gray-100">
-          <td class="px-6 py-4 font-bold text-[var(--azul)]">RES-2026-002</td>
-          <td class="px-6 py-4 font-bold text-[var(--azul-oscuro)]">José Arcadio Buendía</td>
-          <td class="px-6 py-4 text-gray-600">205 — Orfebrería Buendía</td>
-          <td class="px-6 py-4 text-gray-600">18 oct 2026</td>
-          <td class="px-6 py-4 text-gray-600">22 oct 2026</td>
-          <td class="px-6 py-4">
-            <span class="inline-block rounded-full border border-amber-200 bg-amber-50 px-4 py-1 text-xs font-semibold text-amber-700">
-              PENDIENTE
-            </span>
-          </td>
-          <td class="whitespace-nowrap px-6 py-4 text-right">
-            <button class="font-medium text-[var(--azul)] hover:underline" type="button">Ver</button>
-            <button class="ml-4 font-medium text-red-600 hover:underline" type="button">
-              Cancelar
-            </button>
-          </td>
-        </tr>
-        <tr class="border-t border-gray-100">
-          <td class="px-6 py-4 font-bold text-[var(--azul)]">RES-2026-003</td>
-          <td class="px-6 py-4 font-bold text-[var(--azul-oscuro)]">Rebeca Montiel</td>
-          <td class="px-6 py-4 text-gray-600">412 — Mariposas Amarillas</td>
-          <td class="px-6 py-4 text-gray-600">02 oct 2026</td>
-          <td class="px-6 py-4 text-gray-600">06 oct 2026</td>
-          <td class="px-6 py-4">
-            <span class="inline-block rounded-full border border-emerald-200 bg-emerald-50 px-4 py-1 text-xs font-semibold text-emerald-700">
-              FINALIZADA
-            </span>
-          </td>
-          <td class="whitespace-nowrap px-6 py-4 text-right">
-            <button class="font-medium text-[var(--azul)] hover:underline" type="button">Ver</button>
-          </td>
-        </tr>
-        <tr class="border-t border-gray-100">
-          <td class="px-6 py-4 font-bold text-[var(--azul)]">RES-2026-004</td>
-          <td class="px-6 py-4 font-bold text-[var(--azul-oscuro)]">Amaranta Buendía</td>
-          <td class="px-6 py-4 text-gray-600">108 — Castaño Fundacional</td>
-          <td class="px-6 py-4 text-gray-600">24 oct 2026</td>
-          <td class="px-6 py-4 text-gray-600">27 oct 2026</td>
-          <td class="px-6 py-4">
-            <span class="inline-block rounded-full border border-sky-200 bg-sky-50 px-4 py-1 text-xs font-semibold text-sky-600">
-              CONFIRMADA
-            </span>
-          </td>
-          <td class="whitespace-nowrap px-6 py-4 text-right">
-            <button class="font-medium text-[var(--azul)] hover:underline" type="button">Ver</button>
-            <button class="ml-4 font-medium text-red-600 hover:underline" type="button">
-              Cancelar
-            </button>
-          </td>
-        </tr>
+        @for (reserva of reservas(); track reserva.id) {
+          <tr class="border-t border-gray-100">
+            <td class="px-6 py-4 font-bold text-[var(--azul)]">{{ reserva.numeroReserva }}</td>
+            <td class="px-6 py-4 font-bold text-[var(--azul-oscuro)]">
+              {{ reserva.cliente?.nombre }} {{ reserva.cliente?.apellido }}
+            </td>
+            <td class="px-6 py-4 text-gray-600">
+              {{ reserva.habitacion?.numero }} — {{ reserva.habitacion?.tipoHabitacion?.nombre }}
+            </td>
+            <td class="px-6 py-4 text-gray-600">{{ formatearFecha(reserva.fechaInicio) }}</td>
+            <td class="px-6 py-4 text-gray-600">{{ formatearFecha(reserva.fechaFin) }}</td>
+            <td class="px-6 py-4">
+              <span
+                class="inline-block rounded-full border px-4 py-1 text-xs font-semibold"
+                [class.border-sky-200]="reserva.estado === 'ACTIVA'"
+                [class.bg-sky-50]="reserva.estado === 'ACTIVA'"
+                [class.text-sky-600]="reserva.estado === 'ACTIVA'"
+                [class.border-yellow-200]="reserva.estado === 'CONFIRMADA'"
+                [class.bg-yellow-50]="reserva.estado === 'CONFIRMADA'"
+                [class.text-yellow-700]="reserva.estado === 'CONFIRMADA'"
+                [class.border-emerald-200]="reserva.estado === 'FINALIZADA'"
+                [class.bg-emerald-50]="reserva.estado === 'FINALIZADA'"
+                [class.text-emerald-700]="reserva.estado === 'FINALIZADA'"
+                [class.border-red-200]="reserva.estado === 'CANCELADA'"
+                [class.bg-red-50]="reserva.estado === 'CANCELADA'"
+                [class.text-red-600]="reserva.estado === 'CANCELADA'"
+              >
+                {{ reserva.estado }}
+              </span>
+            </td>
+            <td class="whitespace-nowrap px-6 py-4 text-right">
+              <a
+                class="font-medium text-[var(--azul)] hover:underline"
+                [routerLink]="['/operador/reservas', reserva.numeroReserva]"
+              >
+                Ver
+              </a>
+              @if (reserva.estado === 'CONFIRMADA') {
+                <button
+                  class="ml-4 font-medium text-red-600 hover:underline"
+                  type="button"
+                  (click)="cancelar(reserva)"
+                >
+                  Cancelar
+                </button>
+              }
+            </td>
+          </tr>
+        } @empty {
+          <tr class="border-t border-gray-100">
+            <td class="px-6 py-10 text-center text-gray-500" colspan="7">
+              No hay reservas registradas.
+            </td>
+          </tr>
+        }
       </tbody>
     </table>
   </div>

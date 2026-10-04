@@ -1,0 +1,30 @@
+<section class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+  <h2
+    class="mb-4 flex items-center gap-2 font-serif text-xl font-bold text-[var(--azul-oscuro)]"
+  >
+    <i class="bi bi-person text-[var(--azul)]" aria-hidden="true"></i>
+    Cliente
+  </h2>
+  @if (cliente(); as clienteActual) {
+    <dl class="space-y-2 text-sm">
+      <div class="flex justify-between gap-4">
+        <dt class="text-gray-500">Nombre</dt>
+        <dd class="text-right font-semibold">{{ clienteActual.nombre }} {{ clienteActual.apellido }}</dd>
+      </div>
+      <div class="flex justify-between gap-4">
+        <dt class="text-gray-500">Cédula</dt>
+        <dd class="text-right font-semibold">{{ clienteActual.cedula }}</dd>
+      </div>
+      <div class="flex justify-between gap-4">
+        <dt class="text-gray-500">Correo</dt>
+        <dd class="break-all text-right font-semibold">{{ clienteActual.correo }}</dd>
+      </div>
+      <div class="flex justify-between gap-4">
+        <dt class="text-gray-500">Teléfono</dt>
+        <dd class="text-right font-semibold">{{ clienteActual.telefono }}</dd>
+      </div>
+    </dl>
+  } @else {
+    <p class="text-sm text-gray-500">Sin cliente asociado.</p>
+  }
+</section>
