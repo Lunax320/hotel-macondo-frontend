@@ -9,6 +9,7 @@ import { AdminHabitaciones } from './pages/admin-habitaciones/admin-habitaciones
 import { AdminHabitacionForm } from './pages/admin-habitacion-form/admin-habitacion-form';
 import { AdminTiposHabitacion } from './pages/admin-tipos-habitacion/admin-tipos-habitacion';
 import { Operador } from './pages/operador/operador';
+import { OperadorReservas } from './pages/operador/reservas/reservas';
 
 export const routes: Routes = [
   {
@@ -34,6 +35,10 @@ export const routes: Routes = [
   {
     path: 'servicios/:id',
     component: DetalleServicio,
+  },
+  {
+    path: 'operador/reservas',
+    component: OperadorReservas,
   },
   {
     path: 'operador',

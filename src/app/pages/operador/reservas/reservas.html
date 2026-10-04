@@ -1,0 +1,17 @@
+<div class="flex min-h-screen flex-col bg-[var(--crema-claro)] text-[var(--texto)] md:flex-row">
+  <app-operador-sidebar></app-operador-sidebar>
+
+  <main class="min-w-0 flex-1 p-6 md:p-10">
+    <header class="mb-8">
+      <h1 class="font-serif text-3xl font-bold text-[var(--azul-oscuro)] md:text-4xl">
+        Reservas
+      </h1>
+      <p class="mt-1 text-[var(--texto)]">
+        Reservas registradas en el hotel y su estado actual.
+      </p>
+    </header>
+
+    <app-reservas-estadisticas></app-reservas-estadisticas>
+    <app-reservas-tabla></app-reservas-tabla>
+  </main>
+</div>
