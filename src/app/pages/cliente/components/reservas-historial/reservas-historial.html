@@ -1,0 +1,16 @@
+<section>
+  <h2 class="mb-5 font-serif text-2xl font-bold text-[var(--azul-oscuro)]">Historial</h2>
+  <div class="space-y-4">
+    @for (reserva of reservas(); track reserva.id) {
+      <app-reserva-card
+        [reserva]="reserva"
+        [mostrarCancelar]="false"
+        [historial]="true"
+      ></app-reserva-card>
+    } @empty {
+      <p class="rounded-2xl bg-white p-6 text-center text-[var(--texto)] shadow-sm">
+        Aún no tienes reservas pasadas.
+      </p>
+    }
+  </div>
+</section>

@@ -1,0 +1,56 @@
+<!-- Tarjeta de reserva: completa si está activa, resumida si es del historial. -->
+@if (historial()) {
+  <article
+    class="flex flex-col gap-2 rounded-2xl bg-white p-5 opacity-80 shadow-sm sm:flex-row sm:items-center sm:justify-between"
+  >
+    <div>
+      <p class="text-xs font-bold uppercase tracking-wider text-gray-500">
+        {{ reserva().numeroReserva }} · {{ reserva().estado }}
+      </p>
+      <h3 class="font-serif text-lg font-bold text-[var(--azul-oscuro)]">
+        {{ reserva().habitacion?.nombre }}
+      </h3>
+      <p class="text-sm text-[var(--texto)]">
+        {{ reserva().fechaInicio | date: 'dd/MM/yyyy' : 'UTC' }} –
+        {{ reserva().fechaFin | date: 'dd/MM/yyyy' : 'UTC' }}
+      </p>
+    </div>
+    <p class="font-bold text-[var(--azul-oscuro)]">
+      $ {{ reserva().total.toLocaleString('es-CO') }}
+    </p>
+  </article>
+} @else {
+  <article
+    class="flex flex-col gap-4 rounded-2xl bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between"
+  >
+    <div>
+      <p class="text-xs font-bold uppercase tracking-wider text-[var(--azul)]">
+        {{ reserva().numeroReserva }} · {{ reserva().estado }}
+      </p>
+      <h3 class="font-serif text-xl font-bold text-[var(--azul-oscuro)]">
+        {{ reserva().habitacion?.nombre }}
+      </h3>
+      <p class="text-sm text-[var(--texto)]">
+        {{ reserva().habitacion?.tipoHabitacion?.nombre }} · {{ reserva().cantidadPersonas }} pers.
+      </p>
+      <p class="text-sm text-[var(--texto)]">
+        {{ reserva().fechaInicio | date: 'dd/MM/yyyy' : 'UTC' }} –
+        {{ reserva().fechaFin | date: 'dd/MM/yyyy' : 'UTC' }}
+      </p>
+    </div>
+    <div class="text-left sm:text-right">
+      <p class="text-lg font-bold text-[var(--azul-oscuro)]">
+        $ {{ reserva().total.toLocaleString('es-CO') }}
+      </p>
+      @if (mostrarCancelar()) {
+        <button
+          class="mt-2 rounded-lg border border-red-200 px-4 py-1.5 text-sm font-medium text-red-600 transition hover:bg-red-50"
+          type="button"
+          (click)="cancelacionSolicitada.emit(reserva())"
+        >
+          Cancelar reserva
+        </button>
+      }
+    </div>
+  </article>
+}

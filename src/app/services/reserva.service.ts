@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
 import { Habitacion } from '../models/habitacion.model';
 import { Reserva } from '../models/reserva.model';
 
@@ -126,5 +127,25 @@ export class ReservaService {
 
   obtenerPorHabitacion(habitacion: Habitacion): Reserva[] {
     return this.reservaArray.filter((reserva) => reserva.habitacion?.id === habitacion.id);
+  }
+
+  // Portal del cliente: simulan peticiones HTTP con of()
+
+  // Filtra reservas por clienteId.
+  buscarPorCliente(clienteId: number): Observable<Reserva[]> {
+    const reservas = this.reservaArray.filter((reserva) => reserva.cliente?.id === clienteId);
+    return of(reservas.map((r) => ({ ...r })));
+  }
+
+  // Cancela una reserva estableciendo estado 'CANCELADA'.
+  cancelarReserva(id: number): Observable<Reserva | undefined> {
+    const indice = this.reservaArray.findIndex((r) => r.id === id);
+
+    if (indice === -1) {
+      return of(undefined);
+    }
+
+    this.reservaArray[indice] = { ...this.reservaArray[indice], estado: 'CANCELADA' };
+    return of({ ...this.reservaArray[indice] });
   }
 }

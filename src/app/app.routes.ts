@@ -11,6 +11,7 @@ import { AdminHabitacionForm } from './pages/admin-habitacion-form/admin-habitac
 import { AdminTiposHabitacion } from './pages/admin-tipos-habitacion/admin-tipos-habitacion';
 import { AdminServicios } from './pages/admin-servicios/admin-servicios';
 import { AdminServicioForm } from './pages/admin-servicio-form/admin-servicio-form';
+import { PortalCliente } from './pages/cliente/cliente';
 
 export const routes: Routes = [
   {
@@ -40,6 +41,10 @@ export const routes: Routes = [
   {
     path: 'servicios/:id',
     component: DetalleServicio,
+  },
+  {
+    path: 'cliente/:id',
+    component: PortalCliente,
   },
   {
     path: 'admin/habitaciones/nueva',
