@@ -1,0 +1,35 @@
+<div class="space-y-5">
+  <app-campo-formulario
+    [formulario]="formulario()"
+    nombreCampo="correo"
+    etiqueta="Correo electrónico"
+    icono="bi-envelope"
+    tipo="email"
+    placeholder="usuario@macondo.com"
+    [errores]="erroresCorreo"
+  ></app-campo-formulario>
+
+  <app-campo-formulario
+    [formulario]="formulario()"
+    nombreCampo="contrasena"
+    etiqueta="Contraseña"
+    icono="bi-lock"
+    tipo="password"
+    placeholder="••••••••"
+    [errores]="erroresContrasena"
+  ></app-campo-formulario>
+
+  <app-campo-formulario
+    [formulario]="formulario()"
+    nombreCampo="confirmarContrasena"
+    etiqueta="Confirmar contraseña"
+    icono="bi-lock"
+    tipo="password"
+    placeholder="••••••••"
+    [errores]="erroresConfirmarContrasena"
+  ></app-campo-formulario>
+  <app-mensaje-error-campo
+    [mostrar]="contrasenasDistintas()"
+    mensaje="Las contraseñas no coinciden."
+  ></app-mensaje-error-campo>
+</div>

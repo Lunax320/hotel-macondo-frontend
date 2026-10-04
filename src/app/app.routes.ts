@@ -4,6 +4,7 @@ import { DetalleHabitacion } from './pages/detalle-habitacion/detalle-habitacion
 import { Habitaciones } from './pages/habitaciones/habitaciones';
 import { Landing } from './pages/landing/landing';
 import { Login } from './pages/login/login';
+import { Registro } from './pages/registro/registro';
 import { Servicios } from './pages/servicios/servicios';
 import { AdminHabitaciones } from './pages/admin-habitaciones/admin-habitaciones';
 import { AdminHabitacionForm } from './pages/admin-habitacion-form/admin-habitacion-form';
@@ -19,6 +20,10 @@ export const routes: Routes = [
   {
     path: 'login',
     component: Login,
+  },
+  {
+    path: 'registro',
+    component: Registro,
   },
   {
     path: 'habitaciones',
