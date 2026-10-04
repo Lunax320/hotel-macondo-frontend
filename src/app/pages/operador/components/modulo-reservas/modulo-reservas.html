@@ -1,0 +1,23 @@
+<article
+  class="flex h-full flex-col justify-between rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition hover:shadow-md"
+>
+  <div>
+    <div
+      class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-xl text-[var(--azul)]"
+    >
+      <i class="bi bi-calendar-check" aria-hidden="true"></i>
+    </div>
+    <h3 class="mb-2 font-serif text-xl font-bold text-[var(--azul-oscuro)]">Reservas</h3>
+    <p class="mb-6 text-sm text-gray-500">
+      Gestiona el listado general de reservas, realiza búsquedas por cliente, consulta check-ins y
+      check-outs del día.
+    </p>
+  </div>
+  <a
+    class="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--azul)] px-4 py-3 text-center text-sm font-bold text-white transition-all hover:bg-[var(--azul-oscuro)]"
+    routerLink="/operador/reservas"
+  >
+    <span>Ir a Reservas</span>
+    <i class="bi bi-arrow-right" aria-hidden="true"></i>
+  </a>
+</article>

@@ -9,6 +9,6 @@ import { Footer } from './components/footer/footer';
   styleUrl: './app.scss',
   templateUrl: './app.html',
 })
-export class App{
+export class App {
   title = 'hotel-macondo-frontend';
 }

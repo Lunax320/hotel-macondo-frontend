@@ -1,0 +1,50 @@
+<nav
+  class="flex w-full shrink-0 flex-col justify-between bg-[var(--azul-oscuro)] p-6 text-white md:min-h-screen md:w-64"
+  aria-label="Portal Operador"
+>
+  <div>
+    <a class="mb-10 flex items-center gap-3" routerLink="/">
+      <img class="h-auto w-10" src="/images/logo.png" alt="Logo Hotel Macondo" />
+      <span class="font-serif text-xl font-bold text-[var(--dorado)]">Macondo</span>
+    </a>
+
+    <p class="mb-4 text-[0.7rem] uppercase tracking-[3px] text-white/50">Portal Operador</p>
+
+    <a
+      class="mb-1 block rounded-lg bg-[var(--dorado)] px-4 py-3 font-bold text-[var(--azul-oscuro)] transition"
+      routerLink="/operador"
+      aria-current="page"
+    >
+      <i class="bi bi-grid mr-2" aria-hidden="true"></i>
+      Panel Principal
+    </a>
+
+    <div class="flex flex-col gap-1">
+      <a class="rounded-lg px-4 py-3 transition hover:bg-white/10" routerLink="/operador/reservas">
+        <i class="bi bi-journal-text mr-2" aria-hidden="true"></i>
+        Reservas
+      </a>
+      <a class="rounded-lg px-4 py-3 transition hover:bg-white/10" routerLink="/operador/cuenta">
+        <i class="bi bi-receipt mr-2" aria-hidden="true"></i>
+        Cuenta Habitación
+      </a>
+      <a class="rounded-lg px-4 py-3 transition hover:bg-white/10" routerLink="/operador/checkout">
+        <i class="bi bi-box-arrow-right mr-2" aria-hidden="true"></i>
+        Check-out
+      </a>
+    </div>
+
+    <a class="mt-10 block text-sm text-white/60 transition hover:text-[var(--dorado)]" routerLink="/">
+      <i class="bi bi-arrow-left mr-1" aria-hidden="true"></i>
+      Volver al sitio
+    </a>
+  </div>
+
+  <a
+    class="mt-10 block rounded-lg border border-white/20 px-4 py-2.5 text-center text-sm text-white/70 transition hover:bg-white/10 hover:text-white"
+    routerLink="/login"
+  >
+    <i class="bi bi-power mr-2" aria-hidden="true"></i>
+    Cerrar sesión
+  </a>
+</nav>
