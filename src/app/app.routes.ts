@@ -8,6 +8,8 @@ import { Servicios } from './pages/servicios/servicios';
 import { AdminHabitaciones } from './pages/admin-habitaciones/admin-habitaciones';
 import { AdminHabitacionForm } from './pages/admin-habitacion-form/admin-habitacion-form';
 import { AdminTiposHabitacion } from './pages/admin-tipos-habitacion/admin-tipos-habitacion';
+import { AdminServicios } from './pages/admin-servicios/admin-servicios';
+import { AdminServicioForm } from './pages/admin-servicio-form/admin-servicio-form';
 
 export const routes: Routes = [
   {
@@ -49,5 +51,17 @@ export const routes: Routes = [
   {
     path: 'admin/tipos_habitacion',
     component: AdminTiposHabitacion,
+  },
+  {
+    path: 'admin/servicios/nuevo',
+    component: AdminServicioForm,
+  },
+  {
+    path: 'admin/servicios/editar/:id',
+    component: AdminServicioForm,
+  },
+  {
+    path: 'admin/servicios',
+    component: AdminServicios,
   },
 ];

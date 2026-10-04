@@ -1,0 +1,33 @@
+<div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+  <app-campo-formulario
+    [formulario]="formulario()"
+    nombreCampo="imagen"
+    etiqueta="Imagen"
+    [opciones]="imagenesDisponibles()"
+    textoOpcionVacia="Seleccionar imagen..."
+    [errores]="erroresImagen"
+  ></app-campo-formulario>
+
+  <app-campo-formulario
+    [formulario]="formulario()"
+    nombreCampo="precio"
+    etiqueta="Precio (COP)"
+    tipo="number"
+    placeholder="120000"
+    [errores]="erroresPrecio"
+  ></app-campo-formulario>
+
+  <app-campo-formulario
+    [formulario]="formulario()"
+    nombreCampo="duracion"
+    etiqueta="Duración (opcional)"
+    placeholder="Ej: 60-90 min"
+  ></app-campo-formulario>
+
+  <app-campo-formulario
+    [formulario]="formulario()"
+    nombreCampo="horario"
+    etiqueta="Horario (opcional)"
+    placeholder="Ej: Lunes a domingo: 8:00 - 20:00"
+  ></app-campo-formulario>
+</div>

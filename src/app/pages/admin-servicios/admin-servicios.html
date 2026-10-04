@@ -1,0 +1,18 @@
+<div class="flex flex-col bg-[var(--crema-claro)] md:flex-row">
+  <app-admin-sidebar seccionActiva="servicios"></app-admin-sidebar>
+
+  <section class="min-w-0 flex-1 p-6 md:p-10">
+    <app-encabezado-admin
+      titulo="Servicios"
+      descripcion="Catálogo de servicios, experiencias y amenidades del hotel."
+      textoBoton="Nuevo Servicio"
+      iconoBoton="bi-plus-lg"
+      rutaBoton="/admin/servicios/nuevo"
+    ></app-encabezado-admin>
+
+    <app-servicio-table
+      [servicios]="servicios"
+      (cambioEstadoSolicitado)="cambiarEstado($event)"
+    ></app-servicio-table>
+  </section>
+</div>
