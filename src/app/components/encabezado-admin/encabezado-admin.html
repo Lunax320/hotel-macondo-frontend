@@ -1,0 +1,19 @@
+<div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+  <header>
+    <h1 class="font-serif text-3xl font-bold text-[var(--azul-oscuro)] md:text-4xl">
+      {{ titulo() }}
+    </h1>
+    <p class="mt-1 text-[var(--texto)]">{{ descripcion() }}</p>
+  </header>
+  @if (textoBoton() && rutaBoton()) {
+    <a
+      class="flex shrink-0 items-center justify-center gap-2 rounded-lg bg-[var(--dorado)] px-5 py-2.5 text-sm font-bold text-[var(--azul-oscuro)] shadow-sm transition hover:bg-[var(--dorado-oscuro)]"
+      [routerLink]="rutaBoton()"
+    >
+      @if (iconoBoton()) {
+        <i [class]="'bi ' + iconoBoton()" aria-hidden="true"></i>
+      }
+      {{ textoBoton() }}
+    </a>
+  }
+</div>

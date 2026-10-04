@@ -1,0 +1,64 @@
+<div [formGroup]="formulario()">
+  <label
+    class="mb-2 block text-xs font-bold uppercase tracking-wider text-[var(--azul)]"
+    [for]="nombreCampo()"
+  >
+    {{ etiqueta() }}
+  </label>
+
+  @if (opciones().length > 0) {
+    <select
+      class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-[var(--texto)] focus:border-[var(--azul)] focus:outline-none disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"
+      [id]="nombreCampo()"
+      [formControlName]="nombreCampo()"
+      [class.border-red-400]="mostrarErrores()"
+    >
+      <option value="">{{ textoOpcionVacia() }}</option>
+      @for (opcion of opciones(); track opcion) {
+        <option [value]="opcion">{{ opcion }}</option>
+      }
+    </select>
+  } @else if (filas() > 0) {
+    <textarea
+      class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-[var(--texto)] focus:border-[var(--azul)] focus:outline-none disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"
+      [id]="nombreCampo()"
+      [rows]="filas()"
+      [formControlName]="nombreCampo()"
+      [class.border-red-400]="mostrarErrores()"
+      [placeholder]="placeholder()"
+    ></textarea>
+  } @else if (icono()) {
+    <div
+      class="flex items-center rounded-lg border border-gray-200 bg-gray-50 px-3 transition focus-within:border-[var(--azul)]"
+      [class.border-red-400]="mostrarErrores()"
+    >
+      <span class="pl-2 text-gray-400">
+        <i [class]="'bi ' + icono()"></i>
+      </span>
+      <input
+        class="w-full bg-transparent px-3 py-3 text-[var(--texto)] focus:outline-none"
+        [type]="tipo()"
+        [id]="nombreCampo()"
+        [formControlName]="nombreCampo()"
+        [class.border-red-400]="mostrarErrores()"
+        [placeholder]="placeholder()"
+      />
+    </div>
+  } @else {
+    <input
+      class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-[var(--texto)] focus:border-[var(--azul)] focus:outline-none disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"
+      [type]="tipo()"
+      [id]="nombreCampo()"
+      [formControlName]="nombreCampo()"
+      [class.border-red-400]="mostrarErrores()"
+      [placeholder]="placeholder()"
+    />
+  }
+
+  @for (error of errores(); track error.clave) {
+    <app-mensaje-error-campo
+      [mostrar]="mostrarErrores() && tieneError(error.clave)"
+      [mensaje]="error.mensaje"
+    ></app-mensaje-error-campo>
+  }
+</div>
