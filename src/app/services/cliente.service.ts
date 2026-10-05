@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
 import { Cliente } from '../models/cliente.model';
 
 @Injectable({
@@ -94,5 +95,45 @@ export class ClienteService {
 
   obtenerPorId(id: number): Cliente | undefined {
     return this.clienteArray.find((cliente) => cliente.id === id);
+  }
+
+  // Métodos que simulan peticiones HTTP con of(); luego se cambian por this.http.*
+
+  // Simula POST: agrega el cliente con un id nuevo.
+  agregarCliente(cliente: Cliente): Observable<Cliente> {
+    const nuevoCliente: Cliente = { ...cliente, id: this.obtenerSiguienteId() };
+    this.clienteArray.push(nuevoCliente);
+    return of({ ...nuevoCliente });
+  }
+
+  // Simula PUT: reemplaza el cliente con ese id.
+  actualizarCliente(id: number, cliente: Cliente): Observable<Cliente | undefined> {
+    const indice = this.clienteArray.findIndex((c) => c.id === id);
+
+    if (indice === -1) {
+      return of(undefined);
+    }
+
+    this.clienteArray[indice] = { ...cliente, id };
+    return of({ ...this.clienteArray[indice] });
+  }
+
+  // Verifica si ya hay un cliente con esa cédula (en la base de datos es única).
+  existeCedula(cedula: string): boolean {
+    return this.clienteArray.some((cliente) => cliente.cedula === cedula.trim());
+  }
+
+  // Simula GET por id.
+  buscarPorId(id: number): Observable<Cliente | undefined> {
+    const cliente = this.clienteArray.find((c) => c.id === id);
+    return of(cliente ? { ...cliente } : undefined);
+  }
+
+  private obtenerSiguienteId(): number {
+    const ids = this.clienteArray
+      .map((cliente) => cliente.id)
+      .filter((id): id is number => id !== undefined);
+
+    return Math.max(0, ...ids) + 1;
   }
 }

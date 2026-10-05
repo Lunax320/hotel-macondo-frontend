@@ -1,0 +1,20 @@
+<form
+  class="space-y-6 rounded-2xl bg-white p-6 shadow-sm md:p-8"
+  [formGroup]="servicioForm"
+  (ngSubmit)="guardar()"
+>
+  <app-servicio-campos-basicos
+    [formulario]="servicioForm"
+    [categorias]="categorias"
+  ></app-servicio-campos-basicos>
+  <app-servicio-campos-detalle
+    [formulario]="servicioForm"
+    [imagenesDisponibles]="imagenesDisponibles"
+  ></app-servicio-campos-detalle>
+  <app-servicio-campos-extra [formulario]="servicioForm"></app-servicio-campos-extra>
+  <app-botones-formulario
+    [esEdicion]="servicio() !== undefined"
+    [deshabilitado]="servicioForm.invalid"
+    rutaCancelar="/admin/servicios"
+  ></app-botones-formulario>
+</form>

@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
 import { Usuario } from '../models/usuario.model';
+import { Cliente } from '../models/cliente.model';
 
 @Injectable({
   providedIn: 'root',
@@ -89,5 +91,41 @@ export class UsuarioService {
         usuario.correo.toLowerCase() === correo.toLowerCase() && usuario.contrasena === contrasena,
     );
     return usuarioEncontrado || null;
+  }
+
+  // Registro de clientes
+
+  // Verifica si existe un usuario con ese correo (case-insensitive).
+  existeCorreo(correo: string): boolean {
+    return this.usuarioArray.some(
+      (usuario) => usuario.correo.toLowerCase() === correo.toLowerCase(),
+    );
+  }
+
+  // Registra un nuevo usuario CLIENTE vinculado al cliente ya guardado.
+  // Devuelve null si el correo ya existe.
+  registrarCliente(cliente: Cliente, contrasena: string): Observable<Usuario | null> {
+    if (this.existeCorreo(cliente.correo)) {
+      return of(null);
+    }
+
+    const nuevoUsuario: Usuario = {
+      id: this.obtenerSiguienteId(),
+      correo: cliente.correo,
+      contrasena,
+      rol: 'CLIENTE',
+      cliente: { ...cliente },
+    };
+
+    this.usuarioArray.push(nuevoUsuario);
+    return of({ ...nuevoUsuario });
+  }
+
+  private obtenerSiguienteId(): number {
+    const ids = this.usuarioArray
+      .map((usuario) => usuario.id)
+      .filter((id): id is number => id !== undefined);
+
+    return Math.max(0, ...ids) + 1;
   }
 }

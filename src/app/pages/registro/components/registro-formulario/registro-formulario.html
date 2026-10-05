@@ -1,0 +1,47 @@
+<section class="bg-[var(--crema-claro)] flex h-full items-center justify-center p-6 md:p-12">
+  <div
+    class="w-full max-w-[440px] bg-white rounded-[20px] shadow-[0_10px_30px_rgba(0,0,0,0.05)] p-8 md:p-10"
+  >
+    <div class="text-center mb-6 flex flex-col items-center">
+      <img src="/images/logo.png" alt="Logo Hotel Macondo" class="w-12 h-auto object-contain" />
+      <h2 class="text-2xl font-serif font-bold text-[var(--azul-oscuro)] mt-4 mb-1">
+        Hotel Macondo
+      </h2>
+      <p class="text-[var(--azul)] text-[0.72rem] font-bold tracking-[1.5px] uppercase block">
+        Santuario del Caribe
+      </p>
+    </div>
+
+    @if (mensajeError()) {
+      <app-alerta-mensaje [mensaje]="mensajeError()"></app-alerta-mensaje>
+    }
+
+    <form class="space-y-5" [formGroup]="formulario" (ngSubmit)="enviar()">
+      <app-registro-datos-personales [formulario]="formulario"></app-registro-datos-personales>
+      <app-registro-credenciales [formulario]="formulario"></app-registro-credenciales>
+
+      <button
+        type="submit"
+        [disabled]="formulario.invalid"
+        class="w-full bg-[var(--dorado)] text-[var(--azul-oscuro)] font-bold rounded-lg py-3 border-2 border-[var(--dorado)] hover:bg-[var(--dorado-oscuro)] hover:border-[var(--dorado-oscuro)] transition disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        Registrarse
+      </button>
+    </form>
+
+    <div class="relative my-8 text-center">
+      <hr class="border-gray-200" />
+      <span
+        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-3 text-gray-400 text-sm"
+        >o</span
+      >
+    </div>
+
+    <div class="text-center text-sm">
+      <span class="text-gray-500">¿Ya tienes cuenta? </span>
+      <a routerLink="/login" class="font-bold text-[var(--azul)] hover:underline ml-1">
+        Inicia sesión
+      </a>
+    </div>
+  </div>
+</section>

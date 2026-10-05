@@ -28,6 +28,17 @@
       <i class="bi bi-door-closed mr-3" aria-hidden="true"></i>
       Habitaciones
     </a>
+
+    <a
+      class="flex items-center rounded-lg px-4 py-3 transition hover:bg-white/10"
+      [class.bg-[var(--dorado)]]="seccionActiva() === 'servicios'"
+      [class.font-bold]="seccionActiva() === 'servicios'"
+      [class.text-[var(--azul-oscuro)]]="seccionActiva() === 'servicios'"
+      routerLink="/admin/servicios"
+    >
+      <i class="bi bi-stars mr-3" aria-hidden="true"></i>
+      Servicios
+    </a>
   </nav>
 
   <a class="mt-10 block text-sm text-white/60 hover:text-[var(--dorado)]" routerLink="/">
