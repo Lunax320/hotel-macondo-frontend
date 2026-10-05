@@ -43,8 +43,12 @@ export class Login {
     } else if (usuario.rol === 'OPERADOR') {
       this.router.navigate(['/operador']);
     } else {
-      // Cliente: redirige a reservas o al home
-      this.router.navigate(['/']);
+      // Cliente: va a su portal; si la cuenta no tiene cliente asociado, al inicio
+      if (usuario.cliente?.id) {
+        this.router.navigate(['/cliente', usuario.cliente.id]);
+      } else {
+        this.router.navigate(['/']);
+      }
     }
   }
 }

@@ -1,0 +1,16 @@
+<section>
+  <h2 class="mb-5 font-serif text-2xl font-bold text-[var(--azul-oscuro)]">Reservas activas</h2>
+  <div class="space-y-4">
+    @for (reserva of reservas(); track reserva.id) {
+      <app-reserva-card
+        [reserva]="reserva"
+        [mostrarCancelar]="true"
+        (cancelacionSolicitada)="cancelacionSolicitada.emit($event)"
+      ></app-reserva-card>
+    } @empty {
+      <p class="rounded-2xl bg-white p-6 text-center text-[var(--texto)] shadow-sm">
+        No tienes reservas activas.
+      </p>
+    }
+  </div>
+</section>

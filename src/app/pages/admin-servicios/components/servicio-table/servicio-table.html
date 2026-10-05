@@ -1,0 +1,74 @@
+<div class="overflow-x-auto rounded-2xl bg-white shadow-sm">
+  <table class="w-full text-left">
+    <thead class="bg-[var(--crema)] text-sm uppercase tracking-wider text-[var(--azul-oscuro)]">
+      <tr>
+        <th class="hidden px-6 py-4 md:table-cell">ID</th>
+        <th class="px-3 py-4 md:px-6">Servicio</th>
+        <th class="px-3 py-4 md:px-6">Precio</th>
+        <th class="hidden px-3 py-4 sm:table-cell md:px-6">Estado</th>
+        <th class="px-3 py-4 text-right md:px-6">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (servicio of servicios(); track servicio.id) {
+        <tr class="border-t border-gray-100">
+          <td class="hidden px-6 py-4 md:table-cell">{{ servicio.id }}</td>
+          <td class="px-3 py-4 md:px-6">
+            <div class="flex items-center gap-3">
+              <img
+                class="hidden h-12 w-12 rounded-lg bg-[var(--crema)] object-cover sm:block"
+                [src]="servicio.imagen"
+                [alt]="servicio.nombre"
+              />
+              <div>
+                <p class="font-medium text-[var(--azul-oscuro)]">{{ servicio.nombre }}</p>
+                <p class="text-sm text-[var(--texto)]">{{ servicio.categoria }}</p>
+                <!-- En pantallas pequeñas el estado se muestra aquí para que quepan las acciones -->
+                <app-estado-badge
+                  class="mt-1 block sm:hidden"
+                  [activo]="servicio.activo"
+                ></app-estado-badge>
+              </div>
+            </div>
+          </td>
+          <td class="whitespace-nowrap px-3 py-4 font-medium md:px-6">
+            $ {{ servicio.precio.toLocaleString('es-CO') }}
+          </td>
+          <td class="hidden px-3 py-4 sm:table-cell md:px-6">
+            <app-estado-badge [activo]="servicio.activo"></app-estado-badge>
+          </td>
+          <td class="whitespace-nowrap px-3 py-4 text-right md:px-6">
+            <a
+              class="mr-3 inline-flex items-center gap-1 text-sm font-medium text-[var(--azul)] hover:underline"
+              [routerLink]="['/admin/servicios/editar', servicio.id]"
+              [attr.aria-label]="'Editar ' + servicio.nombre"
+            >
+              <i class="bi bi-pencil-square" aria-hidden="true"></i>
+              <span class="hidden lg:inline">Editar</span>
+            </a>
+            <button
+              class="inline-flex items-center gap-1 text-sm font-medium hover:underline"
+              [class.text-red-500]="servicio.activo"
+              [class.text-green-600]="!servicio.activo"
+              type="button"
+              [attr.aria-label]="(servicio.activo ? 'Desactivar ' : 'Activar ') + servicio.nombre"
+              (click)="cambiarEstado(servicio)"
+            >
+              @if (servicio.activo) {
+                <i class="bi bi-eye-slash" aria-hidden="true"></i>
+                <span class="hidden lg:inline">Desactivar</span>
+              } @else {
+                <i class="bi bi-eye" aria-hidden="true"></i>
+                <span class="hidden lg:inline">Activar</span>
+              }
+            </button>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td class="px-6 py-10 text-center" colspan="5">Aún no hay servicios registrados.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

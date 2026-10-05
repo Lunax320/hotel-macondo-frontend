@@ -4,10 +4,14 @@ import { DetalleHabitacion } from './pages/detalle-habitacion/detalle-habitacion
 import { Habitaciones } from './pages/habitaciones/habitaciones';
 import { Landing } from './pages/landing/landing';
 import { Login } from './pages/login/login';
+import { Registro } from './pages/registro/registro';
 import { Servicios } from './pages/servicios/servicios';
 import { AdminHabitaciones } from './pages/admin-habitaciones/admin-habitaciones';
 import { AdminHabitacionForm } from './pages/admin-habitacion-form/admin-habitacion-form';
 import { AdminTiposHabitacion } from './pages/admin-tipos-habitacion/admin-tipos-habitacion';
+import { AdminServicios } from './pages/admin-servicios/admin-servicios';
+import { AdminServicioForm } from './pages/admin-servicio-form/admin-servicio-form';
+import { PortalCliente } from './pages/cliente/cliente';
 
 export const routes: Routes = [
   {
@@ -17,6 +21,10 @@ export const routes: Routes = [
   {
     path: 'login',
     component: Login,
+  },
+  {
+    path: 'registro',
+    component: Registro,
   },
   {
     path: 'habitaciones',
@@ -35,6 +43,10 @@ export const routes: Routes = [
     component: DetalleServicio,
   },
   {
+    path: 'cliente/:id',
+    component: PortalCliente,
+  },
+  {
     path: 'admin/habitaciones/nueva',
     component: AdminHabitacionForm,
   },
@@ -49,5 +61,17 @@ export const routes: Routes = [
   {
     path: 'admin/tipos_habitacion',
     component: AdminTiposHabitacion,
+  },
+  {
+    path: 'admin/servicios/nuevo',
+    component: AdminServicioForm,
+  },
+  {
+    path: 'admin/servicios/editar/:id',
+    component: AdminServicioForm,
+  },
+  {
+    path: 'admin/servicios',
+    component: AdminServicios,
   },
 ];

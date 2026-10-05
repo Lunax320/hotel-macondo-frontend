@@ -1,0 +1,22 @@
+<div class="flex flex-col bg-[var(--crema-claro)] md:flex-row">
+  <app-admin-sidebar seccionActiva="servicios"></app-admin-sidebar>
+
+  <section class="min-w-0 flex-1 p-6 md:p-10">
+    <app-encabezado-admin
+      [titulo]="esEdicion ? 'Editar servicio' : 'Nuevo servicio'"
+      descripcion="Completa la información que verán los huéspedes en el catálogo."
+    ></app-encabezado-admin>
+
+    @if (errorServicio) {
+      <app-alerta-mensaje [mensaje]="errorServicio"></app-alerta-mensaje>
+    }
+
+    <!-- Al editar, el formulario solo aparece cuando ya llegó el servicio (sirve igual con HTTP). -->
+    @if (servicioEncontrado && (!esEdicion || servicio)) {
+      <app-servicio-formulario
+        [servicio]="servicio"
+        (guardado)="guardar($event)"
+      ></app-servicio-formulario>
+    }
+  </section>
+</div>

@@ -1,0 +1,38 @@
+<div class="space-y-5">
+  <app-campo-formulario
+    [formulario]="formulario()"
+    nombreCampo="nombre"
+    etiqueta="Nombre"
+    icono="bi-person"
+    placeholder="Tu nombre"
+    [errores]="erroresNombre"
+  ></app-campo-formulario>
+
+  <app-campo-formulario
+    [formulario]="formulario()"
+    nombreCampo="apellido"
+    etiqueta="Apellido"
+    icono="bi-person"
+    placeholder="Tu apellido"
+    [errores]="erroresApellido"
+  ></app-campo-formulario>
+
+  <app-campo-formulario
+    [formulario]="formulario()"
+    nombreCampo="cedula"
+    etiqueta="Cédula"
+    icono="bi-card-text"
+    placeholder="Número de cédula"
+    [errores]="erroresCedula"
+  ></app-campo-formulario>
+
+  <app-campo-formulario
+    [formulario]="formulario()"
+    nombreCampo="telefono"
+    etiqueta="Teléfono"
+    icono="bi-telephone"
+    tipo="tel"
+    placeholder="Tu teléfono"
+    [errores]="erroresTelefono"
+  ></app-campo-formulario>
+</div>

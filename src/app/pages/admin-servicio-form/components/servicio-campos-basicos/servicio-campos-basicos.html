@@ -1,0 +1,37 @@
+<div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+  <app-campo-formulario
+    [formulario]="formulario()"
+    nombreCampo="nombre"
+    etiqueta="Nombre"
+    placeholder="Ej: Spa & Bienestar"
+    [errores]="erroresNombre"
+  ></app-campo-formulario>
+
+  <app-campo-formulario
+    [formulario]="formulario()"
+    nombreCampo="categoria"
+    etiqueta="Categoría"
+    [opciones]="categorias()"
+    textoOpcionVacia="Seleccionar categoría..."
+    [errores]="erroresCategoria"
+  ></app-campo-formulario>
+
+  <app-campo-formulario
+    class="md:col-span-2"
+    [formulario]="formulario()"
+    nombreCampo="descripcion"
+    etiqueta="Descripción"
+    [filas]="3"
+    placeholder="Descripción breve del servicio..."
+    [errores]="erroresDescripcion"
+  ></app-campo-formulario>
+
+  <app-campo-formulario
+    class="md:col-span-2"
+    [formulario]="formulario()"
+    nombreCampo="descripcionDetalle"
+    etiqueta="Descripción detallada (opcional)"
+    [filas]="3"
+    placeholder="Descripción completa para la página del servicio..."
+  ></app-campo-formulario>
+</div>

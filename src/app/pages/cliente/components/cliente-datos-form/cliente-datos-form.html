@@ -1,0 +1,45 @@
+<section class="h-fit rounded-2xl bg-white p-6 shadow-sm">
+  <h2 class="mb-5 font-serif text-2xl font-bold text-[var(--azul-oscuro)]">Mis datos</h2>
+  @if (mensajeExito() && formulario.pristine) {
+    <app-alerta-mensaje tipo="exito" [mensaje]="mensajeExito()"></app-alerta-mensaje>
+  }
+  <form class="space-y-4" [formGroup]="formulario" (ngSubmit)="guardar()">
+    <app-campo-formulario
+      [formulario]="formulario"
+      nombreCampo="nombre"
+      etiqueta="Nombre"
+      [errores]="erroresNombre"
+    ></app-campo-formulario>
+    <app-campo-formulario
+      [formulario]="formulario"
+      nombreCampo="apellido"
+      etiqueta="Apellido"
+      [errores]="erroresApellido"
+    ></app-campo-formulario>
+    <app-campo-formulario
+      [formulario]="formulario"
+      nombreCampo="telefono"
+      etiqueta="Teléfono"
+      tipo="tel"
+      [errores]="erroresTelefono"
+    ></app-campo-formulario>
+    <app-campo-formulario
+      [formulario]="formulario"
+      nombreCampo="cedula"
+      etiqueta="Cédula"
+    ></app-campo-formulario>
+    <app-campo-formulario
+      [formulario]="formulario"
+      nombreCampo="correo"
+      etiqueta="Correo"
+      tipo="email"
+    ></app-campo-formulario>
+    <button
+      class="w-full rounded-lg bg-[var(--dorado)] px-6 py-2.5 text-sm font-bold text-[var(--azul-oscuro)] transition hover:bg-[var(--dorado-oscuro)] disabled:cursor-not-allowed disabled:opacity-50"
+      type="submit"
+      [disabled]="formulario.invalid || formulario.pristine"
+    >
+      Guardar cambios
+    </button>
+  </form>
+</section>

@@ -1,0 +1,36 @@
+<div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+  <app-campo-formulario
+    [formulario]="formulario()"
+    nombreCampo="incluidos"
+    etiqueta="Incluidos (separados por comas)"
+    placeholder="Ej: Masaje, Aromaterapia, Baño de vapor"
+  ></app-campo-formulario>
+
+  <app-campo-formulario
+    [formulario]="formulario()"
+    nombreCampo="etiquetas"
+    etiqueta="Etiquetas (separadas por comas)"
+    placeholder="Ej: Spa, Bienestar, Relajación"
+  ></app-campo-formulario>
+
+  <div class="flex flex-wrap gap-8 md:col-span-2" [formGroup]="formulario()">
+    <label class="flex cursor-pointer items-center gap-2">
+      <input
+        class="h-4 w-4 rounded border-gray-300 text-[var(--dorado)] focus:ring-[var(--dorado)]"
+        id="destacado"
+        type="checkbox"
+        formControlName="destacado"
+      />
+      <span class="text-sm text-[var(--texto)]">Destacado</span>
+    </label>
+    <label class="flex cursor-pointer items-center gap-2">
+      <input
+        class="h-4 w-4 rounded border-gray-300 text-[var(--dorado)] focus:ring-[var(--dorado)]"
+        id="activo"
+        type="checkbox"
+        formControlName="activo"
+      />
+      <span class="text-sm text-[var(--texto)]">Activo (visible en el sitio)</span>
+    </label>
+  </div>
+</div>
