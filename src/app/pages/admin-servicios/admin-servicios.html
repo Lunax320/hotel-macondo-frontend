@@ -4,11 +4,20 @@
   <section class="min-w-0 flex-1 p-6 md:p-10">
     <app-encabezado-admin
       titulo="Servicios"
-      descripcion="Catálogo de servicios, experiencias y amenidades del hotel."
+      descripcion="Catálogo de experiencias que se pueden cargar a la cuenta del huésped."
       textoBoton="Nuevo Servicio"
       iconoBoton="bi-plus-lg"
       rutaBoton="/admin/servicios/nuevo"
     ></app-encabezado-admin>
+
+    @if (errorServicio) {
+      <div
+        class="mb-4 rounded-lg border border-red-200 bg-red-50 px-5 py-4 text-red-700"
+        role="alert"
+      >
+        {{ errorServicio }}
+      </div>
+    }
 
     <app-servicio-table
       [servicios]="servicios"

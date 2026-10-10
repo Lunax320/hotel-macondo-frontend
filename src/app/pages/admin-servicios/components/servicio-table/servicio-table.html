@@ -1,72 +1,59 @@
 <div class="overflow-x-auto rounded-2xl bg-white shadow-sm">
-  <table class="w-full text-left">
+  <table class="w-full min-w-[720px] text-left">
     <thead class="bg-[var(--crema)] text-sm uppercase tracking-wider text-[var(--azul-oscuro)]">
       <tr>
-        <th class="hidden px-6 py-4 md:table-cell">ID</th>
-        <th class="px-3 py-4 md:px-6">Servicio</th>
-        <th class="px-3 py-4 md:px-6">Precio</th>
-        <th class="hidden px-3 py-4 sm:table-cell md:px-6">Estado</th>
-        <th class="px-3 py-4 text-right md:px-6">Acciones</th>
+        <th class="px-4 py-3">#</th>
+        <th class="px-4 py-3">Servicio</th>
+        <th class="px-4 py-3">Categoría</th>
+        <th class="px-4 py-3">Precio</th>
+        <th class="px-4 py-3">Estado</th>
+        <th class="px-4 py-3 text-right">Acciones</th>
       </tr>
     </thead>
     <tbody>
       @for (servicio of servicios(); track servicio.id) {
-        <tr class="border-t border-gray-100">
-          <td class="hidden px-6 py-4 md:table-cell">{{ servicio.id }}</td>
-          <td class="px-3 py-4 md:px-6">
+        <tr class="border-t border-gray-100 align-top">
+          <td class="px-4 py-3">{{ servicio.id }}</td>
+          <td class="px-4 py-3">
             <div class="flex items-center gap-3">
               <img
-                class="hidden h-12 w-12 rounded-lg bg-[var(--crema)] object-cover sm:block"
+                class="h-10 w-10 shrink-0 rounded-lg bg-[var(--crema)] object-cover"
                 [src]="servicio.imagen"
                 [alt]="servicio.nombre"
               />
-              <div>
-                <p class="font-medium text-[var(--azul-oscuro)]">{{ servicio.nombre }}</p>
-                <p class="text-sm text-[var(--texto)]">{{ servicio.categoria }}</p>
-                <!-- En pantallas pequeñas el estado se muestra aquí para que quepan las acciones -->
-                <app-estado-badge
-                  class="mt-1 block sm:hidden"
-                  [activo]="servicio.activo"
-                ></app-estado-badge>
-              </div>
+              <p class="font-medium text-[var(--azul-oscuro)]">{{ servicio.nombre }}</p>
             </div>
           </td>
-          <td class="whitespace-nowrap px-3 py-4 font-medium md:px-6">
+          <td class="px-4 py-3">{{ servicio.categoria }}</td>
+          <td class="whitespace-nowrap px-4 py-3 font-medium">
             $ {{ servicio.precio.toLocaleString('es-CO') }}
           </td>
-          <td class="hidden px-3 py-4 sm:table-cell md:px-6">
+          <td class="whitespace-nowrap px-4 py-3">
             <app-estado-badge [activo]="servicio.activo"></app-estado-badge>
+            @if (servicio.destacado) {
+              <span
+                class="ml-1 rounded-full bg-[var(--dorado)] px-3 py-1 text-xs font-bold text-[var(--azul-oscuro)]"
+                >Destacado</span
+              >
+            }
           </td>
-          <td class="whitespace-nowrap px-3 py-4 text-right md:px-6">
+          <td class="whitespace-nowrap px-4 py-3 text-right">
             <a
-              class="mr-3 inline-flex items-center gap-1 text-sm font-medium text-[var(--azul)] hover:underline"
+              class="font-medium text-[var(--azul)] hover:underline"
               [routerLink]="['/admin/servicios/editar', servicio.id]"
-              [attr.aria-label]="'Editar ' + servicio.nombre"
-            >
-              <i class="bi bi-pencil-square" aria-hidden="true"></i>
-              <span class="hidden lg:inline">Editar</span>
-            </a>
-            <button
-              class="inline-flex items-center gap-1 text-sm font-medium hover:underline"
-              [class.text-red-500]="servicio.activo"
-              [class.text-green-600]="!servicio.activo"
+              >Editar</a
+            ><button
+              class="ml-4 font-medium text-[var(--azul)] hover:underline"
               type="button"
-              [attr.aria-label]="(servicio.activo ? 'Desactivar ' : 'Activar ') + servicio.nombre"
               (click)="cambiarEstado(servicio)"
             >
-              @if (servicio.activo) {
-                <i class="bi bi-eye-slash" aria-hidden="true"></i>
-                <span class="hidden lg:inline">Desactivar</span>
-              } @else {
-                <i class="bi bi-eye" aria-hidden="true"></i>
-                <span class="hidden lg:inline">Activar</span>
-              }
+              {{ servicio.activo ? 'Desactivar' : 'Activar' }}
             </button>
           </td>
         </tr>
       } @empty {
         <tr>
-          <td class="px-6 py-10 text-center" colspan="5">Aún no hay servicios registrados.</td>
+          <td class="px-6 py-10 text-center" colspan="6">Aún no hay servicios registrados.</td>
         </tr>
       }
     </tbody>

@@ -15,6 +15,8 @@ import { OperadorReservas } from './pages/operador/reservas/reservas';
 import { AdminServicios } from './pages/admin-servicios/admin-servicios';
 import { AdminServicioForm } from './pages/admin-servicio-form/admin-servicio-form';
 import { PortalCliente } from './pages/cliente/cliente';
+import { AdminInicio } from './pages/admin-inicio/admin-inicio';
+import { AdminOperadores } from './pages/admin-operadores/admin-operadores';
 
 export const routes: Routes = [
   {
@@ -60,6 +62,14 @@ export const routes: Routes = [
   {
     path: 'cliente/:id',
     component: PortalCliente,
+  },
+  {
+    path: 'admin',
+    component: AdminInicio,
+  },
+  {
+    path: 'admin/operadores',
+    component: AdminOperadores,
   },
   {
     path: 'admin/habitaciones/nueva',

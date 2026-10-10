@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-// Indica si un servicio está activo o inactivo.
+// Pastilla verde/gris que indica si un registro (servicio, operador) está activo.
 @Component({
   selector: 'app-estado-badge',
   templateUrl: './estado-badge.html',

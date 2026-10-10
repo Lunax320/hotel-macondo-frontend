@@ -51,34 +51,11 @@
             </span>
           </td>
           <td class="whitespace-nowrap px-6 py-4 text-right">
-            @if (habitacion.tipoHabitacion.id) {
-              <a
-                class="font-medium text-[var(--azul)] hover:underline"
-                [routerLink]="['/habitaciones', habitacion.tipoHabitacion.id]"
-              >
-                Ver
-              </a>
-            }
-            <a
-              class="ml-4 font-medium text-[var(--azul)] hover:underline"
-              [routerLink]="['/admin/habitaciones/editar', habitacion.id]"
-            >
-              Editar
-            </a>
-            <button
-              class="ml-4 font-medium text-[var(--azul)] hover:underline"
-              type="button"
-              (click)="cambiarEstado(habitacion)"
-            >
-              {{ habitacion.estado === 'DISPONIBLE' ? 'Deshabilitar' : 'Habilitar' }}
-            </button>
-            <button
-              class="ml-4 font-medium text-red-600 hover:underline"
-              type="button"
-              (click)="eliminar(habitacion)"
-            >
-              Eliminar
-            </button>
+            <app-habitacion-acciones
+              [habitacion]="habitacion"
+              (cambioEstadoSolicitado)="cambiarEstado($event)"
+              (eliminacionSolicitada)="eliminar($event)"
+            ></app-habitacion-acciones>
           </td>
         </tr>
       } @empty {

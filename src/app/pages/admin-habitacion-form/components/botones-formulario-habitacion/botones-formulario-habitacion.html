@@ -1,0 +1,19 @@
+<div class="mt-8 flex flex-wrap gap-4">
+  <button
+    class="rounded-lg bg-[var(--dorado)] px-8 py-3 font-bold text-[var(--azul-oscuro)] transition hover:bg-[var(--dorado-oscuro)] disabled:cursor-not-allowed disabled:opacity-50"
+    type="submit"
+    [disabled]="deshabilitado()"
+  >
+    @if (esEdicion()) {
+      Guardar cambios
+    } @else {
+      Crear habitación
+    }
+  </button>
+  <a
+    class="rounded-lg border-2 border-[var(--azul)] px-8 py-3 font-bold text-[var(--azul)] transition hover:bg-[var(--azul)] hover:text-white"
+    [routerLink]="rutaCancelar()"
+  >
+    Cancelar
+  </a>
+</div>

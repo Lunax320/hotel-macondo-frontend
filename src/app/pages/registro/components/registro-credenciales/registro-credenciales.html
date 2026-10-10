@@ -1,23 +1,51 @@
-<div class="space-y-5">
+<div class="space-y-4">
   <app-campo-formulario
     [formulario]="formulario()"
     nombreCampo="correo"
     etiqueta="Correo electrónico"
     icono="bi-envelope"
     tipo="email"
-    placeholder="usuario@macondo.com"
+    placeholder="ejemplo@macondo.co"
     [errores]="erroresCorreo"
   ></app-campo-formulario>
 
-  <app-campo-formulario
-    [formulario]="formulario()"
-    nombreCampo="contrasena"
-    etiqueta="Contraseña"
-    icono="bi-lock"
-    tipo="password"
-    placeholder="••••••••"
-    [errores]="erroresContrasena"
-  ></app-campo-formulario>
+  <div [formGroup]="formulario()">
+    <label
+      for="contrasena"
+      class="text-[var(--azul)] text-[0.72rem] font-bold tracking-[1.2px] uppercase mb-1.5 block"
+      >Contraseña</label
+    >
+    <div
+      class="flex items-center bg-gray-50 border border-gray-200 rounded-lg focus-within:border-[var(--azul)] transition px-3"
+    >
+      <span class="text-gray-400 pl-1"><i class="bi bi-lock"></i></span>
+      <input
+        class="w-full bg-transparent px-2.5 py-2.5 text-sm text-[var(--texto)] focus:outline-none"
+        [type]="mostrarContrasena ? 'text' : 'password'"
+        id="contrasena"
+        formControlName="contrasena"
+        placeholder="••••••••"
+      />
+      <button
+        type="button"
+        (click)="alternarContrasena()"
+        class="text-gray-400 pr-1 cursor-pointer hover:text-[var(--azul)] transition"
+        aria-label="Mostrar u ocultar contraseña"
+      >
+        <i [class]="mostrarContrasena ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+      </button>
+    </div>
+    @for (error of erroresContrasena; track error.clave) {
+      <app-mensaje-error-campo
+        [mostrar]="
+          !!formulario().get('contrasena')?.invalid &&
+          (!!formulario().get('contrasena')?.dirty || !!formulario().get('contrasena')?.touched) &&
+          !!formulario().get('contrasena')?.errors?.[error.clave]
+        "
+        [mensaje]="error.mensaje"
+      ></app-mensaje-error-campo>
+    }
+  </div>
 
   <app-campo-formulario
     [formulario]="formulario()"

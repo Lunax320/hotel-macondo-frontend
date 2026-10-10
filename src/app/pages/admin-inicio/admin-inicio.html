@@ -1,0 +1,57 @@
+<div class="flex flex-col bg-[var(--crema-claro)] text-[var(--texto)] md:flex-row">
+  <app-admin-sidebar seccionActiva="inicio"></app-admin-sidebar>
+  <main class="flex-1 p-6 md:p-10">
+    <header class="mb-8">
+      <h1 class="font-serif text-3xl font-bold text-[var(--azul-oscuro)] md:text-4xl">
+        Panel de administración
+      </h1>
+      <p class="mt-1 text-[var(--texto)]">Resumen del hotel y acceso a las secciones de gestión.</p>
+    </header>
+    @if (errorResumen) {
+      <div
+        class="mb-4 rounded-lg border border-red-200 bg-red-50 px-5 py-4 text-red-700"
+        role="alert"
+      >
+        {{ errorResumen }}
+      </div>
+    }
+    <div class="mb-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <app-tarjeta-resumen
+        etiqueta="Personal"
+        icono="bi-person-badge"
+        [valor]="totalOperadores"
+        detallePrefijo="Operadores,"
+        [detalleValor]="operadoresActivos"
+        detalleSufijo="activos"
+        enlace="/admin/operadores"
+      ></app-tarjeta-resumen>
+      <app-tarjeta-resumen
+        etiqueta="Experiencias"
+        icono="bi-stars"
+        [valor]="totalServicios"
+        detallePrefijo="Servicios,"
+        [detalleValor]="serviciosActivos"
+        detalleSufijo="activos"
+        enlace="/admin/servicios"
+      ></app-tarjeta-resumen>
+      <app-tarjeta-resumen
+        etiqueta="Categorías"
+        icono="bi-tag"
+        valor="Tipos"
+        claseValor="text-2xl mb-1"
+        detallePrefijo="Gestión de tarifas y capacidades"
+        enlace="/admin/tipos_habitacion"
+      ></app-tarjeta-resumen>
+      <app-tarjeta-resumen
+        etiqueta="Hospedaje"
+        icono="bi-door-closed"
+        [valor]="totalHabitaciones"
+        detallePrefijo="Habitaciones,"
+        [detalleValor]="habitacionesDisponibles"
+        detalleSufijo="disponibles"
+        enlace="/admin/habitaciones"
+      ></app-tarjeta-resumen>
+    </div>
+    <app-bienvenida-admin></app-bienvenida-admin>
+  </main>
+</div>

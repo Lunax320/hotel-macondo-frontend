@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { switchMap } from 'rxjs';
 import { AdminSidebar } from '../../components/admin-sidebar/admin-sidebar';
 import { EncabezadoAdmin } from '../../components/encabezado-admin/encabezado-admin';
@@ -13,16 +13,17 @@ import { ServicioTable } from './components/servicio-table/servicio-table';
   selector: 'app-admin-servicios',
   styleUrl: './admin-servicios.scss',
   templateUrl: './admin-servicios.html',
+  // Angular 22 usa OnPush por defecto; Eager actualiza la vista cuando responde el backend.
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class AdminServicios implements OnInit {
   private servicioService = inject(ServicioService);
 
   servicios: Servicio[] = [];
+  errorServicio = '';
 
   ngOnInit(): void {
-    this.servicioService.buscarTodos().subscribe((servicios) => {
-      this.servicios = servicios;
-    });
+    this.cargarServicios();
   }
 
   // Cambia el estado y vuelve a traer la lista en un solo flujo (sin subscribe anidado).
@@ -34,8 +35,21 @@ export class AdminServicios implements OnInit {
     this.servicioService
       .cambiarEstado(servicio.id)
       .pipe(switchMap(() => this.servicioService.buscarTodos()))
-      .subscribe((servicios) => {
-        this.servicios = servicios;
+      .subscribe({
+        next: (servicios) => {
+          this.servicios = servicios;
+        },
+        error: (error) =>
+          (this.errorServicio = error.error?.mensaje ?? 'No fue posible cambiar el estado.'),
       });
+  }
+
+  // Carga los servicios desde el backend.
+  private cargarServicios(): void {
+    this.servicioService.buscarTodos().subscribe({
+      next: (servicios) => (this.servicios = servicios),
+      error: (error) =>
+        (this.errorServicio = error.error?.mensaje ?? 'No fue posible cargar los servicios.'),
+    });
   }
 }

@@ -1,11 +1,8 @@
-@if (activo()) {
-  <span
-    class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800"
-    >Activo</span
-  >
-} @else {
-  <span
-    class="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800"
-    >Inactivo</span
-  >
-}
+<span
+  class="rounded-full px-3 py-1 text-xs font-bold"
+  [class.bg-green-100]="activo()"
+  [class.text-green-700]="activo()"
+  [class.bg-gray-200]="!activo()"
+  [class.text-gray-600]="!activo()"
+  >{{ activo() ? 'Activo' : 'Inactivo' }}</span
+>

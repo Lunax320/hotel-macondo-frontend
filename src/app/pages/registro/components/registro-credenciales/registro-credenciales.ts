@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MensajeErrorCampo } from '../../../../components/mensaje-error-campo/mensaje-error-campo';
 import {
   CampoFormulario,
@@ -8,12 +8,13 @@ import {
 
 // Sección del registro con el correo y la contraseña de la cuenta.
 @Component({
-  imports: [CampoFormulario, MensajeErrorCampo],
+  imports: [CampoFormulario, MensajeErrorCampo, ReactiveFormsModule],
   selector: 'app-registro-credenciales',
   styleUrl: './registro-credenciales.scss',
   templateUrl: './registro-credenciales.html',
 })
 export class RegistroCredenciales {
+  mostrarContrasena = false;
   // Mensajes que se muestran según el error de cada campo.
   erroresCorreo: ErrorCampo[] = [
     { clave: 'required', mensaje: 'El correo es obligatorio.' },
@@ -29,13 +30,18 @@ export class RegistroCredenciales {
 
   formulario = input<FormGroup>(new FormGroup({}));
 
-  // Se avisa apenas el usuario sale del campo de confirmar, sin esperar al botón.
+  // Alterna la visibilidad de la contraseña.
+  alternarContrasena(): void {
+    this.mostrarContrasena = !this.mostrarContrasena;
+  }
+
+  // Informa si el validador del formulario detecta contraseñas distintas.
   contrasenasDistintas(): boolean {
     const confirmar = this.formulario().get('confirmarContrasena');
     return (
       !!confirmar?.touched &&
       !!confirmar.value &&
-      confirmar.value !== this.formulario().get('contrasena')?.value
+      !!this.formulario().hasError('contrasenasDistintas')
     );
   }
 }

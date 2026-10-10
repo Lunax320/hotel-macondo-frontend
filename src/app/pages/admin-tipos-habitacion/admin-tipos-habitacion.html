@@ -32,26 +32,14 @@
     }
 
     @if (tipoHabitacionPendienteEliminar; as tipoHabitacion) {
-      <div class="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-5 py-4 text-amber-900">
-        <p class="font-bold">¿Eliminar {{ tipoHabitacion.nombre }}?</p>
-        <p class="mt-1 text-sm">Esta acción retirará el tipo de habitación durante esta sesión.</p>
-        <div class="mt-4 flex flex-wrap gap-3">
-          <button
-            class="rounded-lg bg-red-600 px-5 py-2 font-bold text-white hover:bg-red-700"
-            type="button"
-            (click)="confirmarEliminacion()"
-          >
-            Confirmar eliminación
-          </button>
-          <button
-            class="rounded-lg border border-[var(--azul)] px-5 py-2 font-bold text-[var(--azul)]"
-            type="button"
-            (click)="cancelarEliminacion()"
-          >
-            Cancelar
-          </button>
-        </div>
-      </div>
+      <app-confirmacion-accion
+        [titulo]="'¿Eliminar ' + tipoHabitacion.nombre + '?'"
+        mensaje="Esta acción no se puede deshacer."
+        textoConfirmar="Confirmar eliminación"
+        textoCancelar="Cancelar"
+        (confirmado)="confirmarEliminacion()"
+        (cancelado)="cancelarEliminacion()"
+      ></app-confirmacion-accion>
     }
 
     <app-tipo-habitacion-table
@@ -65,6 +53,7 @@
 @if (formularioVisible) {
   <app-tipo-habitacion-form
     [tipoHabitacion]="tipoHabitacionSeleccionado"
+    [mensajeError]="errorTipo"
     (guardado)="guardarTipoHabitacion($event)"
     (cancelado)="cerrarFormulario()"
   ></app-tipo-habitacion-form>

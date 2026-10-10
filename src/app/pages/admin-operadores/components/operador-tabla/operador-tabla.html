@@ -1,0 +1,44 @@
+<div class="overflow-x-auto rounded-2xl bg-white shadow-sm">
+  <table class="w-full min-w-[520px] text-left">
+    <thead class="bg-[var(--crema)] text-sm uppercase tracking-wider text-[var(--azul-oscuro)]">
+      <tr>
+        <th class="px-6 py-4">#</th>
+        <th class="px-6 py-4">Nombre</th>
+        <th class="px-6 py-4">Estado</th>
+        <th class="px-6 py-4 text-right">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (operador of operadores(); track operador.id) {
+        <tr class="border-t border-gray-100">
+          <td class="px-6 py-4">{{ operador.id }}</td>
+          <td class="px-6 py-4 font-medium text-[var(--azul-oscuro)]">{{ operador.nombre }}</td>
+          <td class="px-6 py-4">
+            <app-estado-badge [activo]="operador.activo"></app-estado-badge>
+          </td>
+          <td class="whitespace-nowrap px-6 py-4 text-right">
+            <button
+              class="font-medium text-[var(--azul)] hover:underline"
+              type="button"
+              (click)="onCambiarEstado(operador.id)"
+            >
+              {{ operador.activo ? 'Desactivar' : 'Activar' }}
+            </button>
+            <button
+              class="ml-4 font-medium text-red-600 hover:underline"
+              type="button"
+              (click)="onEliminar(operador.id)"
+            >
+              Eliminar
+            </button>
+          </td>
+        </tr>
+      }
+      @if (operadores().length === 0) {
+        <tr>
+          <td class="px-6 py-10 text-center" colspan="4">Aún no hay operadores registrados.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

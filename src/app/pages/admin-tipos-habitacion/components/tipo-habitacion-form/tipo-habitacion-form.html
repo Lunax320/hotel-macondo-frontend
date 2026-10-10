@@ -26,127 +26,22 @@
       </button>
     </div>
 
+    @if (mensajeError()) {
+      <div
+        class="mb-4 rounded-lg border border-red-200 bg-red-50 px-5 py-4 text-red-700"
+        role="alert"
+      >
+        {{ mensajeError() }}
+      </div>
+    }
+
     <form class="space-y-4" [formGroup]="tipoHabitacionForm" (ngSubmit)="guardar()">
-      <div>
-        <label
-          class="mb-1 block text-xs font-bold uppercase tracking-wider text-[var(--azul)]"
-          for="form-nombre"
-        >
-          Nombre
-        </label>
-        <input
-          class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm focus:border-[var(--azul)] focus:outline-none"
-          id="form-nombre"
-          type="text"
-          formControlName="nombre"
-          placeholder="Ej: Suite Presidencial"
-        />
-        @if (
-          tipoHabitacionForm.controls.nombre.touched && tipoHabitacionForm.controls.nombre.invalid
-        ) {
-          <small class="mt-1 block text-red-600">Ingresa un nombre de 3 a 100 caracteres.</small>
-        }
-      </div>
-
-      <div>
-        <label
-          class="mb-1 block text-xs font-bold uppercase tracking-wider text-[var(--azul)]"
-          for="form-descripcion"
-        >
-          Descripción
-        </label>
-        <textarea
-          class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm focus:border-[var(--azul)] focus:outline-none"
-          id="form-descripcion"
-          rows="3"
-          formControlName="descripcion"
-          placeholder="Detalla comodidades y características..."
-        ></textarea>
-        @if (
-          tipoHabitacionForm.controls.descripcion.touched &&
-          tipoHabitacionForm.controls.descripcion.invalid
-        ) {
-          <small class="mt-1 block text-red-600">La descripción es obligatoria.</small>
-        }
-      </div>
-
-      <div>
-        <label
-          class="mb-1 block text-xs font-bold uppercase tracking-wider text-[var(--azul)]"
-          for="form-imagen"
-        >
-          Imagen
-        </label>
-        <input
-          class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm focus:border-[var(--azul)] focus:outline-none"
-          id="form-imagen"
-          type="text"
-          list="imagenes-tipo-habitacion"
-          formControlName="imagen"
-          placeholder="/images/HabitacionVIP.avif"
-        />
-        <datalist id="imagenes-tipo-habitacion">
-          <option value="/images/HabitacionNormal.avif"></option>
-          <option value="/images/HabitacionExecutive.avif"></option>
-          <option value="/images/HabitacionVIP.avif"></option>
-          <option value="/images/HabitacionLuxury.avif"></option>
-        </datalist>
-        @if (
-          tipoHabitacionForm.controls.imagen.touched && tipoHabitacionForm.controls.imagen.invalid
-        ) {
-          <small class="mt-1 block text-red-600">La ruta de la imagen es obligatoria.</small>
-        }
-      </div>
-
-      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div>
-          <label
-            class="mb-1 block text-xs font-bold uppercase tracking-wider text-[var(--azul)]"
-            for="form-capacidad"
-          >
-            Capacidad (Personas)
-          </label>
-          <input
-            class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm focus:border-[var(--azul)] focus:outline-none"
-            id="form-capacidad"
-            type="number"
-            min="1"
-            max="10"
-            formControlName="capacidadPersonas"
-            placeholder="2"
-          />
-          @if (
-            tipoHabitacionForm.controls.capacidadPersonas.touched &&
-            tipoHabitacionForm.controls.capacidadPersonas.invalid
-          ) {
-            <small class="mt-1 block text-red-600">La capacidad debe estar entre 1 y 10.</small>
-          }
-        </div>
-
-        <div>
-          <label
-            class="mb-1 block text-xs font-bold uppercase tracking-wider text-[var(--azul)]"
-            for="form-precio"
-          >
-            Precio por Noche ($)
-          </label>
-          <input
-            class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm focus:border-[var(--azul)] focus:outline-none"
-            id="form-precio"
-            type="number"
-            min="0"
-            step="10000"
-            formControlName="precioNoche"
-            placeholder="500000"
-          />
-          @if (
-            tipoHabitacionForm.controls.precioNoche.touched &&
-            tipoHabitacionForm.controls.precioNoche.invalid
-          ) {
-            <small class="mt-1 block text-red-600">El precio debe ser mayor o igual a cero.</small>
-          }
-        </div>
-      </div>
+      <app-tipo-habitacion-campos-basicos
+        [formulario]="tipoHabitacionForm"
+      ></app-tipo-habitacion-campos-basicos>
+      <app-tipo-habitacion-campos-detalle
+        [formulario]="tipoHabitacionForm"
+      ></app-tipo-habitacion-campos-detalle>
 
       <div class="flex justify-end gap-3 border-t border-gray-100 pt-4">
         <button

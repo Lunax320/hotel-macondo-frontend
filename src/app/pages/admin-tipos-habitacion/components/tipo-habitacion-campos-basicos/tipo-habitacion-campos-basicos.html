@@ -1,0 +1,65 @@
+<div class="space-y-4" [formGroup]="formulario()">
+  <div>
+    <label
+      class="mb-1 block text-xs font-bold uppercase tracking-wider text-[var(--azul)]"
+      for="form-nombre"
+    >
+      Nombre
+    </label>
+    <input
+      class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm focus:border-[var(--azul)] focus:outline-none"
+      id="form-nombre"
+      type="text"
+      formControlName="nombre"
+      placeholder="Ej: Suite Presidencial"
+    />
+    @if (formulario().get('nombre')?.touched && formulario().get('nombre')?.invalid) {
+      <small class="mt-1 block text-red-600">Ingresa un nombre de 3 a 100 caracteres.</small>
+    }
+  </div>
+
+  <div>
+    <label
+      class="mb-1 block text-xs font-bold uppercase tracking-wider text-[var(--azul)]"
+      for="form-descripcion"
+    >
+      Descripción
+    </label>
+    <textarea
+      class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm focus:border-[var(--azul)] focus:outline-none"
+      id="form-descripcion"
+      rows="3"
+      formControlName="descripcion"
+      placeholder="Detalla comodidades y características..."
+    ></textarea>
+    @if (formulario().get('descripcion')?.touched && formulario().get('descripcion')?.invalid) {
+      <small class="mt-1 block text-red-600">La descripción es obligatoria.</small>
+    }
+  </div>
+
+  <div>
+    <label
+      class="mb-1 block text-xs font-bold uppercase tracking-wider text-[var(--azul)]"
+      for="form-imagen"
+    >
+      Imagen
+    </label>
+    <input
+      class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm focus:border-[var(--azul)] focus:outline-none"
+      id="form-imagen"
+      type="text"
+      list="imagenes-tipo-habitacion"
+      formControlName="imagen"
+      placeholder="/images/HabitacionVIP.avif"
+    />
+    <datalist id="imagenes-tipo-habitacion">
+      <option value="/images/HabitacionNormal.avif"></option>
+      <option value="/images/HabitacionExecutive.avif"></option>
+      <option value="/images/HabitacionVIP.avif"></option>
+      <option value="/images/HabitacionLuxury.avif"></option>
+    </datalist>
+    @if (formulario().get('imagen')?.touched && formulario().get('imagen')?.invalid) {
+      <small class="mt-1 block text-red-600">La ruta de la imagen es obligatoria.</small>
+    }
+  </div>
+</div>

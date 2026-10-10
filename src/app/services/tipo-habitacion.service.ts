@@ -1,10 +1,15 @@
-import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { TipoHabitacion } from '../models/tipo-habitacion.model';
 
+// Tipos de habitacion: API REST para el admin y datos locales para las paginas publicas.
 @Injectable({
   providedIn: 'root',
 })
 export class TipoHabitacionService {
+  private http = inject(HttpClient);
+  private url = 'http://localhost:8080/api/tipo-habitacion';
   private tipoHabitacionArray: TipoHabitacion[] = [
     {
       id: 1,
@@ -66,43 +71,23 @@ export class TipoHabitacionService {
       .map((tipoHabitacion) => ({ ...tipoHabitacion }));
   }
 
-  agregarTipoHabitacion(tipoHabitacion: TipoHabitacion): TipoHabitacion {
-    const nuevoTipo: TipoHabitacion = {
-      ...tipoHabitacion,
-      id: this.obtenerSiguienteId(),
-    };
-
-    this.tipoHabitacionArray.push(nuevoTipo);
-    return { ...nuevoTipo };
+  // Lista los tipos para el panel administrativo.
+  listarTipos(): Observable<TipoHabitacion[]> {
+    return this.http.get<TipoHabitacion[]>(this.url);
   }
 
-  actualizarTipoHabitacion(id: number, tipoHabitacion: TipoHabitacion): TipoHabitacion | undefined {
-    const indice = this.tipoHabitacionArray.findIndex((tipo) => tipo.id === id);
-
-    if (indice === -1) {
-      return undefined;
-    }
-
-    const tipoActualizado: TipoHabitacion = {
-      ...tipoHabitacion,
-      id,
-    };
-
-    this.tipoHabitacionArray[indice] = tipoActualizado;
-    return { ...tipoActualizado };
+  // Crea un tipo de habitación.
+  agregarTipo(tipo: TipoHabitacion): Observable<TipoHabitacion> {
+    return this.http.post<TipoHabitacion>(this.url, tipo);
   }
 
-  eliminarTipoHabitacion(id: number): boolean {
-    const cantidadAnterior = this.tipoHabitacionArray.length;
-    this.tipoHabitacionArray = this.tipoHabitacionArray.filter((tipo) => tipo.id !== id);
-    return this.tipoHabitacionArray.length < cantidadAnterior;
+  // Actualiza un tipo de habitación existente.
+  actualizarTipo(tipo: TipoHabitacion): Observable<TipoHabitacion> {
+    return this.http.put<TipoHabitacion>(this.url, tipo);
   }
 
-  private obtenerSiguienteId(): number {
-    const ids = this.tipoHabitacionArray
-      .map((tipoHabitacion) => tipoHabitacion.id)
-      .filter((id): id is number => id !== undefined);
-
-    return Math.max(0, ...ids) + 1;
+  // Elimina un tipo sin habitaciones asociadas.
+  eliminarTipo(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.url}/delete/${id}`);
   }
 }
