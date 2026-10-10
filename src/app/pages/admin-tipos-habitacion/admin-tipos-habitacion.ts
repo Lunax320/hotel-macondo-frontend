@@ -1,20 +1,23 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { switchMap } from 'rxjs';
 import { AdminSidebar } from '../../components/admin-sidebar/admin-sidebar';
 import { TipoHabitacion } from '../../models/tipo-habitacion.model';
-import { HabitacionService } from '../../services/habitacion.service';
 import { TipoHabitacionService } from '../../services/tipo-habitacion.service';
 import { TipoHabitacionForm } from './components/tipo-habitacion-form/tipo-habitacion-form';
+import { ConfirmacionAccion } from '../../components/confirmacion-accion/confirmacion-accion';
 import { TipoHabitacionTable } from './components/tipo-habitacion-table/tipo-habitacion-table';
 
+// Pagina admin de tipos de habitacion: lista, crea, edita y elimina (via API).
 @Component({
-  imports: [AdminSidebar, TipoHabitacionTable, TipoHabitacionForm],
+  imports: [ConfirmacionAccion, AdminSidebar, TipoHabitacionTable, TipoHabitacionForm],
   selector: 'app-admin-tipos-habitacion',
   styleUrl: './admin-tipos-habitacion.scss',
   templateUrl: './admin-tipos-habitacion.html',
+  // Angular 22 usa OnPush por defecto; Eager actualiza la vista cuando responde el backend.
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class AdminTiposHabitacion implements OnInit {
   private tipoHabitacionService = inject(TipoHabitacionService);
-  private habitacionService = inject(HabitacionService);
 
   tiposHabitacion: TipoHabitacion[] = [];
   tipoHabitacionSeleccionado?: TipoHabitacion;
@@ -22,51 +25,50 @@ export class AdminTiposHabitacion implements OnInit {
   formularioVisible = false;
   errorTipo = '';
 
+  // Inicializa el componente cargando los tipos de habitación.
   ngOnInit(): void {
     this.cargarTiposHabitacion();
   }
 
+  // Abre el formulario para crear un tipo.
   abrirNuevoTipo(): void {
     this.limpiarAvisos();
     this.tipoHabitacionSeleccionado = undefined;
     this.formularioVisible = true;
   }
 
+  // Abre el formulario para editar un tipo.
   abrirEdicion(tipoHabitacion: TipoHabitacion): void {
     this.limpiarAvisos();
     this.tipoHabitacionSeleccionado = tipoHabitacion;
     this.formularioVisible = true;
   }
 
+  // Cierra el formulario de tipos.
   cerrarFormulario(): void {
     this.formularioVisible = false;
     this.tipoHabitacionSeleccionado = undefined;
   }
 
+  // Guarda el tipo (crea o actualiza) y actualiza el listado.
   guardarTipoHabitacion(tipoHabitacion: TipoHabitacion): void {
     this.errorTipo = '';
-    let tipoGuardado: TipoHabitacion | undefined;
+    const guardado =
+      tipoHabitacion.id === undefined
+        ? this.tipoHabitacionService.agregarTipo(tipoHabitacion)
+        : this.tipoHabitacionService.actualizarTipo(tipoHabitacion);
 
-    if (tipoHabitacion.id === undefined) {
-      tipoGuardado = this.tipoHabitacionService.agregarTipoHabitacion(tipoHabitacion);
-    } else {
-      tipoGuardado = this.tipoHabitacionService.actualizarTipoHabitacion(
-        tipoHabitacion.id,
-        tipoHabitacion,
-      );
-
-      if (!tipoGuardado) {
-        this.errorTipo = 'No se encontró el tipo de habitación que se intentó actualizar.';
-        return;
-      }
-
-      this.habitacionService.actualizarHabitacionesPorTipo(tipoGuardado);
-    }
-
-    this.cerrarFormulario();
-    this.cargarTiposHabitacion();
+    guardado.pipe(switchMap(() => this.tipoHabitacionService.listarTipos())).subscribe({
+      next: (tipos) => {
+        this.tiposHabitacion = tipos;
+        this.cerrarFormulario();
+      },
+      error: (error) =>
+        (this.errorTipo = error.error?.mensaje ?? 'No fue posible guardar el tipo de habitación.'),
+    });
   }
 
+  // Solicita la confirmación para eliminar un tipo.
   solicitarEliminacion(tipoHabitacion: TipoHabitacion): void {
     this.limpiarAvisos();
     this.cerrarFormulario();
@@ -75,15 +77,10 @@ export class AdminTiposHabitacion implements OnInit {
       return;
     }
 
-    if (this.habitacionService.existeHabitacionConTipo(tipoHabitacion)) {
-      this.errorTipo =
-        'No se puede eliminar: existen habitaciones asociadas a este tipo de habitación.';
-      return;
-    }
-
     this.tipoHabitacionPendienteEliminar = tipoHabitacion;
   }
 
+  // Elimina el tipo confirmado y recarga el listado.
   confirmarEliminacion(): void {
     const tipoHabitacionId = this.tipoHabitacionPendienteEliminar?.id;
 
@@ -91,24 +88,36 @@ export class AdminTiposHabitacion implements OnInit {
       return;
     }
 
-    const eliminado = this.tipoHabitacionService.eliminarTipoHabitacion(tipoHabitacionId);
-
-    if (!eliminado) {
-      this.errorTipo = 'No se encontró el tipo de habitación que se intentó eliminar.';
-    }
-
-    this.tipoHabitacionPendienteEliminar = undefined;
-    this.cargarTiposHabitacion();
+    this.tipoHabitacionService
+      .eliminarTipo(tipoHabitacionId)
+      .pipe(switchMap(() => this.tipoHabitacionService.listarTipos()))
+      .subscribe({
+        next: (tipos) => {
+          this.tiposHabitacion = tipos;
+          this.tipoHabitacionPendienteEliminar = undefined;
+        },
+        error: (error) => {
+          this.tipoHabitacionPendienteEliminar = undefined;
+          this.errorTipo = error.error?.mensaje ?? 'No fue posible eliminar el tipo de habitación.';
+        },
+      });
   }
 
+  // Cancela la eliminación pendiente.
   cancelarEliminacion(): void {
     this.tipoHabitacionPendienteEliminar = undefined;
   }
 
+  // Carga los tipos de habitación desde el backend.
   private cargarTiposHabitacion(): void {
-    this.tiposHabitacion = this.tipoHabitacionService.obtenerTodos();
+    this.tipoHabitacionService.listarTipos().subscribe({
+      next: (tipos) => (this.tiposHabitacion = tipos),
+      error: (error) =>
+        (this.errorTipo = error.error?.mensaje ?? 'No fue posible cargar los tipos de habitación.'),
+    });
   }
 
+  // Limpia los avisos y confirmaciones activos.
   private limpiarAvisos(): void {
     this.errorTipo = '';
     this.tipoHabitacionPendienteEliminar = undefined;

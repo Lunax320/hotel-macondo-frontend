@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AdminSidebar } from '../../components/admin-sidebar/admin-sidebar';
 import { AlertaMensaje } from '../../components/alerta-mensaje/alerta-mensaje';
@@ -13,6 +13,8 @@ import { ServicioFormulario } from './components/servicio-formulario/servicio-fo
   selector: 'app-admin-servicio-form',
   styleUrl: './admin-servicio-form.scss',
   templateUrl: './admin-servicio-form.html',
+  // Angular 22 usa OnPush por defecto; Eager actualiza la vista cuando responde el backend.
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class AdminServicioForm implements OnInit {
   private route = inject(ActivatedRoute);
@@ -41,23 +43,26 @@ export class AdminServicioForm implements OnInit {
       return;
     }
 
-    this.servicioService.buscarPorId(id).subscribe((servicio) => {
-      if (!servicio) {
+    this.servicioService.buscarPorId(id).subscribe({
+      next: (servicio) => (this.servicio = servicio),
+      error: (error) => {
         this.servicioEncontrado = false;
-        this.errorServicio = `No se encontró el servicio con id ${id}.`;
-        return;
-      }
-
-      this.servicio = servicio;
+        this.errorServicio = error.error?.mensaje ?? `No se encontró el servicio con id ${id}.`;
+      },
     });
   }
 
+  // Crea o actualiza el servicio en el backend y vuelve al listado.
   guardar(servicio: Servicio): void {
     const peticion$ =
       this.esEdicion && servicio.id !== undefined
         ? this.servicioService.actualizarServicio(servicio.id, servicio)
         : this.servicioService.agregarServicio(servicio);
 
-    peticion$.subscribe(() => this.router.navigate(['/admin/servicios']));
+    peticion$.subscribe({
+      next: () => this.router.navigate(['/admin/servicios']),
+      error: (error) =>
+        (this.errorServicio = error.error?.mensaje ?? 'No fue posible guardar el servicio.'),
+    });
   }
 }

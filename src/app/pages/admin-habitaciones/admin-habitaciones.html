@@ -29,45 +29,15 @@
       </div>
     }
 
-    @if (reservasAsociadas.length > 0) {
-      <div class="mb-4 rounded-lg border border-red-200 bg-red-50 px-5 py-4 text-red-700">
-        <p class="text-sm font-bold">
-          Reservas que ocupan la habitación ({{ reservasAsociadas.length }}):
-        </p>
-        <ul class="mt-2 list-disc pl-5 text-sm">
-          @for (reserva of reservasAsociadas; track reserva.id) {
-            <li>
-              <strong>{{ reserva.numeroReserva }}</strong>
-              — {{ reserva.fechaInicio }} → {{ reserva.fechaFin }} ({{ reserva.estado }})
-            </li>
-          }
-        </ul>
-      </div>
-    }
-
     @if (habitacionPendienteEliminar; as habitacion) {
-      <div class="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-5 py-4 text-amber-900">
-        <p class="font-bold">¿Eliminar {{ habitacion.nombre }}?</p>
-        <p class="mt-1 text-sm">
-          Esta acción retirará la habitación del inventario durante esta sesión.
-        </p>
-        <div class="mt-4 flex flex-wrap gap-3">
-          <button
-            class="rounded-lg bg-red-600 px-5 py-2 font-bold text-white hover:bg-red-700"
-            type="button"
-            (click)="confirmarEliminacion()"
-          >
-            Confirmar eliminación
-          </button>
-          <button
-            class="rounded-lg border border-[var(--azul)] px-5 py-2 font-bold text-[var(--azul)]"
-            type="button"
-            (click)="cancelarEliminacion()"
-          >
-            Cancelar
-          </button>
-        </div>
-      </div>
+      <app-confirmacion-accion
+        [titulo]="'¿Eliminar ' + habitacion.nombre + '?'"
+        mensaje="Esta acción no se puede deshacer."
+        textoConfirmar="Confirmar eliminación"
+        textoCancelar="Cancelar"
+        (confirmado)="confirmarEliminacion()"
+        (cancelado)="cancelarEliminacion()"
+      ></app-confirmacion-accion>
     }
 
     <app-habitacion-table

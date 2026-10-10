@@ -1,15 +1,19 @@
 import { Component, input, OnInit, output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TipoHabitacion } from '../../../../models/tipo-habitacion.model';
+import { TipoHabitacionCamposBasicos } from '../tipo-habitacion-campos-basicos/tipo-habitacion-campos-basicos';
+import { TipoHabitacionCamposDetalle } from '../tipo-habitacion-campos-detalle/tipo-habitacion-campos-detalle';
 
+// Modal para crear o editar un tipo de habitación; arma el formulario y emite el resultado.
 @Component({
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, TipoHabitacionCamposBasicos, TipoHabitacionCamposDetalle],
   selector: 'app-tipo-habitacion-form',
   styleUrl: './tipo-habitacion-form.scss',
   templateUrl: './tipo-habitacion-form.html',
 })
 export class TipoHabitacionForm implements OnInit {
   tipoHabitacion = input<TipoHabitacion>();
+  mensajeError = input('');
   guardado = output<TipoHabitacion>();
   cancelado = output<void>();
 
@@ -29,6 +33,7 @@ export class TipoHabitacionForm implements OnInit {
     precioNoche: new FormControl<number | null>(null, [Validators.required, Validators.min(0)]),
   });
 
+  // Completa el formulario cuando se edita un tipo.
   ngOnInit(): void {
     const tipoHabitacion = this.tipoHabitacion();
 
@@ -43,6 +48,7 @@ export class TipoHabitacionForm implements OnInit {
     }
   }
 
+  // Emite el tipo validado para guardarlo.
   guardar(): void {
     this.tipoHabitacionForm.markAllAsTouched();
 
@@ -66,6 +72,7 @@ export class TipoHabitacionForm implements OnInit {
     });
   }
 
+  // Notifica el cierre del formulario.
   cancelar(): void {
     this.cancelado.emit();
   }

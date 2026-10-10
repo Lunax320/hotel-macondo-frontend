@@ -1,0 +1,48 @@
+<div [formGroup]="formulario()">
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <div>
+      <label
+        class="mb-1 block text-xs font-bold uppercase tracking-wider text-[var(--azul)]"
+        for="form-capacidad"
+      >
+        Capacidad (Personas)
+      </label>
+      <input
+        class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm focus:border-[var(--azul)] focus:outline-none"
+        id="form-capacidad"
+        type="number"
+        min="1"
+        max="10"
+        formControlName="capacidadPersonas"
+        placeholder="2"
+      />
+      @if (
+        formulario().get('capacidadPersonas')?.touched &&
+        formulario().get('capacidadPersonas')?.invalid
+      ) {
+        <small class="mt-1 block text-red-600">La capacidad debe estar entre 1 y 10.</small>
+      }
+    </div>
+
+    <div>
+      <label
+        class="mb-1 block text-xs font-bold uppercase tracking-wider text-[var(--azul)]"
+        for="form-precio"
+      >
+        Precio por Noche ($)
+      </label>
+      <input
+        class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm focus:border-[var(--azul)] focus:outline-none"
+        id="form-precio"
+        type="number"
+        min="0"
+        step="10000"
+        formControlName="precioNoche"
+        placeholder="500000"
+      />
+      @if (formulario().get('precioNoche')?.touched && formulario().get('precioNoche')?.invalid) {
+        <small class="mt-1 block text-red-600">El precio debe ser mayor o igual a cero.</small>
+      }
+    </div>
+  </div>
+</div>
