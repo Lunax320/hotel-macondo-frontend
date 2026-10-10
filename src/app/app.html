@@ -1,7 +1,11 @@
-<app-navbar></app-navbar>
+@if (mostrarLayoutGlobal) {
+  <app-navbar></app-navbar>
+}
 
 <main>
-  <router-outlet></router-outlet>
+  <router-outlet (activate)="actualizarLayoutGlobal()"></router-outlet>
 </main>
 
-<app-footer></app-footer>
+@if (mostrarLayoutGlobal) {
+  <app-footer></app-footer>
+}

@@ -1,0 +1,34 @@
+<header class="mb-8">
+  <a
+    routerLink="/operador/reservas"
+    class="mb-3 inline-flex items-center gap-2 text-sm text-gray-500 hover:text-[var(--azul)]"
+  >
+    <i class="bi bi-arrow-left" aria-hidden="true"></i>
+    Volver a reservas
+  </a>
+  <div class="flex flex-wrap items-center gap-4">
+    <h1 class="font-serif text-3xl font-bold text-[var(--azul-oscuro)] md:text-4xl">
+      Reserva {{ reserva().numeroReserva }}
+    </h1>
+    <span
+      class="inline-block rounded-full border px-4 py-1 text-xs font-semibold"
+      [class.border-sky-200]="reserva().estado === 'ACTIVA'"
+      [class.bg-sky-50]="reserva().estado === 'ACTIVA'"
+      [class.text-sky-600]="reserva().estado === 'ACTIVA'"
+      [class.border-red-200]="reserva().estado === 'CANCELADA'"
+      [class.bg-red-50]="reserva().estado === 'CANCELADA'"
+      [class.text-red-600]="reserva().estado === 'CANCELADA'"
+      [class.border-emerald-200]="reserva().estado === 'FINALIZADA'"
+      [class.bg-emerald-50]="reserva().estado === 'FINALIZADA'"
+      [class.text-emerald-700]="reserva().estado === 'FINALIZADA'"
+      [class.border-amber-200]="reserva().estado === 'CONFIRMADA'"
+      [class.bg-amber-50]="reserva().estado === 'CONFIRMADA'"
+      [class.text-amber-700]="reserva().estado === 'CONFIRMADA'"
+    >
+      {{ reserva().estado }}
+    </span>
+  </div>
+  <p class="mt-1 text-[var(--texto)]">
+    Cliente, habitación asignada y cuenta de la reserva.
+  </p>
+</header>

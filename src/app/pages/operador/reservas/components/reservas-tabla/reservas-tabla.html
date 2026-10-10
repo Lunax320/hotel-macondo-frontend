@@ -1,0 +1,110 @@
+<section aria-label="Listado de reservas">
+  <div class="mb-6 flex flex-col items-stretch justify-between gap-4 lg:flex-row lg:items-center">
+    <label class="relative w-full lg:w-1/2">
+      <span class="sr-only">Buscar reserva</span>
+      <i
+        class="bi bi-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+        aria-hidden="true"
+      ></i>
+      <input
+        type="search"
+        placeholder="Buscar código, cliente o habitación..."
+        class="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-11 pr-4 text-sm text-[var(--texto)] shadow-sm focus:border-[var(--azul)] focus:outline-none"
+      />
+    </label>
+
+    <div
+      class="flex w-full flex-wrap justify-start gap-2 text-xs font-semibold lg:w-auto lg:justify-end"
+      role="group"
+      aria-label="Filtrar reservas"
+    >
+      <button
+        class="rounded-full bg-[var(--azul)] px-5 py-2 text-white shadow-sm"
+        type="button"
+        aria-pressed="true"
+      >
+        Todas
+      </button>
+      <button
+        class="rounded-full border border-[var(--azul)] bg-white px-5 py-2 text-[var(--azul)] shadow-sm transition hover:bg-blue-50"
+        type="button"
+        aria-pressed="false"
+      >
+        Activas
+      </button>
+    </div>
+  </div>
+
+  <div class="overflow-x-auto rounded-2xl bg-white shadow-sm">
+    <table class="w-full min-w-[960px] text-left">
+      <thead class="bg-[var(--crema)] text-sm uppercase tracking-wider text-[var(--azul-oscuro)]">
+        <tr>
+          <th class="px-6 py-4">Código</th>
+          <th class="px-6 py-4">Cliente</th>
+          <th class="px-6 py-4">Habitación / Tipo</th>
+          <th class="px-6 py-4">Entrada</th>
+          <th class="px-6 py-4">Salida</th>
+          <th class="px-6 py-4">Estado</th>
+          <th class="px-6 py-4 text-right">Acciones</th>
+        </tr>
+      </thead>
+      <tbody class="text-sm font-medium text-[var(--texto)]">
+        @for (reserva of reservas(); track reserva.id) {
+          <tr class="border-t border-gray-100">
+            <td class="px-6 py-4 font-bold text-[var(--azul)]">{{ reserva.numeroReserva }}</td>
+            <td class="px-6 py-4 font-bold text-[var(--azul-oscuro)]">
+              {{ reserva.cliente?.nombre }} {{ reserva.cliente?.apellido }}
+            </td>
+            <td class="px-6 py-4 text-gray-600">
+              {{ reserva.habitacion?.numero }} — {{ reserva.habitacion?.tipoHabitacion?.nombre }}
+            </td>
+            <td class="px-6 py-4 text-gray-600">{{ formatearFecha(reserva.fechaInicio) }}</td>
+            <td class="px-6 py-4 text-gray-600">{{ formatearFecha(reserva.fechaFin) }}</td>
+            <td class="px-6 py-4">
+              <span
+                class="inline-block rounded-full border px-4 py-1 text-xs font-semibold"
+                [class.border-sky-200]="reserva.estado === 'ACTIVA'"
+                [class.bg-sky-50]="reserva.estado === 'ACTIVA'"
+                [class.text-sky-600]="reserva.estado === 'ACTIVA'"
+                [class.border-yellow-200]="reserva.estado === 'CONFIRMADA'"
+                [class.bg-yellow-50]="reserva.estado === 'CONFIRMADA'"
+                [class.text-yellow-700]="reserva.estado === 'CONFIRMADA'"
+                [class.border-emerald-200]="reserva.estado === 'FINALIZADA'"
+                [class.bg-emerald-50]="reserva.estado === 'FINALIZADA'"
+                [class.text-emerald-700]="reserva.estado === 'FINALIZADA'"
+                [class.border-red-200]="reserva.estado === 'CANCELADA'"
+                [class.bg-red-50]="reserva.estado === 'CANCELADA'"
+                [class.text-red-600]="reserva.estado === 'CANCELADA'"
+              >
+                {{ reserva.estado }}
+              </span>
+            </td>
+            <td class="whitespace-nowrap px-6 py-4 text-right">
+              <a
+                class="font-medium text-[var(--azul)] hover:underline"
+                [routerLink]="['/operador/reservas', reserva.numeroReserva]"
+              >
+                Ver
+              </a>
+              @if (reserva.estado === 'CONFIRMADA') {
+                <button
+                  class="ml-4 font-medium text-red-600 hover:underline"
+                  type="button"
+                  (click)="cancelar(reserva)"
+                >
+                  Cancelar
+                </button>
+              }
+            </td>
+          </tr>
+        } @empty {
+          <tr class="border-t border-gray-100">
+            <td class="px-6 py-10 text-center text-gray-500" colspan="7">
+              No hay reservas registradas.
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

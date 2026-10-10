@@ -9,6 +9,9 @@ import { Servicios } from './pages/servicios/servicios';
 import { AdminHabitaciones } from './pages/admin-habitaciones/admin-habitaciones';
 import { AdminHabitacionForm } from './pages/admin-habitacion-form/admin-habitacion-form';
 import { AdminTiposHabitacion } from './pages/admin-tipos-habitacion/admin-tipos-habitacion';
+import { Operador } from './pages/operador/operador';
+import { OperadorDetalleReserva } from './pages/operador/detalle-reserva/detalle-reserva';
+import { OperadorReservas } from './pages/operador/reservas/reservas';
 import { AdminServicios } from './pages/admin-servicios/admin-servicios';
 import { AdminServicioForm } from './pages/admin-servicio-form/admin-servicio-form';
 import { PortalCliente } from './pages/cliente/cliente';
@@ -41,6 +44,18 @@ export const routes: Routes = [
   {
     path: 'servicios/:id',
     component: DetalleServicio,
+  },
+  {
+    path: 'operador/reservas/:numeroReserva',
+    component: OperadorDetalleReserva,
+  },
+  {
+    path: 'operador/reservas',
+    component: OperadorReservas,
+  },
+  {
+    path: 'operador',
+    component: Operador,
   },
   {
     path: 'cliente/:id',
