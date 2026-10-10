@@ -1,11 +1,16 @@
-import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Servicio } from '../models/servicio.model';
 
+// Servicios del hotel: API REST para el admin y datos locales para las paginas publicas.
 @Injectable({
   providedIn: 'root',
 })
 export class ServicioService {
+  private http = inject(HttpClient);
+  private url = 'http://localhost:8080/api/servicio';
+
   data: Servicio[] = [
     {
       id: 1,
@@ -160,57 +165,33 @@ export class ServicioService {
       .slice(0, limite);
   }
 
-  // CRUD administrativo. Por ahora no hay backend: cada método simula una
-  // petición HTTP devolviendo un Observable con of(), así cuando se conecte
-  // el API solo se cambia el cuerpo por this.http.get/post/put/delete.
+  // Busca los servicios sugeridos por el backend.
+  buscarRecomendaciones(): Observable<Servicio[]> {
+    return this.http.get<Servicio[]>(`${this.url}/recomendaciones`);
+  }
 
-  // Simula GET: todos los servicios, activos e inactivos.
+  // Lista los servicios para el panel administrativo.
   buscarTodos(): Observable<Servicio[]> {
-    return of(this.data.map((servicio) => ({ ...servicio })));
+    return this.http.get<Servicio[]>(this.url);
   }
 
-  // Simula GET por id, sin importar si está activo.
-  buscarPorId(id: number): Observable<Servicio | undefined> {
-    const servicio = this.data.find((servicio) => servicio.id === id);
-    return of(servicio ? { ...servicio } : undefined);
+  // Busca un servicio administrativo por identificador.
+  buscarPorId(id: number): Observable<Servicio> {
+    return this.http.get<Servicio>(`${this.url}/find/${id}`);
   }
 
-  // Simula POST: agrega el servicio con un id nuevo.
+  // Crea un servicio.
   agregarServicio(servicio: Servicio): Observable<Servicio> {
-    const nuevoServicio: Servicio = { ...servicio, id: this.obtenerSiguienteId() };
-    this.data.push(nuevoServicio);
-    return of({ ...nuevoServicio });
+    return this.http.post<Servicio>(this.url, servicio);
   }
 
-  // Simula PUT: reemplaza el servicio con ese id.
-  actualizarServicio(id: number, servicio: Servicio): Observable<Servicio | undefined> {
-    const indice = this.data.findIndex((s) => s.id === id);
-
-    if (indice === -1) {
-      return of(undefined);
-    }
-
-    this.data[indice] = { ...servicio, id };
-    return of({ ...this.data[indice] });
+  // Actualiza un servicio.
+  actualizarServicio(id: number, servicio: Servicio): Observable<Servicio> {
+    return this.http.put<Servicio>(this.url, { ...servicio, id });
   }
 
   // Activa o desactiva el servicio (inactivo = no se muestra en el sitio público).
-  cambiarEstado(id: number): Observable<Servicio | undefined> {
-    const servicio = this.data.find((s) => s.id === id);
-
-    if (!servicio) {
-      return of(undefined);
-    }
-
-    servicio.activo = !servicio.activo;
-    return of({ ...servicio });
-  }
-
-  private obtenerSiguienteId(): number {
-    const ids = this.data
-      .map((servicio) => servicio.id)
-      .filter((id): id is number => id !== undefined);
-
-    return Math.max(0, ...ids) + 1;
+  cambiarEstado(id: number): Observable<Servicio> {
+    return this.http.put<Servicio>(`${this.url}/estado/${id}`, {});
   }
 }

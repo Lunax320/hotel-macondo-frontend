@@ -1,49 +1,63 @@
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { Servicio } from '../models/servicio.model';
 import { ServicioService } from './servicio.service';
 
 describe('ServicioService', () => {
-  let servicioService: ServicioService;
-
-  // of() emite de forma síncrona, así que cada subscribe ya dejó su valor al terminar
-  const nuevoServicio: Servicio = {
-    nombre: 'Kayak',
-    categoria: 'Aventura',
-    descripcion: 'Paseo en kayak',
-    imagen: '/images/Guiado.avif',
+  let servicio: ServicioService;
+  let http: HttpTestingController;
+  const dato: Servicio = {
+    id: 1,
+    nombre: 'Spa',
+    descripcion: 'Relax',
+    categoria: 'Bienestar',
     destacado: false,
-    precio: 50000,
+    precio: 100,
     activo: true,
   };
-
   beforeEach(() => {
-    servicioService = TestBed.inject(ServicioService);
+    TestBed.configureTestingModule({
+      providers: [provideHttpClient(), provideHttpClientTesting()],
+    });
+    servicio = TestBed.inject(ServicioService);
+    http = TestBed.inject(HttpTestingController);
   });
-
-  it('agregarServicio asigna un id nuevo y aparece en buscarTodos', () => {
-    let agregado: Servicio | undefined;
-    servicioService.agregarServicio(nuevoServicio).subscribe((s) => (agregado = s));
-
-    let todos: Servicio[] = [];
-    servicioService.buscarTodos().subscribe((s) => (todos = s));
-
-    expect(agregado?.id).toBe(7);
-    expect(todos.some((s) => s.id === 7 && s.nombre === 'Kayak')).toBe(true);
+  afterEach(() => http.verify());
+  it('lista', () => {
+    servicio.buscarTodos().subscribe();
+    const req = http.expectOne('http://localhost:8080/api/servicio');
+    expect(req.request.method).toBe('GET');
+    req.flush([]);
   });
-
-  it('actualizarServicio cambia el nombre', () => {
-    let actualizado: Servicio | undefined;
-    servicioService
-      .actualizarServicio(1, { ...nuevoServicio, nombre: 'Spa renovado' })
-      .subscribe((s) => (actualizado = s));
-
-    expect(actualizado?.nombre).toBe('Spa renovado');
-    expect(servicioService.obtenerPorId(1)?.nombre).toBe('Spa renovado');
+  it('busca', () => {
+    servicio.buscarPorId(1).subscribe();
+    const req = http.expectOne('http://localhost:8080/api/servicio/find/1');
+    expect(req.request.method).toBe('GET');
+    req.flush(dato);
   });
-
-  it('cambiarEstado saca el servicio del catálogo activo', () => {
-    servicioService.cambiarEstado(3).subscribe();
-
-    expect(servicioService.obtenerCatalogoActivo().some((s) => s.id === 3)).toBe(false);
+  it('crea', () => {
+    servicio.agregarServicio(dato).subscribe();
+    const req = http.expectOne('http://localhost:8080/api/servicio');
+    expect(req.request.method).toBe('POST');
+    req.flush(dato);
+  });
+  it('actualiza', () => {
+    servicio.actualizarServicio(1, dato).subscribe();
+    const req = http.expectOne('http://localhost:8080/api/servicio');
+    expect(req.request.method).toBe('PUT');
+    req.flush(dato);
+  });
+  it('cambia estado', () => {
+    servicio.cambiarEstado(1).subscribe();
+    const req = http.expectOne('http://localhost:8080/api/servicio/estado/1');
+    expect(req.request.method).toBe('PUT');
+    req.flush(dato);
+  });
+  it('busca recomendaciones', () => {
+    servicio.buscarRecomendaciones().subscribe();
+    const req = http.expectOne('http://localhost:8080/api/servicio/recomendaciones');
+    expect(req.request.method).toBe('GET');
+    req.flush([]);
   });
 });

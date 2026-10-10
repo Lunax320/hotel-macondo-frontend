@@ -1,12 +1,18 @@
-import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Habitacion } from '../models/habitacion.model';
 import { Reserva } from '../models/reserva.model';
 
+// Servicio para operaciones de reserva contra el backend.
 @Injectable({
   providedIn: 'root',
 })
 export class ReservaService {
+  private http = inject(HttpClient);
+  private url = 'http://localhost:8080/api/reserva';
+
+  // Arreglo quemado que todavia usan las paginas de operador (PR #6, obtenerTodas). No borrar hasta que operador use la API.
   private reservaArray: Reserva[] = [
     {
       id: 1,
@@ -129,23 +135,13 @@ export class ReservaService {
     return this.reservaArray.filter((reserva) => reserva.habitacion?.id === habitacion.id);
   }
 
-  // Portal del cliente: simulan peticiones HTTP con of()
-
-  // Filtra reservas por clienteId.
-  buscarPorCliente(clienteId: number): Observable<Reserva[]> {
-    const reservas = this.reservaArray.filter((reserva) => reserva.cliente?.id === clienteId);
-    return of(reservas.map((r) => ({ ...r })));
+  // Busca reservas activas de un cliente.
+  buscarActivasPorCliente(clienteId: number): Observable<Reserva[]> {
+    return this.http.get<Reserva[]>(`${this.url}/cliente/${clienteId}/activas`);
   }
 
-  // Cancela una reserva estableciendo estado 'CANCELADA'.
-  cancelarReserva(id: number): Observable<Reserva | undefined> {
-    const indice = this.reservaArray.findIndex((r) => r.id === id);
-
-    if (indice === -1) {
-      return of(undefined);
-    }
-
-    this.reservaArray[indice] = { ...this.reservaArray[indice], estado: 'CANCELADA' };
-    return of({ ...this.reservaArray[indice] });
+  // Busca historial de reservas de un cliente.
+  buscarHistorialPorCliente(clienteId: number): Observable<Reserva[]> {
+    return this.http.get<Reserva[]>(`${this.url}/cliente/${clienteId}/historial`);
   }
 }
