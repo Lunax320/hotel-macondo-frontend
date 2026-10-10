@@ -1,35 +1,36 @@
-<section class="min-h-[70vh] bg-[var(--crema-claro)] px-5 py-12 md:py-16">
-  <div class="mx-auto max-w-[1100px]">
-    @if (!clienteEncontrado) {
-      <app-alerta-mensaje mensaje="No se encontró el cliente."></app-alerta-mensaje>
-    } @else {
-      @if (cliente; as clienteActual) {
-        <app-cliente-encabezado [nombre]="clienteActual.nombre"></app-cliente-encabezado>
-        <div class="grid grid-cols-1 gap-8 lg:grid-cols-[360px_1fr]">
-          <app-cliente-datos-form
-            [cliente]="clienteActual"
-            [mensajeExito]="mensajeExito"
-            (guardado)="guardarCambios($event)"
-          ></app-cliente-datos-form>
-          <div class="min-w-0 space-y-10">
-            @if (reservaPendienteCancelar; as reserva) {
-              <app-confirmacion-accion
-                [titulo]="'¿Cancelar la reserva ' + reserva.numeroReserva + '?'"
-                mensaje="La habitación quedará libre para esas fechas."
-                textoConfirmar="Confirmar cancelación"
-                textoCancelar="Volver"
-                (confirmado)="confirmarCancelacion()"
-                (cancelado)="volver()"
-              ></app-confirmacion-accion>
-            }
-            <app-reservas-activas
-              [reservas]="reservasActivas"
-              (cancelacionSolicitada)="solicitarCancelacion($event)"
-            ></app-reservas-activas
-            ><app-reservas-historial [reservas]="reservasPasadas"></app-reservas-historial>
-          </div>
-        </div>
+<div class="min-h-screen bg-[#eef3f3] text-[var(--texto)] font-sans">
+  <app-navbar-cliente [clienteId]="clienteId"></app-navbar-cliente>
+  <main class="mx-auto max-w-[1180px] px-5 py-10 md:py-12">
+    @if (mensajeError) {
+      <div class="rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
+        {{ mensajeError }}
+      </div>
+    } @else if (cliente; as clienteActual) {
+      <app-cliente-saludo
+        [nombre]="clienteActual.nombre"
+        [apellido]="clienteActual.apellido"
+        [fechaActual]="fechaActual"
+        [clienteId]="clienteId"
+      ></app-cliente-saludo>
+
+      @if (reservaActiva; as reserva) {
+        <app-reserva-activa-card
+          [reserva]="reserva"
+          [habitacionActiva]="habitacionActiva"
+          [noches]="nochesReserva(reserva)"
+          [clienteId]="clienteId"
+        ></app-reserva-activa-card>
+      } @else {
+        <app-reserva-activa-vacia [clienteId]="clienteId"></app-reserva-activa-vacia>
       }
+
+      <app-acceso-rapido
+        [clienteId]="clienteId"
+        [cantidadActivas]="cantidadActivas"
+        [cantidadHistorial]="cantidadHistorial"
+      ></app-acceso-rapido>
+
+      <app-servicios-recomendados [recomendaciones]="recomendaciones"></app-servicios-recomendados>
     }
-  </div>
-</section>
+  </main>
+</div>

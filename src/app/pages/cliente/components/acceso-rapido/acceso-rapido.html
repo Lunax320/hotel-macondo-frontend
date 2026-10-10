@@ -1,0 +1,57 @@
+<section class="mt-12">
+  <h2 class="font-serif text-2xl font-bold text-[var(--azul-oscuro)]">Acceso rápido</h2>
+  <div class="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+    <a
+      class="rounded-[18px] bg-white p-6 transition hover:-translate-y-1 shadow-[0_10px_25px_rgba(30,58,70,0.10)]"
+      [routerLink]="rutaReservas()"
+    >
+      <div class="flex items-start justify-between">
+        <span
+          class="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--azul)] text-2xl text-white"
+          ><i class="bi bi-calendar-week"></i></span
+        ><span class="rounded-full bg-[#eaf5f9] px-3 py-1 text-xs font-bold text-[var(--azul)]">{{
+          cantidadActivas()
+        }}</span>
+      </div>
+      <h3 class="mt-5 font-serif text-xl font-bold text-[var(--azul-oscuro)]">Reservas Activas</h3>
+      <p class="mt-1 text-sm">Ver reservas en curso</p>
+    </a>
+    <a
+      class="rounded-[18px] bg-white p-6 transition hover:-translate-y-1 shadow-[0_10px_25px_rgba(30,58,70,0.10)]"
+      [routerLink]="rutaHistorial()"
+    >
+      <div class="flex items-start justify-between">
+        <span
+          class="flex h-12 w-12 items-center justify-center rounded-xl bg-[#65443a] text-2xl text-white"
+          ><i class="bi bi-calendar3"></i></span
+        ><span class="rounded-full bg-[#f0eeee] px-3 py-1 text-xs font-bold text-[#65443a]">{{
+          cantidadHistorial()
+        }}</span>
+      </div>
+      <h3 class="mt-5 font-serif text-xl font-bold text-[var(--azul-oscuro)]">Historial</h3>
+      <p class="mt-1 text-sm">Experiencias pasadas</p>
+    </a>
+    <a
+      class="rounded-[18px] bg-white p-6 transition hover:-translate-y-1 shadow-[0_10px_25px_rgba(30,58,70,0.10)]"
+      [routerLink]="rutaPerfil()"
+    >
+      <span
+        class="flex h-12 w-12 items-center justify-center rounded-xl bg-[#1fb56b] text-2xl text-white"
+        ><i class="bi bi-person"></i
+      ></span>
+      <h3 class="mt-5 font-serif text-xl font-bold text-[var(--azul-oscuro)]">Mi Perfil</h3>
+      <p class="mt-1 text-sm">Datos personales</p>
+    </a>
+    <a
+      class="rounded-[18px] bg-white p-6 transition hover:-translate-y-1 shadow-[0_10px_25px_rgba(30,58,70,0.10)]"
+      [routerLink]="rutaNuevaReserva()"
+    >
+      <span
+        class="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--dorado)] text-2xl text-[var(--azul-oscuro)]"
+        ><i class="bi bi-plus-lg"></i
+      ></span>
+      <h3 class="mt-5 font-serif text-xl font-bold text-[var(--azul-oscuro)]">Nueva Reserva</h3>
+      <p class="mt-1 text-sm">Reservar habitación</p>
+    </a>
+  </div>
+</section>

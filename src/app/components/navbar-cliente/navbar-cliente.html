@@ -1,0 +1,49 @@
+<header class="border-b border-gray-200 bg-white shadow-sm">
+  <nav
+    class="mx-auto flex min-h-[74px] max-w-[1180px] flex-wrap items-center justify-between gap-5 px-5 py-3"
+    aria-label="Navegación del cliente"
+  >
+    <a class="flex items-center gap-3" [routerLink]="['/cliente', clienteId()]"
+      ><img class="h-11 w-11 object-contain" src="/images/logo.png" alt="Logo Hotel Macondo" /><span
+        class="font-serif text-[22px] font-bold text-[var(--azul)]"
+        >Hotel Macondo</span
+      ></a
+    >
+    <div class="hidden items-center gap-8 text-[15px] md:flex">
+      <a
+        class="font-semibold text-[var(--azul)]"
+        [routerLink]="['/cliente', clienteId()]"
+        aria-current="page"
+        >Inicio</a
+      ><a
+        class="transition hover:text-[var(--azul)]"
+        [routerLink]="['/cliente', clienteId(), 'reservas']"
+        >Mis Reservas</a
+      ><a
+        class="transition hover:text-[var(--azul)]"
+        [routerLink]="['/cliente', clienteId(), 'historial']"
+        >Historial</a
+      ><a
+        class="transition hover:text-[var(--azul)]"
+        [routerLink]="['/habitaciones']"
+        [queryParams]="{ clienteId: clienteId() }"
+        >Habitaciones</a
+      ><a
+        class="transition hover:text-[var(--azul)]"
+        [routerLink]="['/cliente', clienteId(), 'reservas', 'nueva']"
+        >Nueva Reserva</a
+      ><a class="transition hover:text-[var(--azul)]" routerLink="/servicios">Servicios</a>
+    </div>
+    <div class="flex items-center gap-3 text-sm">
+      <a
+        class="rounded-md border-2 border-[var(--azul)] px-5 py-2.5 font-semibold text-[var(--azul)] transition hover:bg-[var(--azul)] hover:text-white"
+        [routerLink]="['/cliente', clienteId(), 'perfil']"
+        >Mi Perfil</a
+      ><a
+        class="rounded-md bg-[var(--dorado)] px-5 py-2.5 font-bold text-[var(--azul-oscuro)] transition hover:bg-[var(--dorado-oscuro)]"
+        routerLink="/login"
+        >Cerrar sesión</a
+      >
+    </div>
+  </nav>
+</header>

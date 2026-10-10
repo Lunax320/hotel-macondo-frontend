@@ -1,92 +1,104 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { of, switchMap } from 'rxjs';
+import { NavbarCliente } from '../../components/navbar-cliente/navbar-cliente';
 import { Cliente } from '../../models/cliente.model';
+import { Habitacion } from '../../models/habitacion.model';
 import { Reserva } from '../../models/reserva.model';
+import { Servicio } from '../../models/servicio.model';
 import { ClienteService } from '../../services/cliente.service';
+import { HabitacionService } from '../../services/habitacion.service';
 import { ReservaService } from '../../services/reserva.service';
-import { AlertaMensaje } from '../../components/alerta-mensaje/alerta-mensaje';
-import { ConfirmacionAccion } from '../../components/confirmacion-accion/confirmacion-accion';
-import { ClienteEncabezado } from './components/cliente-encabezado/cliente-encabezado';
-import { ClienteDatosForm } from './components/cliente-datos-form/cliente-datos-form';
-import { ReservasActivas } from './components/reservas-activas/reservas-activas';
-import { ReservasHistorial } from './components/reservas-historial/reservas-historial';
-// Portal del cliente: ver y editar datos, consultar y cancelar reservas.
+import { ServicioService } from '../../services/servicio.service';
+import { ClienteSaludo } from './components/cliente-saludo/cliente-saludo';
+import { ReservaActivaCard } from './components/reserva-activa-card/reserva-activa-card';
+import { ReservaActivaVacia } from './components/reserva-activa-vacia/reserva-activa-vacia';
+import { AccesoRapido } from './components/acceso-rapido/acceso-rapido';
+import { ServiciosRecomendados } from './components/servicios-recomendados/servicios-recomendados';
+
+// Panel principal con el resumen de la estancia y recomendaciones del cliente.
 @Component({
-  imports: [
-    AlertaMensaje,
-    ConfirmacionAccion,
-    ClienteEncabezado,
-    ClienteDatosForm,
-    ReservasActivas,
-    ReservasHistorial,
-  ],
   selector: 'app-portal-cliente',
-  styleUrl: './cliente.scss',
+  imports: [
+    NavbarCliente,
+    ClienteSaludo,
+    ReservaActivaCard,
+    ReservaActivaVacia,
+    AccesoRapido,
+    ServiciosRecomendados,
+  ],
   templateUrl: './cliente.html',
+  styleUrl: './cliente.scss',
+  // Angular 22 usa OnPush por defecto; Eager hace que la vista se actualice al llegar los datos HTTP.
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class PortalCliente implements OnInit {
   private route = inject(ActivatedRoute);
   private clienteService = inject(ClienteService);
   private reservaService = inject(ReservaService);
+  private habitacionService = inject(HabitacionService);
+  private servicioService = inject(ServicioService);
   clienteId = 0;
   cliente?: Cliente;
-  clienteEncontrado = true;
-  mensajeExito = '';
-  reservasActivas: Reserva[] = [];
-  reservasPasadas: Reserva[] = [];
-  reservaPendienteCancelar?: Reserva;
+  reservaActiva?: Reserva;
+  habitacionActiva?: Habitacion | null;
+  cantidadActivas = 0;
+  cantidadHistorial = 0;
+  recomendaciones: Servicio[] = [];
+  mensajeError = '';
+  // Fecha larga en español con la primera letra en mayúscula, igual que en Thymeleaf
+  fechaActual = this.capitalizar(
+    new Intl.DateTimeFormat('es-CO', { dateStyle: 'full' }).format(new Date()),
+  );
+
+  // Carga el resumen encadenado y los datos secundarios del portal.
   ngOnInit(): void {
     this.clienteId = Number(this.route.snapshot.params['id']);
     if (!Number.isInteger(this.clienteId) || this.clienteId < 1) {
-      this.clienteEncontrado = false;
+      this.mensajeError = 'No encontramos tu cuenta.';
       return;
     }
     this.clienteService
       .buscarPorId(this.clienteId)
       .pipe(
         switchMap((cliente) => {
-          if (!cliente) {
-            this.clienteEncontrado = false;
-            return of([]);
-          }
           this.cliente = cliente;
-          return this.reservaService.buscarPorCliente(this.clienteId);
+          return this.reservaService.buscarActivasPorCliente(this.clienteId);
+        }),
+        switchMap((activas) => {
+          this.cantidadActivas = activas.length;
+          this.reservaActiva = activas[0];
+          return activas.length && activas[0].id
+            ? this.habitacionService.buscarPorReserva(activas[0].id)
+            : of(null);
         }),
       )
-      .subscribe((reservas) => this.separarReservas(reservas));
-  }
-  guardarCambios(clienteActualizado: Cliente): void {
-    this.mensajeExito = '';
-    if (!this.cliente) return;
-    this.clienteService
-      .actualizarCliente(this.clienteId, clienteActualizado)
-      .subscribe((cliente) => {
-        this.cliente = cliente;
-        this.mensajeExito = 'Datos actualizados.';
+      .subscribe({
+        next: (habitacion) => (this.habitacionActiva = habitacion),
+        error: () => (this.mensajeError = 'No encontramos tu cuenta.'),
       });
-  }
-  solicitarCancelacion(reserva: Reserva): void {
-    this.reservaPendienteCancelar = reserva;
-  }
-  confirmarCancelacion(): void {
-    const reservaId = this.reservaPendienteCancelar?.id;
-    if (reservaId === undefined) return;
     this.reservaService
-      .cancelarReserva(reservaId)
-      .pipe(switchMap(() => this.reservaService.buscarPorCliente(this.clienteId)))
-      .subscribe((reservas) => {
-        this.separarReservas(reservas);
-        this.reservaPendienteCancelar = undefined;
-      });
+      .buscarHistorialPorCliente(this.clienteId)
+      .subscribe({ next: (historial) => (this.cantidadHistorial = historial.length) });
+    this.servicioService
+      .buscarRecomendaciones()
+      .subscribe({ next: (servicios) => (this.recomendaciones = servicios) });
   }
-  volver(): void {
-    this.reservaPendienteCancelar = undefined;
+
+  // Calcula las noches entre las fechas de inicio y fin de la reserva.
+  nochesReserva(reserva: Reserva): number {
+    return Math.max(
+      0,
+      Math.round(
+        (new Date(`${reserva.fechaFin}T00:00:00`).getTime() -
+          new Date(`${reserva.fechaInicio}T00:00:00`).getTime()) /
+          86_400_000,
+      ),
+    );
   }
-  private separarReservas(reservas: Reserva[]): void {
-    const esActiva = (reserva: Reserva) =>
-      reserva.estado === 'ACTIVA' || reserva.estado === 'CONFIRMADA';
-    this.reservasActivas = reservas.filter(esActiva);
-    this.reservasPasadas = reservas.filter((reserva) => !esActiva(reserva));
+
+  // Pone en mayúscula la primera letra de un texto.
+  private capitalizar(texto: string): string {
+    return texto.charAt(0).toUpperCase() + texto.slice(1);
   }
 }
