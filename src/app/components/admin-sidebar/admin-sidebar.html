@@ -7,38 +7,18 @@
   <p class="mb-4 text-[0.7rem] uppercase tracking-[3px] text-white/50">Administración</p>
 
   <nav class="flex flex-col gap-1" aria-label="Administración">
-    <a
-      class="flex items-center rounded-lg px-4 py-3 transition hover:bg-white/10"
-      [class.bg-[var(--dorado)]]="seccionActiva() === 'tipos_habitacion'"
-      [class.font-bold]="seccionActiva() === 'tipos_habitacion'"
-      [class.text-[var(--azul-oscuro)]]="seccionActiva() === 'tipos_habitacion'"
-      routerLink="/admin/tipos_habitacion"
-    >
-      <i class="bi bi-tag mr-3" aria-hidden="true"></i>
-      Tipo Habitación
-    </a>
-
-    <a
-      class="flex items-center rounded-lg px-4 py-3 transition hover:bg-white/10"
-      [class.bg-[var(--dorado)]]="seccionActiva() === 'habitaciones'"
-      [class.font-bold]="seccionActiva() === 'habitaciones'"
-      [class.text-[var(--azul-oscuro)]]="seccionActiva() === 'habitaciones'"
-      routerLink="/admin/habitaciones"
-    >
-      <i class="bi bi-door-closed mr-3" aria-hidden="true"></i>
-      Habitaciones
-    </a>
-
-    <a
-      class="flex items-center rounded-lg px-4 py-3 transition hover:bg-white/10"
-      [class.bg-[var(--dorado)]]="seccionActiva() === 'servicios'"
-      [class.font-bold]="seccionActiva() === 'servicios'"
-      [class.text-[var(--azul-oscuro)]]="seccionActiva() === 'servicios'"
-      routerLink="/admin/servicios"
-    >
-      <i class="bi bi-stars mr-3" aria-hidden="true"></i>
-      Servicios
-    </a>
+    @for (seccion of secciones; track seccion.clave) {
+      <a
+        class="flex items-center rounded-lg px-4 py-3 transition hover:bg-white/10"
+        [class.bg-[var(--dorado)]]="seccionActiva() === seccion.clave"
+        [class.hover:bg-[var(--dorado)]]="seccionActiva() === seccion.clave"
+        [class.font-bold]="seccionActiva() === seccion.clave"
+        [class.text-[var(--azul-oscuro)]]="seccionActiva() === seccion.clave"
+        [routerLink]="seccion.ruta"
+      >
+        <i class="bi {{ seccion.icono }} mr-3" aria-hidden="true"></i>{{ seccion.texto }}
+      </a>
+    }
   </nav>
 
   <a class="mt-10 block text-sm text-white/60 hover:text-[var(--dorado)]" routerLink="/">

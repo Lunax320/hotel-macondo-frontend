@@ -1,0 +1,22 @@
+<form
+  class="mb-8 flex flex-col gap-4 rounded-2xl bg-white p-6 shadow-sm sm:flex-row"
+  [formGroup]="formulario()"
+  (ngSubmit)="agregar.emit()"
+>
+  <div class="flex-1">
+    <app-campo-formulario
+      [formulario]="formulario()"
+      nombreCampo="nombre"
+      etiqueta="Nombre del operador"
+      placeholder="Nombre del operador"
+      [errores]="erroresNombre"
+    ></app-campo-formulario>
+  </div>
+  <button
+    class="rounded-lg bg-[var(--dorado)] px-8 py-3 font-bold text-[var(--azul-oscuro)] transition hover:bg-[var(--dorado-oscuro)] disabled:cursor-not-allowed disabled:opacity-50"
+    type="submit"
+    [disabled]="formulario().invalid"
+  >
+    Agregar
+  </button>
+</form>
