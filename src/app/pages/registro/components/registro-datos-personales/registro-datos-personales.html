@@ -1,28 +1,29 @@
-<div class="space-y-5">
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
   <app-campo-formulario
     [formulario]="formulario()"
     nombreCampo="nombre"
     etiqueta="Nombre"
     icono="bi-person"
-    placeholder="Tu nombre"
+    placeholder="Gabriel"
     [errores]="erroresNombre"
   ></app-campo-formulario>
-
   <app-campo-formulario
     [formulario]="formulario()"
     nombreCampo="apellido"
     etiqueta="Apellido"
     icono="bi-person"
-    placeholder="Tu apellido"
+    placeholder="García"
     [errores]="erroresApellido"
   ></app-campo-formulario>
+</div>
 
+<div class="space-y-4">
   <app-campo-formulario
     [formulario]="formulario()"
     nombreCampo="cedula"
     etiqueta="Cédula"
     icono="bi-card-text"
-    placeholder="Número de cédula"
+    placeholder="1 234 567 890"
     [errores]="erroresCedula"
   ></app-campo-formulario>
 
@@ -32,7 +33,7 @@
     etiqueta="Teléfono"
     icono="bi-telephone"
     tipo="tel"
-    placeholder="Tu teléfono"
+    placeholder="+57 300 000 0000"
     [errores]="erroresTelefono"
   ></app-campo-formulario>
 </div>

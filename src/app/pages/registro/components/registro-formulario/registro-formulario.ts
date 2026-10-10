@@ -1,5 +1,12 @@
 import { Component, input, output } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Cliente } from '../../../../models/cliente.model';
 import { AlertaMensaje } from '../../../../components/alerta-mensaje/alerta-mensaje';
@@ -10,7 +17,13 @@ import { RegistroCredenciales } from '../registro-credenciales/registro-credenci
 export interface DatosRegistro {
   cliente: Cliente;
   contrasena: string;
-  confirmarContrasena: string;
+}
+
+// Verifica que las dos contraseñas del registro sean idénticas.
+function contrasenasIguales(control: AbstractControl): ValidationErrors | null {
+  return control.get('contrasena')?.value === control.get('confirmarContrasena')?.value
+    ? null
+    : { contrasenasDistintas: true };
 }
 
 // Tarjeta del registro: arma el formulario y emite los datos; la página decide si se puede registrar.
@@ -30,33 +43,37 @@ export class RegistroFormulario {
   mensajeError = input('');
   registrado = output<DatosRegistro>();
 
-  formulario = new FormGroup({
-    nombre: new FormControl('', [
-      Validators.required,
-      Validators.minLength(2),
-      Validators.maxLength(100),
-    ]),
-    apellido: new FormControl('', [
-      Validators.required,
-      Validators.minLength(2),
-      Validators.maxLength(100),
-    ]),
-    cedula: new FormControl('', [
-      Validators.required,
-      Validators.pattern(/^[0-9]+$/),
-      Validators.maxLength(20),
-    ]),
-    telefono: new FormControl('', [
-      Validators.required,
-      Validators.pattern(/^[0-9]+$/),
-      Validators.minLength(7),
-      Validators.maxLength(20),
-    ]),
-    correo: new FormControl('', [Validators.required, Validators.email]),
-    contrasena: new FormControl('', [Validators.required, Validators.minLength(6)]),
-    confirmarContrasena: new FormControl('', [Validators.required]),
-  });
+  formulario = new FormGroup(
+    {
+      nombre: new FormControl('', [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(100),
+      ]),
+      apellido: new FormControl('', [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(100),
+      ]),
+      cedula: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[0-9]+$/),
+        Validators.maxLength(20),
+      ]),
+      telefono: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[0-9]+$/),
+        Validators.minLength(7),
+        Validators.maxLength(20),
+      ]),
+      correo: new FormControl('', [Validators.required, Validators.email]),
+      contrasena: new FormControl('', [Validators.required, Validators.minLength(6)]),
+      confirmarContrasena: new FormControl('', [Validators.required]),
+    },
+    { validators: contrasenasIguales },
+  );
 
+  // Emite los datos cuando el formulario es válido.
   enviar(): void {
     if (this.formulario.invalid) {
       return;
@@ -73,7 +90,6 @@ export class RegistroFormulario {
         correo: valor.correo ?? '',
       },
       contrasena: valor.contrasena ?? '',
-      confirmarContrasena: valor.confirmarContrasena ?? '',
     });
   }
 }
