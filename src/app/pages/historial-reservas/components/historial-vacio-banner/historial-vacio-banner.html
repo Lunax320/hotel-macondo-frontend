@@ -1,0 +1,18 @@
+<div
+  class="bg-gradient-to-br from-[var(--azul)] to-[#87ceeb] rounded-2xl overflow-hidden p-16 md:p-20 text-center shadow-[0_10px_40px_rgba(26,117,159,0.2)]"
+>
+  <div class="text-6xl mb-6 leading-none">🌊</div>
+  <h2 class="font-serif text-2xl md:text-3xl font-bold text-white mb-3">
+    Aún no tienes experiencias registradas
+  </h2>
+  <p class="font-sans text-sm text-white/80 mb-8 leading-relaxed max-w-md mx-auto">
+    Cada estadía en Hotel Macondo es una historia que merece ser vivida.<br />
+    Comienza tu primera aventura caribeña hoy.
+  </p>
+  <a
+    [routerLink]="['/cliente', clienteId(), 'reservas', 'nueva']"
+    class="font-sans text-sm font-bold bg-[var(--dorado)] text-[#333] rounded-xl px-8 py-3.5 inline-flex items-center gap-2 transition-transform hover:scale-105 cursor-pointer"
+  >
+    Hacer mi primera reserva <i class="bi bi-arrow-right"></i>
+  </a>
+</div>

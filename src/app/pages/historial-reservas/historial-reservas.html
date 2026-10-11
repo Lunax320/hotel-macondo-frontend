@@ -1,0 +1,86 @@
+<div class="min-h-screen bg-[#f8f6f3] flex flex-col font-sans">
+  <app-navbar-cliente [clienteId]="clienteId"></app-navbar-cliente>
+
+  <main class="flex-1 max-w-[1100px] mx-auto w-full px-6 py-12">
+    <div class="mb-8">
+      <h1 class="font-serif text-3xl md:text-4xl font-bold text-[#0e2a3f] mb-2">
+        Historial de Experiencias
+      </h1>
+      <p class="font-sans text-sm text-gray-500">
+        Un recuento de todas tus estadías en Hotel Macondo
+      </p>
+    </div>
+
+    @if (historial.length > 0) {
+      <div class="flex gap-2.5 flex-wrap mb-8">
+        <button
+          type="button"
+          (click)="seleccionarFiltro('TODOS')"
+          class="font-sans text-xs font-semibold px-5 py-2 rounded-full border-2 transition-all cursor-pointer"
+          [class]="
+            filtroActual === 'TODOS'
+              ? 'border-[var(--azul)] bg-[var(--azul)] text-white'
+              : 'border-[rgba(26,117,159,0.2)] text-gray-600 bg-transparent'
+          "
+        >
+          Todos
+        </button>
+        <button
+          type="button"
+          (click)="seleccionarFiltro('FINALIZADA')"
+          class="font-sans text-xs font-semibold px-5 py-2 rounded-full border-2 transition-all cursor-pointer"
+          [class]="
+            filtroActual === 'FINALIZADA'
+              ? 'border-[var(--azul)] bg-[var(--azul)] text-white'
+              : 'border-[rgba(26,117,159,0.2)] text-gray-600 bg-transparent'
+          "
+        >
+          Finalizada
+        </button>
+        <button
+          type="button"
+          (click)="seleccionarFiltro('CANCELADA')"
+          class="font-sans text-xs font-semibold px-5 py-2 rounded-full border-2 transition-all cursor-pointer"
+          [class]="
+            filtroActual === 'CANCELADA'
+              ? 'border-[var(--azul)] bg-[var(--azul)] text-white'
+              : 'border-[rgba(26,117,159,0.2)] text-gray-600 bg-transparent'
+          "
+        >
+          Cancelada
+        </button>
+      </div>
+
+      <div class="flex flex-col gap-4">
+        @for (h of historialFiltrado; track h.id) {
+          <app-historial-item [reserva]="h"></app-historial-item>
+        }
+      </div>
+
+      <div class="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="bg-white rounded-xl border border-[#e8e0d8] p-5 md:p-6">
+          <p class="font-sans text-[0.7rem] text-gray-500 mb-1 tracking-wider">Estadías totales</p>
+          <p class="font-serif text-2xl md:text-3xl font-bold text-[#27ae60] m-0">
+            {{ historial.length }}
+          </p>
+        </div>
+
+        <div class="bg-white rounded-xl border border-[#e8e0d8] p-5 md:p-6">
+          <p class="font-sans text-[0.7rem] text-gray-500 mb-1 tracking-wider">Noches acumuladas</p>
+          <p class="font-serif text-2xl md:text-3xl font-bold text-[var(--azul)] m-0">
+            {{ nochesTotales }}
+          </p>
+        </div>
+
+        <div class="bg-white rounded-xl border border-[#e8e0d8] p-5 md:p-6">
+          <p class="font-sans text-[0.7rem] text-gray-500 mb-1 tracking-wider">Cancelaciones</p>
+          <p class="font-serif text-2xl md:text-3xl font-bold text-[#e74c3c] m-0">
+            {{ cancelaciones }}
+          </p>
+        </div>
+      </div>
+    } @else {
+      <app-historial-vacio-banner [clienteId]="clienteId"></app-historial-vacio-banner>
+    }
+  </main>
+</div>
