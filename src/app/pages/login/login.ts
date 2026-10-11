@@ -38,17 +38,14 @@ export class Login {
           return;
         }
 
-        // Redirección dinámica según el rol retornado por la base de datos
         if (usuario.rol === 'ADMINISTRADOR') {
           this.router.navigate(['/admin']);
         } else if (usuario.rol === 'OPERADOR') {
           this.router.navigate(['/operador']);
         } else {
-          if (usuario.cliente?.id) {
-            this.router.navigate(['/cliente', usuario.cliente.id]);
-          } else {
-            this.router.navigate(['/']);
-          }
+          // Si el objeto cliente no viene anidado (probando lo de @JSONIgnore), usa usuario.clienteId o el id del usuario
+          const clienteId = (usuario as any).cliente?.id ?? (usuario as any).clienteId ?? usuario.id;
+          this.router.navigate(['/cliente', clienteId]);
         }
       },
       error: () => {

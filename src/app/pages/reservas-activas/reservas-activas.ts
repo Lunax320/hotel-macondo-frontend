@@ -31,10 +31,13 @@ export class ReservasActivas implements OnInit {
     this.clienteId = Number(this.route.snapshot.params['id']);
     this.cargarReservas();
   }
-
+  
   cargarReservas(): void {
     this.reservaService.buscarActivasPorCliente(this.clienteId).subscribe({
-      next: (datos) => (this.reservas = datos),
+      next: (datos) => {
+        console.log('RESERVAS DEL BACKEND:', datos); 
+        this.reservas = datos;
+      },
       error: (err) => console.error('Error al cargar reservas activas:', err),
     });
   }

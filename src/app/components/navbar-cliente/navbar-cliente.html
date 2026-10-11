@@ -1,49 +1,72 @@
-<header class="border-b border-gray-200 bg-white shadow-sm">
-  <nav
-    class="mx-auto flex min-h-[74px] max-w-[1180px] flex-wrap items-center justify-between gap-5 px-5 py-3"
-    aria-label="Navegación del cliente"
-  >
-    <a class="flex items-center gap-3" [routerLink]="['/cliente', clienteId()]"
-      ><img class="h-11 w-11 object-contain" src="/images/logo.png" alt="Logo Hotel Macondo" /><span
-        class="font-serif text-[22px] font-bold text-[var(--azul)]"
-        >Hotel Macondo</span
-      ></a
+<header class="bg-white shadow-md sticky top-0 z-50 py-4">
+  <div class="container mx-auto px-4 flex flex-wrap justify-between items-center">
+    <!-- Logo -->
+    <a
+      class="flex items-center gap-3 font-serif text-xl font-bold text-[var(--azul)]"
+      [routerLink]="['/cliente', clienteId()]"
     >
-    <div class="hidden items-center gap-8 text-[15px] md:flex">
+      <img class="h-11 w-11 object-contain" src="/images/logo.png" alt="Logo Hotel Macondo" />
+      Hotel Macondo
+    </a>
+
+    <!-- Enlaces -->
+    <ul class="hidden md:flex gap-6 font-sans text-gray-600 font-medium">
+      <li>
+        <a class="hover:text-[var(--azul)] transition" [routerLink]="['/cliente', clienteId()]"
+          >Inicio</a
+        >
+      </li>
+      <li>
+        <a
+          class="hover:text-[var(--azul)] transition"
+          [routerLink]="['/cliente', clienteId(), 'reservas']"
+          >Mis Reservas</a
+        >
+      </li>
+      <li>
+        <a
+          class="hover:text-[var(--azul)] transition"
+          [routerLink]="['/cliente', clienteId(), 'historial']"
+          >Historial</a
+        >
+      </li>
+      <li>
+        <a
+          class="hover:text-[var(--azul)] transition"
+          [routerLink]="['/habitaciones']"
+          [queryParams]="{ clienteId: clienteId() }"
+          >Habitaciones</a
+        >
+      </li>
+      <li>
+        <a
+          class="hover:text-[var(--azul)] transition"
+          [routerLink]="['/cliente', clienteId(), 'reservas', 'nueva']"
+          >Nueva Reserva</a
+        >
+      </li>
+      <li>
+        <a class="hover:text-[var(--azul)] transition" routerLink="/servicios">Servicios</a>
+      </li>
+    </ul>
+
+    <!-- Botones -->
+    <div class="hidden md:flex items-center gap-3 font-sans text-sm">
       <a
-        class="font-semibold text-[var(--azul)]"
-        [routerLink]="['/cliente', clienteId()]"
-        aria-current="page"
-        >Inicio</a
-      ><a
-        class="transition hover:text-[var(--azul)]"
-        [routerLink]="['/cliente', clienteId(), 'reservas']"
-        >Mis Reservas</a
-      ><a
-        class="transition hover:text-[var(--azul)]"
-        [routerLink]="['/cliente', clienteId(), 'historial']"
-        >Historial</a
-      ><a
-        class="transition hover:text-[var(--azul)]"
-        [routerLink]="['/habitaciones']"
-        [queryParams]="{ clienteId: clienteId() }"
-        >Habitaciones</a
-      ><a
-        class="transition hover:text-[var(--azul)]"
-        [routerLink]="['/cliente', clienteId(), 'reservas', 'nueva']"
-        >Nueva Reserva</a
-      ><a class="transition hover:text-[var(--azul)]" routerLink="/servicios">Servicios</a>
-    </div>
-    <div class="flex items-center gap-3 text-sm">
-      <a
-        class="rounded-md border-2 border-[var(--azul)] px-5 py-2.5 font-semibold text-[var(--azul)] transition hover:bg-[var(--azul)] hover:text-white"
+        class="border-2 border-[var(--azul)] text-[var(--azul)] font-semibold px-4 py-2 rounded-lg hover:bg-[var(--azul)] hover:text-white transition"
         [routerLink]="['/cliente', clienteId(), 'perfil']"
         >Mi Perfil</a
-      ><a
-        class="rounded-md bg-[var(--dorado)] px-5 py-2.5 font-bold text-[var(--azul-oscuro)] transition hover:bg-[var(--dorado-oscuro)]"
+      >
+      <a
+        class="bg-[var(--dorado)] text-[var(--azul-oscuro)] font-bold px-5 py-2 rounded-lg hover:bg-[var(--dorado-oscuro)] transition cursor-pointer"
         routerLink="/login"
         >Cerrar sesión</a
       >
     </div>
-  </nav>
+
+    <!-- Menú móvil -->
+    <button class="md:hidden text-2xl text-[var(--azul)] focus:outline-none">
+      <i class="bi bi-list"></i>
+    </button>
+  </div>
 </header>
