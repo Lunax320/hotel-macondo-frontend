@@ -5,10 +5,11 @@ import { NavbarCliente } from '../../components/navbar-cliente/navbar-cliente';
 import { TipoHabitacion } from '../../models/tipo-habitacion.model';
 import { TipoHabitacionService } from '../../services/tipo-habitacion.service';
 import { ReservaInstrucciones } from './components/reserva-instrucciones/reserva-instrucciones';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-crear-reserva',
-  imports: [FormsModule, NavbarCliente, ReservaInstrucciones],
+  imports: [FormsModule, NavbarCliente, ReservaInstrucciones, DecimalPipe],
   templateUrl: './crear-reserva.html',
   styleUrl: './crear-reserva.scss',
   changeDetection: ChangeDetectionStrategy.Eager,

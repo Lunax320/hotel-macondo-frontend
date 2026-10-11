@@ -1,10 +1,11 @@
 import { Component, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Reserva } from '../../../../models/reserva.model';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-reservas-activa-item',
-  imports: [RouterLink],
+  imports: [RouterLink, DecimalPipe],
   templateUrl: './reservas-activa-item.html',
 })
 export class ReservasActivaItem {
