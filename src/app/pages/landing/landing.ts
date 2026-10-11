@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { TipoHabitacionService } from '../../services/tipo-habitacion.service';
 import { TestimonioService } from '../../services/testimonio.service';
 import { TipoHabitacion } from '../../models/tipo-habitacion.model';
@@ -22,6 +22,7 @@ import { LandingCta } from './components/landing-cta/landing-cta';
   selector: 'app-landing',
   templateUrl: './landing.html',
   styleUrl: './landing.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class Landing implements OnInit {
   private tipoService = inject(TipoHabitacionService);
@@ -31,7 +32,14 @@ export class Landing implements OnInit {
   testimonios: Testimonio[] = [];
 
   ngOnInit(): void {
-    this.tiposHabitacion = this.tipoService.obtenerTodos();
-    this.testimonios = this.testimonioService.obtenerTodos();
+    this.tipoService.obtenerTodos().subscribe({
+      next: (tipos) => (this.tiposHabitacion = tipos),
+      error: (err) => console.error('Error al cargar tipos de habitacion:', err),
+    });
+
+    this.testimonioService.obtenerTodos().subscribe({
+      next: (testimonios) => (this.testimonios = testimonios),
+      error: (err) => console.error('Error al cargar testimonios:', err),
+    });
   }
 }

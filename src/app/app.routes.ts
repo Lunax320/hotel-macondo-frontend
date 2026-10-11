@@ -17,6 +17,10 @@ import { AdminServicioForm } from './pages/admin-servicio-form/admin-servicio-fo
 import { PortalCliente } from './pages/cliente/cliente';
 import { AdminInicio } from './pages/admin-inicio/admin-inicio';
 import { AdminOperadores } from './pages/admin-operadores/admin-operadores';
+import { PerfilCliente } from './pages/perfil-cliente/perfil-cliente';
+import { CrearReserva } from './pages/crear-reserva/crear-reserva';
+import { HistorialReservas } from './pages/historial-reservas/historial-reservas';
+import { ReservasActivas } from './pages/reservas-activas/reservas-activas';
 
 export const routes: Routes = [
   {
@@ -62,6 +66,22 @@ export const routes: Routes = [
   {
     path: 'cliente/:id',
     component: PortalCliente,
+  },
+  {
+    path: 'cliente/:id/reservas',
+    component: ReservasActivas,
+  },
+  {
+    path: 'cliente/:id/historial',
+    component: HistorialReservas,
+  },
+  {
+    path: 'cliente/:id/reservas/nueva',
+    component: CrearReserva,
+  },
+  {
+    path: 'cliente/:id/perfil',
+    component: PerfilCliente,
   },
   {
     path: 'admin',

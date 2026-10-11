@@ -1,0 +1,52 @@
+<div
+  class="bg-white rounded-[16px] shadow-[0_4px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.13)] flex overflow-hidden transition-shadow duration-300"
+>
+  <div
+    class="w-2 flex-shrink-0"
+    [class]="reserva().estado?.toUpperCase() === 'FINALIZADA' ? 'bg-[#27ae60]' : 'bg-[#e74c3c]'"
+  ></div>
+
+  <div class="flex-1 p-5 md:p-6 flex items-center flex-wrap gap-4 md:gap-6">
+    <div class="flex-[1_1_200px]">
+      <div class="flex items-center gap-2 mb-1">
+        <i class="bi bi-door-closed text-gray-400 text-xs"></i>
+        <span class="font-sans text-[0.68rem] text-gray-400 tracking-wider">
+          {{ reserva().numeroReserva }}
+        </span>
+      </div>
+      <h3 class="font-serif text-xl font-bold text-[#0e2a3f] mb-1">
+        {{ reserva().habitacion?.tipoHabitacion?.nombre ?? 'Tipo no asignado' }}
+      </h3>
+      <p class="font-sans text-[0.78rem] text-gray-500 mb-0">
+        {{ reserva().habitacion ? 'Habitación ' + reserva().habitacion?.numero + ' · ' : '' }}
+        {{ reserva().cantidadPersonas }} personas
+      </p>
+
+      <div class="flex items-center gap-1.5 mt-2">
+        <i class="bi bi-calendar3 text-gray-400 text-[0.7rem]"></i>
+        <span class="font-sans text-[0.75rem] text-gray-500">
+          {{ reserva().fechaInicio }} → {{ reserva().fechaFin }}
+        </span>
+      </div>
+    </div>
+
+    <div class="flex-none">
+      <span class="font-serif text-lg md:text-xl font-bold text-[var(--azul)]">
+        ${{ reserva().total | number }}
+      </span>
+    </div>
+
+    <div class="flex-none text-right ml-auto md:ml-0">
+      <span
+        class="font-sans text-[0.72rem] font-bold rounded-lg px-3 py-1.5 tracking-wider border-[1.5px]"
+        [class]="
+          reserva().estado?.toUpperCase() === 'FINALIZADA'
+            ? 'text-[#27ae60] bg-[#27ae60]/10 border-[#27ae60]/30'
+            : 'text-[#e74c3c] bg-[#e74c3c]/10 border-[#e74c3c]/30'
+        "
+      >
+        {{ reserva().estado }}
+      </span>
+    </div>
+  </div>
+</div>

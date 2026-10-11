@@ -1,0 +1,46 @@
+<div class="bg-white flex flex-col font-sans">
+  <app-navbar-cliente [clienteId]="clienteId"></app-navbar-cliente>
+
+  <main class="flex-1 max-w-[1100px] mx-auto w-full px-8 py-12">
+    <div class="mb-8">
+      <h1 class="font-serif text-3xl md:text-4xl font-bold text-[#0e2a3f] mb-2">
+        Reservas Activas
+      </h1>
+      <p class="font-sans text-sm text-gray-500">
+        Gestiona tus reservas actuales y próximas estadías
+      </p>
+    </div>
+
+    <app-reservas-filtro-barra
+      (cambioFiltro)="actualizarFiltro($event)"
+    ></app-reservas-filtro-barra>
+
+    <div class="flex flex-col gap-4">
+      @if (reservasFiltradas.length === 0) {
+        <div class="bg-white rounded-[16px] p-12 text-center shadow-[0_4px_20px_rgba(0,0,0,0.07)]">
+          <i class="bi bi-check-circle text-5xl text-gray-300"></i>
+          <p class="font-serif text-xl text-gray-500 mt-4">
+            No tienes reservas activas con este criterio
+          </p>
+        </div>
+      } @else {
+        @for (r of reservasFiltradas; track r.id) {
+          <app-reservas-activa-item
+            [reserva]="r"
+            [clienteId]="clienteId"
+            (cancelar)="cancelarReserva($event)"
+          ></app-reservas-activa-item>
+        }
+      }
+    </div>
+
+    @if (reservas.length > 0) {
+      <app-reservas-metricas-resumen
+        [totalReservas]="reservas.length"
+        [totalActivas]="contarPorEstado('ACTIVA')"
+        [totalConfirmadas]="contarPorEstado('CONFIRMADA')"
+        [totalPendientes]="contarPorEstado('PENDIENTE')"
+      ></app-reservas-metricas-resumen>
+    }
+  </main>
+</div>

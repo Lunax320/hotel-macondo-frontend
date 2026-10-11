@@ -1,0 +1,17 @@
+<aside
+  class="h-fit rounded-[20px] bg-[#14516f] p-7 text-white shadow-[0_14px_35px_rgba(20,81,111,0.18)]"
+>
+  <i class="bi bi-calendar2-check text-4xl text-[var(--dorado)]"></i>
+  <h2 class="mt-5 font-serif text-2xl font-bold !text-white">Cómo funciona</h2>
+  <ol class="mt-5 space-y-4 text-sm leading-6 text-white/85">
+    <li>1. Elige el tipo de habitación que necesitas.</li>
+    <li>2. Consulta la disponibilidad real para tus fechas.</li>
+    <li>3. Confirma y recibe automáticamente una habitación.</li>
+  </ol>
+  <a
+    class="mt-7 inline-flex font-bold text-[var(--dorado)] hover:text-white cursor-pointer"
+    [routerLink]="['/cliente', clienteId(), 'reservas']"
+  >
+    Volver a mis reservas
+  </a>
+</aside>
