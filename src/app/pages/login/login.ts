@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { UsuarioService } from '../../services/usuario.service';
@@ -7,7 +7,8 @@ import { UsuarioService } from '../../services/usuario.service';
   selector: 'app-login',
   imports: [RouterLink, FormsModule],
   templateUrl: './login.html',
-  styleUrl: './login.scss'
+  styleUrl: './login.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class Login {
   private usuarioService = inject(UsuarioService);
@@ -30,25 +31,29 @@ export class Login {
       return;
     }
 
-    const usuario = this.usuarioService.autenticar(this.correo, this.contrasena);
+    this.usuarioService.autenticar(this.correo, this.contrasena).subscribe({
+      next: (usuario) => {
+        if (!usuario) {
+          this.mensajeError = 'Correo electrónico o contraseña incorrectos.';
+          return;
+        }
 
-    if (!usuario) {
-      this.mensajeError = 'Correo electrónico o contraseña incorrectos.';
-      return;
-    }
-
-    // Redirección dinámica por rol
-    if (usuario.rol === 'ADMINISTRADOR') {
-      this.router.navigate(['/admin']);
-    } else if (usuario.rol === 'OPERADOR') {
-      this.router.navigate(['/operador']);
-    } else {
-      // Cliente: va a su portal; si la cuenta no tiene cliente asociado, al inicio
-      if (usuario.cliente?.id) {
-        this.router.navigate(['/cliente', usuario.cliente.id]);
-      } else {
-        this.router.navigate(['/']);
-      }
-    }
+        // Redirección dinámica según el rol retornado por la base de datos
+        if (usuario.rol === 'ADMINISTRADOR') {
+          this.router.navigate(['/admin']);
+        } else if (usuario.rol === 'OPERADOR') {
+          this.router.navigate(['/operador']);
+        } else {
+          if (usuario.cliente?.id) {
+            this.router.navigate(['/cliente', usuario.cliente.id]);
+          } else {
+            this.router.navigate(['/']);
+          }
+        }
+      },
+      error: () => {
+        this.mensajeError = 'Correo electrónico o contraseña incorrectos.';
+      },
+    });
   }
 }

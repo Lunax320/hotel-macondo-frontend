@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Servicio } from '../../models/servicio.model';
 import { ServicioService } from '../../services/servicio.service';
@@ -9,6 +9,7 @@ import { ServicioCard } from './components/servicio-card/servicio-card';
   selector: 'app-servicios',
   styleUrl: './servicios.scss',
   templateUrl: './servicios.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class Servicios implements OnInit {
   private servicioService = inject(ServicioService);
@@ -19,8 +20,13 @@ export class Servicios implements OnInit {
   serviciosAgregados: number[] = [];
 
   ngOnInit(): void {
-    this.servicios = this.servicioService.obtenerCatalogoActivo();
-    this.categorias = this.servicioService.obtenerCategoriasDisponibles();
+    this.servicioService.obtenerCatalogoActivo().subscribe({
+      next: (datos) => {
+        this.servicios = datos;
+        this.categorias = [...new Set(datos.map((s) => s.categoria))];
+      },
+      error: (err) => console.error('Error al cargar servicios:', err),
+    });
   }
 
   get serviciosFiltrados(): Servicio[] {

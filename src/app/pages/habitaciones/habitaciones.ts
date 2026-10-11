@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, RouterLink } from '@angular/router';
 import { TipoHabitacion } from '../../models/tipo-habitacion.model';
 import { TipoHabitacionService } from '../../services/tipo-habitacion.service';
@@ -9,6 +9,7 @@ import { HabitacionCard } from './components/habitacion-card/habitacion-card';
   selector: 'app-habitaciones',
   styleUrl: './habitaciones.scss',
   templateUrl: './habitaciones.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class Habitaciones implements OnInit {
   private route = inject(ActivatedRoute);
@@ -29,20 +30,25 @@ export class Habitaciones implements OnInit {
   }
 
   private cargarTiposHabitacion(): void {
-    if (this.tipoId !== null) {
-      const tipoHabitacion = this.tipoHabitacionService.obtenerPorId(this.tipoId);
-      this.tiposHabitacion =
-        tipoHabitacion !== undefined &&
-        (this.personas === null || tipoHabitacion.capacidadPersonas >= this.personas)
-          ? [tipoHabitacion]
-          : [];
-      return;
-    }
+    this.tipoHabitacionService.obtenerTodos().subscribe({
+      next: (todosLosTipos) => {
+        if (this.tipoId !== null) {
+          const tipoHabitacion = todosLosTipos.find((t) => t.id === this.tipoId);
+          this.tiposHabitacion =
+            tipoHabitacion !== undefined &&
+            (this.personas === null || tipoHabitacion.capacidadPersonas >= this.personas)
+              ? [tipoHabitacion]
+              : [];
+          return;
+        }
 
-    this.tiposHabitacion =
-      this.personas === null
-        ? this.tipoHabitacionService.obtenerTodos()
-        : this.tipoHabitacionService.obtenerPorPersonas(this.personas);
+        this.tiposHabitacion =
+          this.personas === null
+            ? todosLosTipos
+            : todosLosTipos.filter((t) => t.capacidadPersonas >= (this.personas ?? 0));
+      },
+      error: (err) => console.error('Error al cargar habitaciones:', err),
+    });
   }
 
   private obtenerNumeroConsulta(parametros: ParamMap, nombre: string): number | null {
