@@ -2,20 +2,36 @@
   <app-operador-sidebar></app-operador-sidebar>
 
   <main class="min-w-0 flex-1 p-6 md:p-10">
-    @if (reserva; as reservaActual) {
-      <app-detalle-reserva-encabezado [reserva]="reservaActual"></app-detalle-reserva-encabezado>
-      <div class="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <app-detalle-reserva-resumen [reserva]="reservaActual"></app-detalle-reserva-resumen>
-        <app-detalle-reserva-cliente
-          [cliente]="reservaActual.cliente"
-        ></app-detalle-reserva-cliente>
-        <app-detalle-reserva-habitacion
-          [habitacion]="reservaActual.habitacion"
-        ></app-detalle-reserva-habitacion>
-      </div>
-      <app-detalle-reserva-cuenta></app-detalle-reserva-cuenta>
+    @if (resultadoReserva$ | async; as resultado) {
+      @if (resultado.tipo === 'exito') {
+        <app-detalle-reserva-encabezado [reserva]="resultado.reserva"></app-detalle-reserva-encabezado>
+        <div class="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <app-detalle-reserva-resumen [reserva]="resultado.reserva"></app-detalle-reserva-resumen>
+          <app-detalle-reserva-cliente
+            [cliente]="resultado.reserva.cliente"
+          ></app-detalle-reserva-cliente>
+          <app-detalle-reserva-habitacion
+            [habitacion]="resultado.reserva.habitacion"
+          ></app-detalle-reserva-habitacion>
+        </div>
+        <app-detalle-reserva-cuenta [cuenta]="resultado.reserva.cuenta"></app-detalle-reserva-cuenta>
+      } @else if (resultado.tipo === 'no-encontrada') {
+        <app-detalle-reserva-no-encontrada></app-detalle-reserva-no-encontrada>
+      } @else {
+        <div class="rounded-xl border border-red-200 bg-red-50 p-5 text-sm text-red-800" role="alert">
+          <p>{{ resultado.mensaje }}</p>
+          <a
+            routerLink="/operador/reservas"
+            class="mt-4 inline-flex items-center gap-2 font-semibold hover:underline"
+          >
+            <i class="bi bi-arrow-left" aria-hidden="true"></i> Volver a reservas
+          </a>
+        </div>
+      }
     } @else {
-      <app-detalle-reserva-no-encontrada></app-detalle-reserva-no-encontrada>
+      <p class="rounded-xl border border-gray-200 bg-white p-4 text-sm text-gray-600" role="status">
+        Cargando detalle de la reserva...
+      </p>
     }
   </main>
 </div>

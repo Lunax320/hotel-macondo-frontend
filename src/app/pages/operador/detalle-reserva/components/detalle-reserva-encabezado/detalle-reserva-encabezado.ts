@@ -8,5 +8,5 @@ import { Reserva } from '../../../../../models/reserva.model';
   templateUrl: './detalle-reserva-encabezado.html',
 })
 export class DetalleReservaEncabezado {
-  reserva = input.required<Reserva>();
+  reserva = input.required<Pick<Reserva, 'numeroReserva' | 'estado'>>();
 }

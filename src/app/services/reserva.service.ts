@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Habitacion } from '../models/habitacion.model';
 import { Reserva } from '../models/reserva.model';
+import { ReservaDetalleOperador } from '../models/reserva-detalle-operador.model';
+import { ReservaOperador } from '../models/reserva-operador.model';
 
 // Servicio para operaciones de reserva contra el backend.
 @Injectable({
@@ -12,8 +13,7 @@ export class ReservaService {
   private http = inject(HttpClient);
   private url = 'http://localhost:8080/api/reserva';
 
-  // Arreglo quemado que todavia usan las paginas de operador (PR #6, obtenerTodas). No borrar hasta que operador use la API.
-  private reservaArray: Reserva[] = [
+  private readonly reservasDemostracion: Reserva[] = [
     {
       id: 1,
       numeroReserva: 'MHC-2025-001',
@@ -38,8 +38,6 @@ export class ReservaService {
         estado: 'DISPONIBLE',
         capacidad: 2,
         precio: 280000,
-        etiqueta: 'ACOGEDORA',
-        piso: 1,
         tipoHabitacion: {
           id: 1,
           nombre: 'Castaño Fundacional',
@@ -75,8 +73,6 @@ export class ReservaService {
         estado: 'DISPONIBLE',
         capacidad: 3,
         precio: 450000,
-        etiqueta: 'POPULAR',
-        piso: 2,
         tipoHabitacion: {
           id: 2,
           nombre: 'Orfebrería Buendía',
@@ -112,8 +108,6 @@ export class ReservaService {
         estado: 'DISPONIBLE',
         capacidad: 4,
         precio: 650000,
-        etiqueta: 'EXCLUSIVA',
-        piso: 3,
         tipoHabitacion: {
           id: 3,
           nombre: 'Mariposas Amarillas',
@@ -127,12 +121,25 @@ export class ReservaService {
     },
   ];
 
-  obtenerTodas(): Reserva[] {
-    return this.reservaArray;
+  obtenerReservasOperador(): Observable<ReservaOperador[]> {
+    return this.http.get<ReservaOperador[]>(this.url);
   }
 
-  obtenerPorHabitacion(habitacion: Habitacion): Reserva[] {
-    return this.reservaArray.filter((reserva) => reserva.habitacion?.id === habitacion.id);
+  obtenerDetalleOperador(numeroReserva: string): Observable<ReservaDetalleOperador> {
+    return this.http.get<ReservaDetalleOperador>(
+      `${this.url}/${encodeURIComponent(numeroReserva)}`,
+    );
+  }
+
+  cancelarReservaOperador(numeroReserva: string): Observable<ReservaOperador> {
+    return this.http.post<ReservaOperador>(
+      `${this.url}/${encodeURIComponent(numeroReserva)}/cancelar`,
+      {},
+    );
+  }
+
+  obtenerTodasDemostracion(): Reserva[] {
+    return this.reservasDemostracion;
   }
 
   // Busca reservas activas de un cliente.
