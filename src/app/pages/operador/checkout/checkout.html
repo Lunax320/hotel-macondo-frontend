@@ -1,0 +1,26 @@
+<div class="flex min-h-screen flex-col bg-white font-sans text-[var(--texto)] md:flex-row">
+  <app-operador-sidebar></app-operador-sidebar>
+
+  <main class="min-w-0 flex-1 overflow-y-auto p-6 md:p-10">
+    <header class="mb-8 border-b border-gray-200 pb-4">
+      <h1 class="font-serif text-3xl font-bold text-[var(--azul-oscuro)] md:text-4xl">
+        Check-out — Habitación {{ habitacionId }}
+      </h1>
+      <p class="mt-1 text-sm font-medium text-gray-500">Finalización de estadía — Portal operador</p>
+    </header>
+
+    <p class="mb-6 max-w-4xl rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900" role="status">
+      Vista de demostración: el check-out todavía no se registra en el backend.
+    </p>
+
+    <div class="flex max-w-4xl flex-col gap-8">
+      <app-checkout-estadia [habitacionId]="habitacionId"></app-checkout-estadia>
+      <app-checkout-consumos [consumos]="consumos"></app-checkout-consumos>
+      <app-checkout-verificaciones></app-checkout-verificaciones>
+
+      <a routerLink="/operador" class="inline-flex items-center gap-2 text-sm font-semibold text-[var(--azul)] hover:underline">
+        <i class="bi bi-arrow-left" aria-hidden="true"></i> Volver al panel
+      </a>
+    </div>
+  </main>
+</div>

@@ -1,0 +1,39 @@
+<section class="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm" aria-labelledby="resumen-consumos">
+  <div class="p-6 pb-4">
+    <h2 id="resumen-consumos" class="block text-xs font-bold uppercase tracking-wider text-[var(--azul)]">
+      Resumen de consumos
+    </h2>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="w-full border-collapse text-left">
+      <thead>
+        <tr class="bg-[var(--crema)] text-sm font-bold uppercase tracking-wider text-[var(--azul-oscuro)]">
+          <th scope="col" class="px-6 py-3.5">Concepto</th>
+          <th scope="col" class="px-6 py-3.5 text-right">Valor</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100 text-sm font-medium text-[var(--texto)]">
+        @for (consumo of consumos; track consumo.concepto) {
+          <tr class="transition hover:bg-gray-50/50">
+            <td class="px-6 py-4 text-[var(--azul-oscuro)]">
+              {{ consumo.concepto }} ×{{ consumo.cantidad }}
+            </td>
+            <td class="px-6 py-4 text-right font-bold text-[var(--azul-oscuro)]">
+              {{ consumo.cantidad * consumo.valorUnitario | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="2" class="px-6 py-8 text-center text-gray-500">Sin consumos pendientes.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <div class="flex items-center justify-between border-t border-gray-100 bg-[var(--crema-claro)] px-6 py-4">
+    <span class="font-serif text-xl font-bold text-[var(--azul-oscuro)]">Total</span>
+    <span class="font-serif text-2xl font-bold text-[var(--azul)]">
+      {{ total | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
+    </span>
+  </div>
+</section>

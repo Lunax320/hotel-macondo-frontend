@@ -1,0 +1,46 @@
+<div class="flex min-h-screen flex-col bg-white font-sans text-[var(--texto)] md:flex-row">
+  <app-operador-sidebar></app-operador-sidebar>
+
+  <main class="min-w-0 flex-1 overflow-y-auto p-6 md:p-10">
+    <header class="mb-6 flex items-center gap-4 border-b border-gray-200 pb-4">
+      <div
+        class="flex h-14 w-14 items-center justify-center rounded-full bg-[var(--azul)] font-serif text-2xl font-bold text-white shadow-sm"
+        aria-hidden="true"
+      >
+        {{ habitacionId }}
+      </div>
+      <div>
+        <h1 class="font-serif text-3xl font-bold text-[var(--azul-oscuro)] md:text-4xl">
+          Cuenta habitación {{ habitacionId }}
+        </h1>
+        <p class="text-sm font-medium text-gray-500">Cuenta de consumos</p>
+      </div>
+    </header>
+
+    <p class="mb-6 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900" role="status">
+      Vista de demostración: los datos del huésped, la estadía, los servicios y los consumos son de ejemplo.
+      Puedes agregar o quitar consumos, pero los cambios solo se reflejan temporalmente en esta pantalla;
+      la cuenta todavía no consulta ni guarda información en el backend.
+    </p>
+
+    <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+      <div class="flex flex-col gap-6 lg:col-span-2">
+        <app-cuenta-habitacion-detalles [habitacionId]="habitacionId"></app-cuenta-habitacion-detalles>
+        <app-cuenta-habitacion-servicios
+          [servicios]="servicios"
+          [mensaje]="mensaje"
+          (agregar)="agregarServicio($event)"
+        ></app-cuenta-habitacion-servicios>
+        <app-cuenta-habitacion-tabla
+          [consumos]="consumos"
+          (eliminar)="eliminarConsumo($event)"
+        ></app-cuenta-habitacion-tabla>
+      </div>
+      <app-cuenta-habitacion-resumen [consumos]="consumos"></app-cuenta-habitacion-resumen>
+    </div>
+
+    <a routerLink="/operador" class="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-[var(--azul)] hover:underline">
+      <i class="bi bi-arrow-left" aria-hidden="true"></i> Volver al panel
+    </a>
+  </main>
+</div>

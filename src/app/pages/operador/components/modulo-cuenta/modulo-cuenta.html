@@ -13,7 +13,7 @@
     </p>
   </div>
 
-  <form action="/operador/cuenta/buscar" method="get" class="space-y-3">
+  <form (ngSubmit)="buscarCuenta()" class="space-y-3">
     <div>
       <label
         for="habitacionId"
@@ -24,8 +24,11 @@
       <input
         type="text"
         id="habitacionId"
-        name="id"
+        name="habitacionId"
         placeholder="Ej: 301"
+        [(ngModel)]="habitacionId"
+        inputmode="numeric"
+        pattern="[0-9]+"
         required
         class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-[var(--texto)] focus:border-[var(--azul)] focus:outline-none"
       />
