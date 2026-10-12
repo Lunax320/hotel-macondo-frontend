@@ -28,6 +28,12 @@
       </div>
 
       <form (ngSubmit)="guardarDatos()">
+        @if (errorPerfil) {
+          <p class="mb-4 text-sm text-red-600" role="alert">{{ errorPerfil }}</p>
+        }
+        @if (mensajePerfil) {
+          <p class="mb-4 text-sm text-green-700" role="status">{{ mensajePerfil }}</p>
+        }
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
           <div>
             <label
@@ -39,6 +45,7 @@
               type="text"
               name="nombre"
               [(ngModel)]="nombre"
+              required
               class="w-full bg-[#faf8f6] border-[1.5px] border-[rgba(26,117,159,0.2)] text-gray-700 text-sm font-sans rounded-xl px-4 py-3 outline-none focus:border-[var(--azul)] focus:bg-white transition-all"
             />
           </div>
@@ -53,6 +60,7 @@
               type="text"
               name="apellido"
               [(ngModel)]="apellido"
+              required
               class="w-full bg-[#faf8f6] border-[1.5px] border-[rgba(26,117,159,0.2)] text-gray-700 text-sm font-sans rounded-xl px-4 py-3 outline-none focus:border-[var(--azul)] focus:bg-white transition-all"
             />
           </div>
@@ -67,6 +75,7 @@
               type="email"
               name="correo"
               [(ngModel)]="correo"
+              required
               class="w-full bg-[#faf8f6] border-[1.5px] border-[rgba(26,117,159,0.2)] text-gray-700 text-sm font-sans rounded-xl px-4 py-3 outline-none focus:border-[var(--azul)] focus:bg-white transition-all"
             />
           </div>
@@ -81,6 +90,7 @@
               type="tel"
               name="telefono"
               [(ngModel)]="telefono"
+              required
               class="w-full bg-[#faf8f6] border-[1.5px] border-[rgba(26,117,159,0.2)] text-gray-700 text-sm font-sans rounded-xl px-4 py-3 outline-none focus:border-[var(--azul)] focus:bg-white transition-all"
             />
           </div>
@@ -114,6 +124,12 @@
       </div>
 
       <form (ngSubmit)="cambiarPassword()" class="flex flex-col gap-5 max-w-[420px]">
+        @if (errorPassword) {
+          <p class="text-sm text-red-600" role="alert">{{ errorPassword }}</p>
+        }
+        @if (mensajePassword) {
+          <p class="text-sm text-green-700" role="status">{{ mensajePassword }}</p>
+        }
         <div>
           <label
             class="block font-sans text-[0.7rem] font-bold text-[var(--azul)] mb-1.5 uppercase tracking-wider"
@@ -174,6 +190,9 @@
       <p class="font-sans text-[0.78rem] text-gray-500 mb-4">
         Estas acciones son irreversibles. Por favor, procede con cuidado.
       </p>
+      @if (errorCuenta) {
+        <p class="mb-4 text-sm text-red-600" role="alert">{{ errorCuenta }}</p>
+      }
       <button
         type="button"
         (click)="eliminarCuenta()"
