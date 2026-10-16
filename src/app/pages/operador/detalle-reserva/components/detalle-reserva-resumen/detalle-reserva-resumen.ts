@@ -6,7 +6,9 @@ import { Reserva } from '../../../../../models/reserva.model';
   templateUrl: './detalle-reserva-resumen.html',
 })
 export class DetalleReservaResumen {
-  reserva = input.required<Reserva>();
+  reserva = input.required<
+    Pick<Reserva, 'fechaInicio' | 'fechaFin' | 'cantidadPersonas' | 'precioNoche' | 'total'>
+  >();
 
   formatearFecha(fecha: string): string {
     return new Date(`${fecha}T00:00:00`).toLocaleDateString('es-CO', {

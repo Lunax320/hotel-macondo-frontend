@@ -1,6 +1,6 @@
 import { Component, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Reserva } from '../../../../../models/reserva.model';
+import { ReservaOperador } from '../../../../../models/reserva-operador.model';
 
 @Component({
   imports: [RouterLink],
@@ -8,12 +8,9 @@ import { Reserva } from '../../../../../models/reserva.model';
   templateUrl: './reservas-tabla.html',
 })
 export class ReservasTabla {
-  reservas = input<Reserva[]>([]);
-  cancelacionSolicitada = output<Reserva>();
-
-  cancelar(reserva: Reserva): void {
-    this.cancelacionSolicitada.emit(reserva);
-  }
+  reservas = input<ReservaOperador[]>([]);
+  cancelandoNumero = input<string | null>(null);
+  cancelacionSolicitada = output<string>();
 
   formatearFecha(fecha: string): string {
     return new Date(`${fecha}T00:00:00`).toLocaleDateString('es-CO', {
@@ -21,5 +18,9 @@ export class ReservasTabla {
       month: 'short',
       year: 'numeric',
     });
+  }
+
+  cancelar(reserva: ReservaOperador): void {
+    this.cancelacionSolicitada.emit(reserva.numeroReserva);
   }
 }

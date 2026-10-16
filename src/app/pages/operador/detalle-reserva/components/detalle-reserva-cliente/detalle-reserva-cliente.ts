@@ -6,5 +6,5 @@ import { Cliente } from '../../../../../models/cliente.model';
   templateUrl: './detalle-reserva-cliente.html',
 })
 export class DetalleReservaCliente {
-  cliente = input<Cliente | undefined>();
+  cliente = input<Cliente | null>();
 }

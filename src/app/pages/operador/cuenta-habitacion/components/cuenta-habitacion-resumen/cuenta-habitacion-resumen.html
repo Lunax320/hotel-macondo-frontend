@@ -1,0 +1,47 @@
+<aside class="lg:col-span-1" aria-labelledby="resumen-cuenta">
+  <div class="flex h-auto flex-col justify-between rounded-2xl border border-gray-100 bg-white p-6 shadow-md lg:sticky lg:top-8">
+    <div>
+      <h2 id="resumen-cuenta" class="mb-6 font-serif text-2xl font-bold text-[var(--azul-oscuro)]">
+        Resumen de cuenta
+      </h2>
+      <div class="space-y-3 border-b border-gray-100 pb-6 text-sm">
+        @for (consumo of consumos; track consumo.servicioId) {
+          <div class="flex items-center justify-between text-gray-600">
+            <span>{{ consumo.nombre }} <small class="font-normal text-gray-400">×{{ consumo.cantidad }}</small></span>
+            <span class="font-bold text-[var(--azul-oscuro)]">
+              {{ consumo.precio * consumo.cantidad | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
+            </span>
+          </div>
+        }
+      </div>
+      <div class="space-y-2 border-b border-gray-100 py-4 text-sm">
+        <div class="flex items-center justify-between text-gray-500">
+          <span>Subtotal</span>
+          <span class="font-bold text-[var(--azul-oscuro)]">
+            {{ subtotal | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
+          </span>
+        </div>
+        <div class="flex items-center justify-between text-gray-500">
+          <span>IVA (19%)</span>
+          <span class="font-bold text-[var(--azul-oscuro)]">
+            {{ impuesto | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
+          </span>
+        </div>
+      </div>
+      <div class="mb-8 mt-6 flex items-center justify-between rounded-xl bg-[var(--crema-claro)] p-4">
+        <span class="text-sm font-bold text-[var(--azul)]">Total</span>
+        <span class="font-serif text-2xl font-bold text-[var(--azul)]">
+          {{ total | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
+        </span>
+      </div>
+    </div>
+    <button
+      type="button"
+      disabled
+      class="w-full cursor-not-allowed rounded-lg bg-[var(--dorado)] px-4 py-3 text-center font-bold text-[var(--azul-oscuro)] opacity-60"
+      title="El registro de pagos requiere un endpoint del backend"
+    >
+      Registrar pago — backend pendiente
+    </button>
+  </div>
+</aside>

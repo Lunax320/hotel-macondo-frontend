@@ -1,0 +1,56 @@
+<section class="rounded-2xl bg-white p-6 shadow-sm" aria-labelledby="agregar-servicio">
+  <h2 id="agregar-servicio" class="mb-4 block text-xs font-bold uppercase tracking-wider text-[var(--azul)]">
+    Agregar servicio
+  </h2>
+  <form (ngSubmit)="enviar()" class="flex flex-col items-end gap-4 sm:flex-row">
+    <div class="w-full flex-1">
+      <label
+        for="servicio"
+        class="mb-2 block text-[0.68rem] font-bold uppercase tracking-wider text-gray-500"
+      >
+        Servicio
+      </label>
+      <select
+        id="servicio"
+        name="servicio"
+        [(ngModel)]="servicioSeleccionado"
+        required
+        class="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm text-[var(--texto)] focus:border-[var(--azul)] focus:outline-none"
+      >
+        <option [ngValue]="null">Seleccionar...</option>
+        @for (servicio of servicios; track servicio.id) {
+          <option [ngValue]="servicio.id">
+            {{ servicio.nombre }} — {{ servicio.precio | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
+          </option>
+        }
+      </select>
+    </div>
+    <div class="w-full sm:w-24">
+      <label
+        for="cantidad"
+        class="mb-2 block text-[0.68rem] font-bold uppercase tracking-wider text-gray-500"
+      >
+        Cant.
+      </label>
+      <input
+        id="cantidad"
+        name="cantidad"
+        type="number"
+        min="1"
+        step="1"
+        required
+        [(ngModel)]="cantidad"
+        class="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-center text-sm text-[var(--texto)] focus:border-[var(--azul)] focus:outline-none"
+      />
+    </div>
+    <button
+      type="submit"
+      class="w-full rounded-lg bg-[#E2D8CD] px-6 py-2.5 text-sm font-bold text-[var(--azul-oscuro)] transition-all hover:bg-[#D5C9BB] sm:w-auto"
+    >
+      Agregar
+    </button>
+  </form>
+  @if (mensaje) {
+    <p class="mt-4 text-sm text-[var(--azul-oscuro)]" role="status">{{ mensaje }}</p>
+  }
+</section>

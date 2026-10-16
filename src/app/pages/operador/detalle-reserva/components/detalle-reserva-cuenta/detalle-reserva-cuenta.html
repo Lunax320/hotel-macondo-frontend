@@ -5,7 +5,63 @@
     <i class="bi bi-receipt text-[var(--azul)]" aria-hidden="true"></i>
     Cuenta
   </h2>
-  <p class="text-sm text-gray-500">
-    La información de servicios contratados y pagos aún no está disponible en el frontend.
-  </p>
+  @if (cuenta(); as cuentaActual) {
+    <dl class="mb-6 grid grid-cols-1 gap-4 text-sm sm:grid-cols-3">
+      <div>
+        <dt class="text-gray-500">Estado</dt>
+        <dd class="font-semibold text-[var(--azul-oscuro)]">{{ cuentaActual.estado }}</dd>
+      </div>
+      <div>
+        <dt class="text-gray-500">Apertura</dt>
+        <dd class="font-semibold text-[var(--azul-oscuro)]">
+          {{ cuentaActual.fechaApertura | date: 'medium' : undefined : 'es-CO' }}
+        </dd>
+      </div>
+      <div>
+        <dt class="text-gray-500">Total de cuenta</dt>
+        <dd class="font-semibold text-[var(--azul-oscuro)]">
+          {{ cuentaActual.total | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
+        </dd>
+      </div>
+    </dl>
+
+    <h3 class="mb-3 text-xs font-bold uppercase tracking-wider text-[var(--azul)]">Consumos</h3>
+    @if (cuentaActual.consumos.length > 0) {
+      <ul class="mb-6 divide-y divide-gray-100 text-sm">
+        @for (consumo of cuentaActual.consumos; track consumo.id) {
+          <li class="flex items-center justify-between gap-4 py-3">
+            <span class="font-medium text-[var(--azul-oscuro)]">
+              {{ consumo.servicio ?? 'Servicio no disponible' }} ×{{ consumo.cantidad }}
+            </span>
+            <span class="text-gray-600">
+              {{ consumo.precio * consumo.cantidad | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
+            </span>
+          </li>
+        }
+      </ul>
+    } @else {
+      <p class="mb-6 text-sm text-gray-500">No hay consumos registrados en esta cuenta.</p>
+    }
+
+    <h3 class="mb-3 text-xs font-bold uppercase tracking-wider text-[var(--azul)]">Pagos</h3>
+    @if (cuentaActual.pagos.length > 0) {
+      <ul class="divide-y divide-gray-100 text-sm">
+        @for (pago of cuentaActual.pagos; track pago.id) {
+          <li class="flex flex-wrap items-center justify-between gap-2 py-3">
+            <span class="font-medium text-[var(--azul-oscuro)]">
+              {{ pago.metodoPago }} · {{ pago.estado }}
+            </span>
+            <span class="text-gray-600">
+              {{ pago.monto | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
+              — {{ pago.fechaPago | date: 'short' : undefined : 'es-CO' }}
+            </span>
+          </li>
+        }
+      </ul>
+    } @else {
+      <p class="text-sm text-gray-500">No hay pagos registrados en esta cuenta.</p>
+    }
+  } @else {
+    <p class="text-sm text-gray-500">Esta reserva todavía no tiene una cuenta asociada.</p>
+  }
 </section>

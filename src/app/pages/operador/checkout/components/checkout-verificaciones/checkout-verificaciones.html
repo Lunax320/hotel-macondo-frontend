@@ -1,0 +1,79 @@
+<section class="space-y-4" aria-labelledby="verificacion-checkout">
+  <h2 id="verificacion-checkout" class="block text-xs font-bold uppercase tracking-wider text-gray-500">
+    Verificación de check-out
+  </h2>
+  <div class="space-y-4">
+    <label class="flex cursor-pointer items-center justify-between rounded-2xl border border-gray-100 bg-white p-4 shadow-sm transition-all hover:border-gray-300">
+      <span class="flex items-center gap-4">
+        <span class="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-100 text-xl text-gray-600">
+          <i class="bi bi-check-circle" aria-hidden="true"></i>
+        </span>
+        <span>
+          <span class="block text-base font-bold text-[var(--azul-oscuro)]">Cuenta saldada</span>
+          <span class="block text-xs text-gray-400">
+            {{ cuentaSaldada ? 'Verificado' : 'Pendiente de verificación' }}
+          </span>
+        </span>
+      </span>
+      <input
+        type="checkbox"
+        name="cuentaSaldada"
+        [(ngModel)]="cuentaSaldada"
+        class="h-5 w-5 cursor-pointer accent-[var(--azul)]"
+      />
+    </label>
+
+    <label class="flex cursor-pointer items-center justify-between rounded-2xl border border-gray-100 bg-white p-4 shadow-sm transition-all hover:border-gray-300">
+      <span class="flex items-center gap-4">
+        <span class="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-100 text-xl text-gray-600">
+          <i class="bi bi-key" aria-hidden="true"></i>
+        </span>
+        <span>
+          <span class="block text-base font-bold text-[var(--azul-oscuro)]">Llaves devueltas</span>
+          <span class="block text-xs text-gray-400">
+            {{ llavesDevueltas ? 'Verificado' : 'Pendiente de verificación' }}
+          </span>
+        </span>
+      </span>
+      <input
+        type="checkbox"
+        name="llavesDevueltas"
+        [(ngModel)]="llavesDevueltas"
+        class="h-5 w-5 cursor-pointer accent-[var(--azul)]"
+      />
+    </label>
+
+    <label class="flex cursor-pointer items-center justify-between rounded-2xl border border-gray-100 bg-white p-4 shadow-sm transition-all hover:border-gray-300">
+      <span class="flex items-center gap-4">
+        <span class="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-100 text-xl text-gray-600">
+          <i class="bi bi-aspect-ratio" aria-hidden="true"></i>
+        </span>
+        <span>
+          <span class="block text-base font-bold text-[var(--azul-oscuro)]">Habitación inspeccionada</span>
+          <span class="block text-xs text-gray-400">
+            {{ habitacionInspeccionada ? 'Verificado' : 'Pendiente de verificación' }}
+          </span>
+        </span>
+      </span>
+      <input
+        type="checkbox"
+        name="habitacionInspeccionada"
+        [(ngModel)]="habitacionInspeccionada"
+        class="h-5 w-5 cursor-pointer accent-[var(--azul)]"
+      />
+    </label>
+  </div>
+  @if (verificacionesCompletas) {
+    <p class="text-sm font-medium text-emerald-700" role="status">
+      Verificaciones completas. El cierre de estadía requiere conexión con el backend.
+    </p>
+  }
+  <button
+    type="button"
+    disabled
+    class="w-full cursor-not-allowed rounded-lg bg-[var(--azul)] py-4 text-center text-base font-bold text-white opacity-60 shadow-sm"
+    title="El cierre de estadía requiere un endpoint del backend"
+  >
+    Realizar check-out — backend pendiente
+  </button>
+</section>

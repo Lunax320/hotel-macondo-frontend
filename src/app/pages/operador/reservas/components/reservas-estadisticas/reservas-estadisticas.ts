@@ -1,12 +1,12 @@
 import { Component, computed, input } from '@angular/core';
-import { Reserva } from '../../../../../models/reserva.model';
+import { ReservaOperador } from '../../../../../models/reserva-operador.model';
 
 @Component({
   selector: 'app-reservas-estadisticas',
   templateUrl: './reservas-estadisticas.html',
 })
 export class ReservasEstadisticas {
-  reservas = input<Reserva[]>([]);
+  reservas = input<ReservaOperador[]>([]);
 
   totalReservas = computed(() => this.reservas().length);
   reservasActivas = computed(

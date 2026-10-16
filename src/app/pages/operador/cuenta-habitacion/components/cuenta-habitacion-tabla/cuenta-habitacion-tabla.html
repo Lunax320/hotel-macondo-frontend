@@ -1,0 +1,43 @@
+<section class="overflow-hidden rounded-2xl bg-white shadow-sm" aria-label="Consumos de habitación">
+  <div class="overflow-x-auto">
+    <table class="w-full border-collapse text-left">
+      <thead>
+        <tr class="bg-[var(--crema)] text-sm font-bold uppercase tracking-wider text-[var(--azul-oscuro)]">
+          <th scope="col" class="px-6 py-3.5">Servicio</th>
+          <th scope="col" class="px-4 py-3.5">Precio unit.</th>
+          <th scope="col" class="px-4 py-3.5 text-center">Cantidad</th>
+          <th scope="col" class="px-4 py-3.5">Subtotal</th>
+          <th scope="col" class="px-6 py-3.5 text-center">Acciones</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100 text-sm font-medium text-[var(--texto)]">
+        @for (consumo of consumos; track consumo.servicioId) {
+          <tr class="transition hover:bg-gray-50/50">
+            <td class="px-6 py-4 font-bold text-[var(--azul-oscuro)]">{{ consumo.nombre }}</td>
+            <td class="px-4 py-4 text-gray-600">
+              {{ consumo.precio | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
+            </td>
+            <td class="px-4 py-4 text-center">{{ consumo.cantidad }}</td>
+            <td class="px-4 py-4 font-bold text-[var(--azul)]">
+              {{ consumo.precio * consumo.cantidad | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
+            </td>
+            <td class="px-6 py-4 text-center">
+              <button
+                type="button"
+                (click)="eliminar.emit(consumo)"
+                class="inline-flex items-center gap-1.5 rounded-lg bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-600 transition hover:bg-red-100"
+                [attr.aria-label]="'Eliminar consumo: ' + consumo.nombre"
+              >
+                <i class="bi bi-trash" aria-hidden="true"></i> Eliminar
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="5" class="px-6 py-8 text-center text-gray-500">Aún no hay consumos en esta vista.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

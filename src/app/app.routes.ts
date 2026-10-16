@@ -12,6 +12,9 @@ import { AdminTiposHabitacion } from './pages/admin-tipos-habitacion/admin-tipos
 import { Operador } from './pages/operador/operador';
 import { OperadorDetalleReserva } from './pages/operador/detalle-reserva/detalle-reserva';
 import { OperadorReservas } from './pages/operador/reservas/reservas';
+import { OperadorCuentaHabitacion } from './pages/operador/cuenta-habitacion/cuenta-habitacion';
+import { OperadorBuscarCuenta } from './pages/operador/cuenta-habitacion/buscar-cuenta';
+import { OperadorCheckout } from './pages/operador/checkout/checkout';
 import { AdminServicios } from './pages/admin-servicios/admin-servicios';
 import { AdminServicioForm } from './pages/admin-servicio-form/admin-servicio-form';
 import { PortalCliente } from './pages/cliente/cliente';
@@ -58,6 +61,18 @@ export const routes: Routes = [
   {
     path: 'operador/reservas',
     component: OperadorReservas,
+  },
+  {
+    path: 'operador/cuenta',
+    component: OperadorBuscarCuenta,
+  },
+  {
+    path: 'operador/cuenta/:id',
+    component: OperadorCuentaHabitacion,
+  },
+  {
+    path: 'operador/checkout',
+    component: OperadorCheckout,
   },
   {
     path: 'operador',

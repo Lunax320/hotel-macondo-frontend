@@ -20,4 +20,28 @@ export class ClienteService {
   registrar(cliente: Cliente, contrasena: string): Observable<Cliente> {
     return this.http.post<Cliente>(`${this.url}/registro`, { cliente, contrasena });
   }
+
+  // Actualiza los datos de un cliente existente.
+  actualizar(cliente: Cliente): Observable<Cliente> {
+    return this.http.post<Cliente>(`${this.url}/${cliente.id}/perfil`, cliente);
+  }
+
+  // Cambia la contraseña de un cliente.
+  cambiarContrasena(
+    clienteId: number,
+    contrasenaActual: string,
+    nuevaContrasena: string,
+    confirmarContrasena: string,
+  ): Observable<void> {
+    return this.http.post<void>(`${this.url}/${clienteId}/password`, {
+      contrasenaActual,
+      nuevaContrasena,
+      confirmarContrasena,
+    });
+  }
+
+  // Elimina la cuenta de un cliente.
+  eliminarCuenta(clienteId: number): Observable<void> {
+    return this.http.post<void>(`${this.url}/delete/${clienteId}`, null);
+  }
 }
