@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { ReservaOperador } from '../../../../../models/reserva-operador.model';
 
 @Component({
@@ -8,14 +8,23 @@ import { ReservaOperador } from '../../../../../models/reserva-operador.model';
 export class ReservasEstadisticas {
   reservas = input<ReservaOperador[]>([]);
 
-  totalReservas = computed(() => this.reservas().length);
-  reservasActivas = computed(
-    () => this.reservas().filter((reserva) => reserva.estado === 'ACTIVA').length,
-  );
-  reservasConfirmadas = computed(
-    () => this.reservas().filter((reserva) => reserva.estado === 'CONFIRMADA').length,
-  );
-  reservasCanceladas = computed(
-    () => this.reservas().filter((reserva) => reserva.estado === 'CANCELADA').length,
-  );
+  totalReservas(): number {
+    return this.reservas().length;
+  }
+
+  reservasActivas(): number {
+    return this.contarPorEstado('ACTIVA');
+  }
+
+  reservasConfirmadas(): number {
+    return this.contarPorEstado('CONFIRMADA');
+  }
+
+  reservasCanceladas(): number {
+    return this.contarPorEstado('CANCELADA');
+  }
+
+  private contarPorEstado(estado: string): number {
+    return this.reservas().filter((reserva) => reserva.estado.toUpperCase() === estado).length;
+  }
 }

@@ -8,16 +8,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { Cliente } from '../../../../../models/cliente.model';
+import { DatosRegistro } from '../../../../../models/datos-registro.model';
 import { AlertaMensaje } from '../../../../../components/alerta-mensaje/alerta-mensaje';
 import { RegistroDatosPersonales } from '../registro-datos-personales/registro-datos-personales';
 import { RegistroCredenciales } from '../registro-credenciales/registro-credenciales';
-
-// Datos que el formulario de registro le entrega a la página.
-export interface DatosRegistro {
-  cliente: Cliente;
-  contrasena: string;
-}
 
 // Verifica que las dos contraseñas del registro sean idénticas.
 function contrasenasIguales(control: AbstractControl): ValidationErrors | null {

@@ -13,7 +13,9 @@
         [clienteId]="clienteId"
       ></app-cliente-saludo>
 
-      @if (reservaActiva; as reserva) {
+      @if (cargandoReserva) {
+        <p class="mt-10 text-[var(--azul)]" role="status">Cargando tus reservas…</p>
+      } @else if (reservaActiva; as reserva) {
         <app-reserva-activa-card
           [reserva]="reserva"
           [habitacionActiva]="habitacionActiva"

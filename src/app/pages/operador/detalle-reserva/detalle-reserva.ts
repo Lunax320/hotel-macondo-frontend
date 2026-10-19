@@ -1,8 +1,7 @@
-import { AsyncPipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { catchError, map, of } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { OperadorSidebar } from '../../../components/operador-sidebar/operador-sidebar';
 import { ReservaDetalleOperador } from '../../../models/reserva-detalle-operador.model';
 import { ReservaService } from '../../../services/reserva.service';
@@ -13,14 +12,8 @@ import { DetalleReservaNoEncontrada } from './components/detalle-reserva-no-enco
 import { DetalleReservaResumen } from './components/detalle-reserva-resumen/detalle-reserva-resumen';
 import { DetalleReservaCliente } from './components/detalle-reserva-cliente/detalle-reserva-cliente';
 
-type ResultadoDetalleReserva =
-  | { tipo: 'exito'; reserva: ReservaDetalleOperador }
-  | { tipo: 'no-encontrada' }
-  | { tipo: 'error'; mensaje: string };
-
 @Component({
   imports: [
-    AsyncPipe,
     OperadorSidebar,
     RouterLink,
     DetalleReservaCuenta,
@@ -32,33 +25,57 @@ type ResultadoDetalleReserva =
   ],
   selector: 'app-operador-detalle-reserva',
   templateUrl: './detalle-reserva.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
-export class OperadorDetalleReserva {
+export class OperadorDetalleReserva implements OnInit, OnDestroy {
   private activatedRoute = inject(ActivatedRoute);
   private reservaService = inject(ReservaService);
+  private cambiosRuta?: Subscription;
+  private carga?: Subscription;
 
-  readonly resultadoReserva$ = this.cargarDetalle();
+  reserva?: ReservaDetalleOperador;
+  cargando = true;
+  noEncontrada = false;
+  errorCarga = '';
 
-  private cargarDetalle() {
+  ngOnInit(): void {
+    this.cambiosRuta = this.activatedRoute.paramMap.subscribe(() => this.cargarDetalle());
+  }
+
+  ngOnDestroy(): void {
+    this.cambiosRuta?.unsubscribe();
+    this.carga?.unsubscribe();
+  }
+
+  cargarDetalle(): void {
+    this.carga?.unsubscribe();
+    this.reserva = undefined;
+    this.noEncontrada = false;
+    this.errorCarga = '';
+    this.cargando = true;
     const numeroReserva = this.activatedRoute.snapshot.paramMap.get('numeroReserva');
-    if (!numeroReserva) {
-      return of<ResultadoDetalleReserva>({ tipo: 'no-encontrada' });
+    if (!numeroReserva?.trim()) {
+      this.noEncontrada = true;
+      this.cargando = false;
+      return;
     }
 
-    return this.reservaService.obtenerDetalleOperador(numeroReserva).pipe(
-      map((reserva): ResultadoDetalleReserva => ({ tipo: 'exito', reserva })),
-      catchError((error: HttpErrorResponse) =>
-        of<ResultadoDetalleReserva>(
-          error.status === 404
-            ? { tipo: 'no-encontrada' }
-            : { tipo: 'error', mensaje: this.mensajeError(error) },
-        ),
-      ),
-    );
+    // Una sola consulta: la respuesta ya contiene cliente, habitación y cuenta.
+    this.carga = this.reservaService.obtenerDetalleOperador(numeroReserva).subscribe({
+      next: (reserva) => {
+        this.reserva = reserva;
+        this.cargando = false;
+      },
+      error: (error: HttpErrorResponse) => {
+        this.noEncontrada = error.status === 404;
+        this.errorCarga = this.noEncontrada ? '' : this.mensajeError(error);
+        this.cargando = false;
+      },
+    });
   }
 
   private mensajeError(error: HttpErrorResponse): string {
-    const respuesta = error.error;
+    const respuesta: unknown = error.error;
     if (
       respuesta !== null &&
       typeof respuesta === 'object' &&
@@ -67,7 +84,6 @@ export class OperadorDetalleReserva {
     ) {
       return respuesta.mensaje;
     }
-
     return error.status === 0
       ? 'No fue posible conectar con el backend. Verifica que esté ejecutándose e inténtalo de nuevo.'
       : `No fue posible cargar el detalle de la reserva (HTTP ${error.status}).`;

@@ -95,6 +95,10 @@ export const routes: Routes = [
     component: CrearReserva,
   },
   {
+    path: 'cliente/:id/reservas/:reservaId/editar',
+    component: CrearReserva,
+  },
+  {
     path: 'cliente/:id/perfil',
     component: PerfilCliente,
   },

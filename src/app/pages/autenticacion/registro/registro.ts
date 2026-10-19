@@ -1,11 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { DatosRegistro } from '../../../models/datos-registro.model';
 import { ClienteService } from '../../../services/cliente.service';
 import { RegistroPresentacion } from './components/registro-presentacion/registro-presentacion';
-import {
-  DatosRegistro,
-  RegistroFormulario,
-} from './components/registro-formulario/registro-formulario';
+import { RegistroFormulario } from './components/registro-formulario/registro-formulario';
 
 // Página de registro que crea la cuenta y abre el portal del cliente.
 @Component({

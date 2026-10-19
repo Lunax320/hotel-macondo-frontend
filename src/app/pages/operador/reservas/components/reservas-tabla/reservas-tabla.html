@@ -1,40 +1,4 @@
 <section aria-label="Listado de reservas">
-  <div class="mb-6 flex flex-col items-stretch justify-between gap-4 lg:flex-row lg:items-center">
-    <label class="relative w-full lg:w-1/2">
-      <span class="sr-only">Buscar reserva</span>
-      <i
-        class="bi bi-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-        aria-hidden="true"
-      ></i>
-      <input
-        type="search"
-        placeholder="Buscar código, cliente o habitación..."
-        class="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-11 pr-4 text-sm text-[var(--texto)] shadow-sm focus:border-[var(--azul)] focus:outline-none"
-      />
-    </label>
-
-    <div
-      class="flex w-full flex-wrap justify-start gap-2 text-xs font-semibold lg:w-auto lg:justify-end"
-      role="group"
-      aria-label="Filtrar reservas"
-    >
-      <button
-        class="rounded-full bg-[var(--azul)] px-5 py-2 text-white shadow-sm"
-        type="button"
-        aria-pressed="true"
-      >
-        Todas
-      </button>
-      <button
-        class="rounded-full border border-[var(--azul)] bg-white px-5 py-2 text-[var(--azul)] shadow-sm transition hover:bg-blue-50"
-        type="button"
-        aria-pressed="false"
-      >
-        Activas
-      </button>
-    </div>
-  </div>
-
   <div class="overflow-x-auto rounded-2xl bg-white shadow-sm">
     <table class="w-full min-w-[960px] text-left">
       <thead class="bg-[var(--crema)] text-sm uppercase tracking-wider text-[var(--azul-oscuro)]">
@@ -86,18 +50,14 @@
               >
                 Ver detalle
               </a>
-              @if (reserva.estado === 'CONFIRMADA') {
+              @if (numerosCancelables().includes(reserva.numeroReserva)) {
                 <button
                   class="ml-4 font-medium text-red-600 hover:underline disabled:cursor-wait disabled:text-gray-400 disabled:no-underline"
                   type="button"
                   [disabled]="cancelandoNumero() !== null"
                   (click)="cancelar(reserva)"
                 >
-                  {{
-                    cancelandoNumero() === reserva.numeroReserva
-                      ? 'Cancelando...'
-                      : 'Cancelar'
-                  }}
+                  {{ cancelandoNumero() === reserva.numeroReserva ? 'Cancelando...' : 'Cancelar' }}
                 </button>
               }
             </td>
@@ -105,7 +65,7 @@
         } @empty {
           <tr class="border-t border-gray-100">
             <td class="px-6 py-10 text-center text-gray-500" colspan="7">
-              No hay reservas registradas.
+              No hay reservas que coincidan con la búsqueda y el filtro seleccionados.
             </td>
           </tr>
         }

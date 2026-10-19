@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 import { NavbarCliente } from '../../../components/navbar-cliente/navbar-cliente';
 import { Reserva } from '../../../models/reserva.model';
 import { ReservaService } from '../../../services/reserva.service';
@@ -20,12 +21,37 @@ export class HistorialReservas implements OnInit {
   clienteId = 0;
   historial: Reserva[] = [];
   filtroActual = 'TODOS';
+  cargando = false;
+  errorCarga = '';
 
   ngOnInit(): void {
     this.clienteId = Number(this.route.snapshot.params['id']);
+    this.cargarHistorial();
+  }
+
+  cargarHistorial(): void {
+    this.errorCarga = '';
+    if (!Number.isInteger(this.clienteId) || this.clienteId < 1) {
+      this.errorCarga = 'El identificador del cliente no es válido.';
+      return;
+    }
+    this.cargando = true;
     this.reservaService.buscarHistorialPorCliente(this.clienteId).subscribe({
-      next: (datos) => (this.historial = datos),
-      error: (err) => console.error('Error al cargar historial:', err),
+      next: (datos) => {
+        this.historial = datos;
+        this.cargando = false;
+      },
+      error: (error: HttpErrorResponse) => {
+        const respuesta: unknown = error.error;
+        this.errorCarga =
+          respuesta !== null &&
+          typeof respuesta === 'object' &&
+          'mensaje' in respuesta &&
+          typeof respuesta.mensaje === 'string'
+            ? respuesta.mensaje
+            : 'No fue posible cargar el historial. Verifica la conexión con el backend.';
+        this.cargando = false;
+      },
     });
   }
 

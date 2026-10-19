@@ -1,10 +1,8 @@
 import { Component, input } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MensajeErrorCampo } from '../../../../../components/mensaje-error-campo/mensaje-error-campo';
-import {
-  CampoFormulario,
-  ErrorCampo,
-} from '../../../../../components/campo-formulario/campo-formulario';
+import { CampoFormulario } from '../../../../../components/campo-formulario/campo-formulario';
+import { ErrorCampo } from '../../../../../models/error-campo.model';
 
 // Sección del registro con el correo y la contraseña de la cuenta.
 @Component({

@@ -1,13 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { of, switchMap } from 'rxjs';
+import { mergeMap } from 'rxjs';
 import { NavbarCliente } from '../../../components/navbar-cliente/navbar-cliente';
 import { Cliente } from '../../../models/cliente.model';
 import { Habitacion } from '../../../models/habitacion.model';
 import { Reserva } from '../../../models/reserva.model';
 import { Servicio } from '../../../models/servicio.model';
 import { ClienteService } from '../../../services/cliente.service';
-import { HabitacionService } from '../../../services/habitacion.service';
 import { ReservaService } from '../../../services/reserva.service';
 import { ServicioService } from '../../../services/servicio.service';
 import { ClienteSaludo } from './components/cliente-saludo/cliente-saludo';
@@ -36,7 +35,6 @@ export class PortalCliente implements OnInit {
   private route = inject(ActivatedRoute);
   private clienteService = inject(ClienteService);
   private reservaService = inject(ReservaService);
-  private habitacionService = inject(HabitacionService);
   private servicioService = inject(ServicioService);
   clienteId = 0;
   cliente?: Cliente;
@@ -46,6 +44,7 @@ export class PortalCliente implements OnInit {
   cantidadHistorial = 0;
   recomendaciones: Servicio[] = [];
   mensajeError = '';
+  cargandoReserva = true;
   // Fecha larga en español con la primera letra en mayúscula, igual que en Thymeleaf
   fechaActual = this.capitalizar(
     new Intl.DateTimeFormat('es-CO', { dateStyle: 'full' }).format(new Date()),
@@ -56,26 +55,30 @@ export class PortalCliente implements OnInit {
     this.clienteId = Number(this.route.snapshot.params['id']);
     if (!Number.isInteger(this.clienteId) || this.clienteId < 1) {
       this.mensajeError = 'No encontramos tu cuenta.';
+      this.cargandoReserva = false;
       return;
     }
     this.clienteService
       .buscarPorId(this.clienteId)
       .pipe(
-        switchMap((cliente) => {
+        mergeMap((cliente) => {
           this.cliente = cliente;
           return this.reservaService.buscarActivasPorCliente(this.clienteId);
         }),
-        switchMap((activas) => {
-          this.cantidadActivas = activas.length;
-          this.reservaActiva = activas[0];
-          return activas.length && activas[0].id
-            ? this.habitacionService.buscarPorReserva(activas[0].id)
-            : of(null);
-        }),
       )
       .subscribe({
-        next: (habitacion) => (this.habitacionActiva = habitacion),
-        error: () => (this.mensajeError = 'No encontramos tu cuenta.'),
+        next: (activas) => {
+          this.cantidadActivas = activas.length;
+          this.reservaActiva = activas[0];
+          // La API ya incluye la habitación y su tipo; no repetir esa consulta.
+          this.habitacionActiva = activas[0]?.habitacion ?? null;
+          this.cargandoReserva = false;
+        },
+        error: () => {
+          this.mensajeError =
+            'No fue posible cargar tu cuenta y sus reservas. Verifica la conexión con el backend.';
+          this.cargandoReserva = false;
+        },
       });
     this.reservaService
       .buscarHistorialPorCliente(this.clienteId)

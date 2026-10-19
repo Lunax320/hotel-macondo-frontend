@@ -1,32 +1,28 @@
-import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, input } from '@angular/core';
-
-interface CuentaReserva {
-  id: number;
-  estado: string;
-  total: number;
-  fechaApertura: string;
-  consumos: {
-    id: number;
-    cantidad: number;
-    precio: number;
-    fechaRegistro: string;
-    servicio: string | null;
-  }[];
-  pagos: {
-    id: number;
-    monto: number;
-    metodoPago: string;
-    fechaPago: string;
-    estado: string;
-  }[];
-}
+import { CuentaReserva } from '../../../../../models/cuenta-reserva.model';
 
 @Component({
-  imports: [CurrencyPipe, DatePipe],
+  imports: [],
   selector: 'app-detalle-reserva-cuenta',
   templateUrl: './detalle-reserva-cuenta.html',
 })
 export class DetalleReservaCuenta {
   cuenta = input<CuentaReserva | null>();
+
+  formatearFecha(fecha: string, formato: 'medium' | 'short' = 'medium'): string {
+    return new Intl.DateTimeFormat('es-CO', {
+      dateStyle: formato,
+      timeStyle: 'short',
+    }).format(new Date(fecha));
+  }
+
+  formatearMoneda(valor: number): string {
+    return new Intl.NumberFormat('es-CO', {
+      style: 'currency',
+      currency: 'COP',
+      currencyDisplay: 'narrowSymbol',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(valor);
+  }
 }

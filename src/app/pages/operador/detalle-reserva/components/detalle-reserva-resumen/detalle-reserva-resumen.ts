@@ -1,14 +1,12 @@
 import { Component, input } from '@angular/core';
-import { Reserva } from '../../../../../models/reserva.model';
+import { ReservaDetalleOperador } from '../../../../../models/reserva-detalle-operador.model';
 
 @Component({
   selector: 'app-detalle-reserva-resumen',
   templateUrl: './detalle-reserva-resumen.html',
 })
 export class DetalleReservaResumen {
-  reserva = input.required<
-    Pick<Reserva, 'fechaInicio' | 'fechaFin' | 'cantidadPersonas' | 'precioNoche' | 'total'>
-  >();
+  reserva = input.required<ReservaDetalleOperador>();
 
   formatearFecha(fecha: string): string {
     return new Date(`${fecha}T00:00:00`).toLocaleDateString('es-CO', {

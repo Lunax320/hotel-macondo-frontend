@@ -1,9 +1,7 @@
 import { Component, input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import {
-  CampoFormulario,
-  ErrorCampo,
-} from '../../../../../components/campo-formulario/campo-formulario';
+import { CampoFormulario } from '../../../../../components/campo-formulario/campo-formulario';
+import { ErrorCampo } from '../../../../../models/error-campo.model';
 
 // Campos de imagen, precio, duración y horario del servicio.
 @Component({

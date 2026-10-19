@@ -1,11 +1,6 @@
 import { CurrencyPipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
-
-interface ConsumoCheckout {
-  concepto: string;
-  cantidad: number;
-  valorUnitario: number;
-}
+import { ConsumoCheckout } from '../../../../../models/consumo-checkout.model';
 
 @Component({
   imports: [CurrencyPipe],

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { UsuarioService } from '../../../services/usuario.service';
 
@@ -13,6 +13,7 @@ import { UsuarioService } from '../../../services/usuario.service';
 export class Login {
   private usuarioService = inject(UsuarioService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   correo: string = '';
   contrasena: string = '';
@@ -43,9 +44,19 @@ export class Login {
         } else if (usuario.rol === 'OPERADOR') {
           this.router.navigate(['/operador']);
         } else {
-          // Si el objeto cliente no viene anidado (probando lo de @JSONIgnore), usa usuario.clienteId o el id del usuario
-          const clienteId = (usuario as any).cliente?.id ?? (usuario as any).clienteId ?? usuario.id;
-          this.router.navigate(['/cliente', clienteId]);
+          const clienteId = usuario.cliente?.id;
+          if (clienteId === undefined || !Number.isInteger(clienteId) || clienteId < 1) {
+            this.mensajeError = 'La cuenta no tiene un cliente asociado.';
+            return;
+          }
+          const tipoId = Number(this.route.snapshot.queryParams['tipoId']);
+          if (Number.isInteger(tipoId) && tipoId > 0) {
+            this.router.navigate(['/cliente', clienteId, 'reservas', 'nueva'], {
+              queryParams: { tipoId },
+            });
+          } else {
+            this.router.navigate(['/cliente', clienteId]);
+          }
         }
       },
       error: () => {

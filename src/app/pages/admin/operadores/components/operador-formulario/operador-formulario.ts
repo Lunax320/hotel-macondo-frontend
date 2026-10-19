@@ -1,9 +1,7 @@
 import { Component, input, output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import {
-  CampoFormulario,
-  ErrorCampo,
-} from '../../../../../components/campo-formulario/campo-formulario';
+import { CampoFormulario } from '../../../../../components/campo-formulario/campo-formulario';
+import { ErrorCampo } from '../../../../../models/error-campo.model';
 
 // Formulario para agregar un operador.
 @Component({

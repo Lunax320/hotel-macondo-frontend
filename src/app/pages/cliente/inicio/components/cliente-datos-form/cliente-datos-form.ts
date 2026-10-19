@@ -2,10 +2,8 @@ import { Component, OnInit, input, output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Cliente } from '../../../../../models/cliente.model';
 import { AlertaMensaje } from '../../../../../components/alerta-mensaje/alerta-mensaje';
-import {
-  CampoFormulario,
-  ErrorCampo,
-} from '../../../../../components/campo-formulario/campo-formulario';
+import { CampoFormulario } from '../../../../../components/campo-formulario/campo-formulario';
+import { ErrorCampo } from '../../../../../models/error-campo.model';
 
 // Edita los datos personales del cliente. La cédula y el correo (usuario de inicio de sesión)
 // se muestran deshabilitados porque no se cambian desde aquí.

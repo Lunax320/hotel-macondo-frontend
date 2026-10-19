@@ -11,12 +11,51 @@
       </p>
     </div>
 
+    @if (mensajeOperacion) {
+      <p
+        class="mb-6 rounded-lg border border-[#9ad7b6] bg-[#effaf4] p-4 text-[#166534]"
+        role="status"
+      >
+        {{ mensajeOperacion }}
+      </p>
+    }
+    @if (errorCancelacion) {
+      <p
+        class="mb-6 rounded-lg border border-[#f1b8b1] bg-[#fff4f2] p-4 text-[#b42318]"
+        role="alert"
+      >
+        {{ errorCancelacion }}
+      </p>
+      <button
+        type="button"
+        class="mb-5 font-bold text-[var(--azul)] underline cursor-pointer"
+        (click)="cargarReservas()"
+      >
+        Volver a consultar
+      </button>
+    }
     <app-reservas-filtro-barra
       (cambioFiltro)="actualizarFiltro($event)"
     ></app-reservas-filtro-barra>
 
     <div class="flex flex-col gap-4">
-      @if (reservasFiltradas.length === 0) {
+      @if (cargando) {
+        <p class="py-6 text-[var(--azul)]" role="status">Cargando reservas…</p>
+      } @else if (errorCarga) {
+        <div
+          class="rounded-lg border border-[#f1b8b1] bg-[#fff4f2] p-4 text-[#b42318]"
+          role="alert"
+        >
+          <p>{{ errorCarga }}</p>
+          <button
+            type="button"
+            class="mt-3 font-bold underline cursor-pointer"
+            (click)="cargarReservas()"
+          >
+            Volver a consultar
+          </button>
+        </div>
+      } @else if (reservasFiltradas.length === 0) {
         <div class="bg-white rounded-[16px] p-12 text-center shadow-[0_4px_20px_rgba(0,0,0,0.07)]">
           <i class="bi bi-check-circle text-5xl text-gray-300"></i>
           <p class="font-serif text-xl text-gray-500 mt-4">
@@ -28,13 +67,15 @@
           <app-reservas-activa-item
             [reserva]="r"
             [clienteId]="clienteId"
+            [ocupado]="cancelandoId !== undefined"
+            [cancelando]="cancelandoId === r.id"
             (cancelar)="cancelarReserva($event)"
           ></app-reservas-activa-item>
         }
       }
     </div>
 
-    @if (reservas.length > 0) {
+    @if (!cargando && !errorCarga && reservas.length > 0) {
       <app-reservas-metricas-resumen
         [totalReservas]="reservas.length"
         [totalActivas]="contarPorEstado('ACTIVA')"
