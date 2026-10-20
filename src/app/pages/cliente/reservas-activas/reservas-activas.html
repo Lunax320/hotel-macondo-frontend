@@ -1,5 +1,8 @@
-<div class="bg-white flex flex-col font-sans">
-  <app-navbar-cliente [clienteId]="clienteId"></app-navbar-cliente>
+<div class="min-h-screen bg-white flex flex-col font-sans">
+  <app-navbar-cliente
+    [clienteId]="clienteId"
+    class="sticky top-0 z-50 block w-full"
+  ></app-navbar-cliente>
 
   <main class="flex-1 max-w-[1100px] mx-auto w-full px-8 py-12">
     <div class="mb-8">
