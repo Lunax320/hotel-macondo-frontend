@@ -1,0 +1,52 @@
+<section
+  class="mb-6 flex flex-col items-stretch justify-between gap-4 lg:flex-row lg:items-center"
+  aria-label="Buscar y filtrar reservas"
+>
+  <label class="relative w-full lg:w-1/2">
+    <span class="sr-only">Buscar reserva</span>
+    <i
+      class="bi bi-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+      aria-hidden="true"
+    ></i>
+    <input
+      #campoBusqueda
+      type="search"
+      placeholder="Buscar código, cliente o habitación..."
+      class="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-11 pr-4 text-sm text-[var(--texto)] shadow-sm focus:border-[var(--azul)] focus:outline-none"
+      [value]="textoBusqueda()"
+      (input)="busquedaCambiada.emit(campoBusqueda.value)"
+    />
+  </label>
+  <div
+    class="flex w-full flex-wrap justify-start gap-2 text-xs font-semibold lg:w-auto lg:justify-end"
+    role="group"
+    aria-label="Filtrar reservas"
+  >
+    <button
+      class="rounded-full border border-[var(--azul)] px-5 py-2 shadow-sm transition cursor-pointer"
+      [class]="
+        filtro() === 'todas'
+          ? 'bg-[var(--azul)] text-white'
+          : 'bg-white text-[var(--azul)] hover:bg-blue-50'
+      "
+      type="button"
+      [attr.aria-pressed]="filtro() === 'todas'"
+      (click)="filtroCambiado.emit('todas')"
+    >
+      Todas
+    </button>
+    <button
+      class="rounded-full border border-[var(--azul)] px-5 py-2 shadow-sm transition cursor-pointer"
+      [class]="
+        filtro() === 'activas'
+          ? 'bg-[var(--azul)] text-white'
+          : 'bg-white text-[var(--azul)] hover:bg-blue-50'
+      "
+      type="button"
+      [attr.aria-pressed]="filtro() === 'activas'"
+      (click)="filtroCambiado.emit('activas')"
+    >
+      Activas
+    </button>
+  </div>
+</section>

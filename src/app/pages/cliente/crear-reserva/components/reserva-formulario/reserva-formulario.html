@@ -1,0 +1,64 @@
+<div
+  class="grid grid-cols-1 gap-6 md:grid-cols-2"
+  [formGroup]="formulario()"
+  (input)="criteriosCambiados.emit()"
+  (change)="criteriosCambiados.emit()"
+>
+  <label class="md:col-span-2">
+    <span class="mb-2 block text-sm font-bold text-[var(--azul-oscuro)]">Tipo de habitación</span>
+    <select
+      class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 outline-none transition focus:border-[var(--azul)] focus:ring-2 focus:ring-[var(--azul)]/15"
+      formControlName="tipoId"
+      required
+    >
+      <option value="" disabled>Selecciona un tipo</option>
+      @for (tipo of tiposHabitacion(); track tipo.id) {
+        <option [value]="tipo.id">
+          {{ tipo.nombre }} - ${{ tipo.precioNoche | number }} por noche
+        </option>
+      }
+    </select>
+    @if (formulario().get('tipoId')?.touched && formulario().get('tipoId')?.invalid) {
+      <span class="mt-2 block text-sm text-[#b42318]">Selecciona un tipo de habitación.</span>
+    }
+  </label>
+  <label>
+    <span class="mb-2 block text-sm font-bold text-[var(--azul-oscuro)]">Fecha de entrada</span>
+    <input
+      class="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-[var(--azul)] focus:ring-2 focus:ring-[var(--azul)]/15"
+      type="date"
+      formControlName="fechaEntrada"
+      [min]="fechaMinima()"
+      required
+    />
+  </label>
+  <label>
+    <span class="mb-2 block text-sm font-bold text-[var(--azul-oscuro)]">Fecha de salida</span>
+    <input
+      class="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-[var(--azul)] focus:ring-2 focus:ring-[var(--azul)]/15"
+      type="date"
+      formControlName="fechaSalida"
+      [min]="formulario().get('fechaEntrada')?.value || fechaMinima()"
+      required
+    />
+  </label>
+  <label class="md:col-span-2">
+    <span class="mb-2 block text-sm font-bold text-[var(--azul-oscuro)]">Cantidad de personas</span>
+    <input
+      class="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-[var(--azul)] focus:ring-2 focus:ring-[var(--azul)]/15"
+      type="number"
+      formControlName="cantidadPersonas"
+      min="1"
+      step="1"
+      placeholder="Ej. 2"
+      required
+    />
+    @if (
+      formulario().get('cantidadPersonas')?.touched && formulario().get('cantidadPersonas')?.invalid
+    ) {
+      <span class="mt-2 block text-sm text-[#b42318]"
+        >Indica una cantidad entera de personas mayor que cero.</span
+      >
+    }
+  </label>
+</div>

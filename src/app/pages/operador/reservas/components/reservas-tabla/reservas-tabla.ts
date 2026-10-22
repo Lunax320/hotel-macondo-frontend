@@ -9,6 +9,7 @@ import { ReservaOperador } from '../../../../../models/reserva-operador.model';
 })
 export class ReservasTabla {
   reservas = input<ReservaOperador[]>([]);
+  numerosCancelables = input<string[]>([]);
   cancelandoNumero = input<string | null>(null);
   cancelacionSolicitada = output<string>();
 
@@ -21,6 +22,11 @@ export class ReservasTabla {
   }
 
   cancelar(reserva: ReservaOperador): void {
-    this.cancelacionSolicitada.emit(reserva.numeroReserva);
+    if (
+      this.cancelandoNumero() === null &&
+      this.numerosCancelables().includes(reserva.numeroReserva)
+    ) {
+      this.cancelacionSolicitada.emit(reserva.numeroReserva);
+    }
   }
 }

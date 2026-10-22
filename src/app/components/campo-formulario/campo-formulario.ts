@@ -1,12 +1,7 @@
 import { Component, input } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ErrorCampo } from '../../models/error-campo.model';
 import { MensajeErrorCampo } from '../mensaje-error-campo/mensaje-error-campo';
-
-// Mensaje que se muestra cuando el control tiene ese error (required, minlength, pattern, email...).
-export interface ErrorCampo {
-  clave: string;
-  mensaje: string;
-}
 
 // Un campo de formulario reutilizable: etiqueta + input/textarea/select + sus mensajes de error.
 // Recibe el FormGroup del formulario padre y el nombre del control que debe pintar.

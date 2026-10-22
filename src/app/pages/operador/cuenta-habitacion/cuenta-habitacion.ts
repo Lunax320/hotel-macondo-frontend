@@ -1,7 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { OperadorSidebar } from '../../../components/operador-sidebar/operador-sidebar';
-import { ConsumoHabitacion } from './models/consumo-habitacion.model';
+import { ConsumoHabitacion } from '../../../models/consumo-habitacion.model';
+import { ConsumoSolicitud } from '../../../models/consumo-solicitud.model';
 import { CuentaHabitacionDetalles } from './components/cuenta-habitacion-detalles/cuenta-habitacion-detalles';
 import { CuentaHabitacionServicios } from './components/cuenta-habitacion-servicios/cuenta-habitacion-servicios';
 import { CuentaHabitacionTabla } from './components/cuenta-habitacion-tabla/cuenta-habitacion-tabla';
@@ -41,7 +42,7 @@ export class OperadorCuentaHabitacion implements OnInit {
     this.habitacionId = this.route.snapshot.paramMap.get('id') ?? '301';
   }
 
-  agregarServicio(evento: { servicioId: number | null; cantidad: number }): void {
+  agregarServicio(evento: ConsumoSolicitud): void {
     const servicio = this.servicios.find((item) => item.id === evento.servicioId);
     if (!servicio || !Number.isInteger(evento.cantidad) || evento.cantidad < 1) {
       this.mensaje = 'Selecciona un servicio e indica una cantidad válida.';

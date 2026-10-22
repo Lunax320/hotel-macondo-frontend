@@ -1,6 +1,6 @@
 import { CurrencyPipe } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ConsumoHabitacion } from '../../models/consumo-habitacion.model';
+import { ConsumoHabitacion } from '../../../../../models/consumo-habitacion.model';
 
 @Component({
   imports: [CurrencyPipe],

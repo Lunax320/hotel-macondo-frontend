@@ -1,15 +1,10 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { OperadorSidebar } from '../../../components/operador-sidebar/operador-sidebar';
+import { ConsumoCheckout } from '../../../models/consumo-checkout.model';
 import { CheckoutEstadia } from './components/checkout-estadia/checkout-estadia';
 import { CheckoutConsumos } from './components/checkout-consumos/checkout-consumos';
 import { CheckoutVerificaciones } from './components/checkout-verificaciones/checkout-verificaciones';
-
-interface ConsumoCheckout {
-  concepto: string;
-  cantidad: number;
-  valorUnitario: number;
-}
 
 @Component({
   imports: [OperadorSidebar, RouterLink, CheckoutEstadia, CheckoutConsumos, CheckoutVerificaciones],

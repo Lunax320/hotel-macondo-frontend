@@ -1,12 +1,8 @@
 import { CurrencyPipe } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
-interface ServicioCuenta {
-  id: number;
-  nombre: string;
-  precio: number;
-}
+import { ConsumoSolicitud } from '../../../../../models/consumo-solicitud.model';
+import { ServicioCuenta } from '../../../../../models/servicio-cuenta.model';
 
 @Component({
   imports: [CurrencyPipe, FormsModule],
@@ -16,7 +12,7 @@ interface ServicioCuenta {
 export class CuentaHabitacionServicios {
   @Input({ required: true }) servicios: ServicioCuenta[] = [];
   @Input() mensaje = '';
-  @Output() agregar = new EventEmitter<{ servicioId: number | null; cantidad: number }>();
+  @Output() agregar = new EventEmitter<ConsumoSolicitud>();
 
   servicioSeleccionado: number | null = null;
   cantidad = 1;

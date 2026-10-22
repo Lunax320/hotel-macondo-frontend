@@ -1,6 +1,6 @@
 import { Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Reserva } from '../../../../../models/reserva.model';
+import { ReservaDetalleOperador } from '../../../../../models/reserva-detalle-operador.model';
 
 @Component({
   imports: [RouterLink],
@@ -8,5 +8,5 @@ import { Reserva } from '../../../../../models/reserva.model';
   templateUrl: './detalle-reserva-encabezado.html',
 })
 export class DetalleReservaEncabezado {
-  reserva = input.required<Pick<Reserva, 'numeroReserva' | 'estado'>>();
+  reserva = input.required<ReservaDetalleOperador>();
 }

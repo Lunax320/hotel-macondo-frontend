@@ -1,0 +1,89 @@
+<div class="min-h-screen bg-[#eef3f3] text-[var(--texto)] font-sans">
+  <app-navbar-cliente [clienteId]="clienteId"></app-navbar-cliente>
+  <main class="mx-auto max-w-[1180px] px-5 py-10 md:py-14">
+    <header class="max-w-3xl">
+      <span class="text-xs font-bold uppercase tracking-[1.5px] text-[var(--azul)]">
+        {{ esEdicion ? 'Actualizar estadía' : 'Nueva estadía' }}
+      </span>
+      <h1 class="mt-3 font-serif text-4xl font-bold text-[var(--azul-oscuro)] md:text-5xl">
+        {{ esEdicion ? 'Modifica tu reserva' : 'Crea tu reserva' }}
+      </h1>
+      <p class="mt-4 max-w-2xl leading-7 text-gray-600">
+        {{
+          esEdicion
+            ? 'Actualiza el tipo de habitación, las fechas o la cantidad de huéspedes. Los cambios se guardarán únicamente si existe disponibilidad.'
+            : 'Selecciona el tipo de habitación, las fechas y la cantidad de huéspedes. Al confirmar, el sistema asignará una habitación física disponible.'
+        }}
+      </p>
+    </header>
+
+    @if (cargando) {
+      <p class="mt-10 text-[var(--azul)]" role="status">Cargando formulario de reserva…</p>
+    } @else if (errorCarga) {
+      <div
+        class="mt-10 rounded-lg border border-[#f1b8b1] bg-[#fff4f2] p-5 text-[#b42318]"
+        role="alert"
+      >
+        <p>{{ errorCarga }}</p>
+        <button
+          type="button"
+          class="mt-3 font-bold underline cursor-pointer"
+          (click)="cargarFormulario()"
+        >
+          Volver a consultar
+        </button>
+      </div>
+    } @else {
+      <section class="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
+        <form
+          class="rounded-[20px] bg-white p-6 shadow-[0_14px_35px_rgba(30,58,70,0.10)] md:p-9"
+          [formGroup]="formulario"
+          (ngSubmit)="consultarDisponibilidad()"
+        >
+          <fieldset [disabled]="consultando || guardando" class="min-w-0">
+            <app-reserva-formulario
+              [formulario]="formulario"
+              [tiposHabitacion]="tiposHabitacion"
+              [fechaMinima]="fechaMinima"
+              (criteriosCambiados)="invalidarDisponibilidad()"
+            ></app-reserva-formulario>
+            @if (mensajeError) {
+              <p
+                class="mt-7 rounded-lg border border-[#f1b8b1] bg-[#fff4f2] p-4 font-semibold text-[#b42318]"
+                role="alert"
+              >
+                {{ mensajeError }}
+              </p>
+            }
+            <app-reserva-disponibilidad
+              [consultada]="disponibilidadConsultada"
+              [cantidadDisponibles]="cantidadDisponibles"
+            ></app-reserva-disponibilidad>
+            <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+              <button
+                class="rounded-md border-2 border-[var(--azul)] px-6 py-3 font-bold text-[var(--azul)] transition hover:bg-[var(--azul)] hover:text-white cursor-pointer disabled:opacity-60"
+                type="submit"
+                [disabled]="consultando || guardando"
+              >
+                {{ consultando ? 'Consultando…' : 'Consultar disponibilidad' }}
+              </button>
+              @if (disponibilidadConsultada && cantidadDisponibles > 0) {
+                <button
+                  class="rounded-md bg-[var(--dorado)] px-6 py-3 font-bold text-[var(--azul-oscuro)] transition hover:bg-[var(--dorado-oscuro)] cursor-pointer disabled:opacity-60"
+                  type="button"
+                  [disabled]="consultando || guardando"
+                  (click)="confirmarReserva()"
+                >
+                  {{
+                    guardando ? 'Guardando…' : esEdicion ? 'Guardar cambios' : 'Confirmar reserva'
+                  }}
+                </button>
+              }
+            </div>
+          </fieldset>
+        </form>
+        <app-reserva-instrucciones [clienteId]="clienteId"></app-reserva-instrucciones>
+      </section>
+    }
+  </main>
+</div>
