@@ -14,6 +14,7 @@ export class CheckoutConsumos {
     return this.reserva?.cuenta ?? null;
   }
 
+  // El total sale de la cuenta del backend (hospedaje + servicios)
   get total(): number {
     return this.cuenta?.total ?? 0;
   }

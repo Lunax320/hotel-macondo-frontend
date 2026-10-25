@@ -118,6 +118,16 @@ export class ReservaService {
     );
   }
 
+  // Busca la reserva activa de la habitación para el check-out (aunque la cuenta ya esté pagada)
+  obtenerReservaCheckoutPorHabitacion(
+    numeroHabitacion: string | number,
+  ): Observable<ReservaIdentificadorResponse> {
+    return this.http.get<ReservaIdentificadorResponse>(
+      `${this.url}/habitacion/${encodeURIComponent(String(numeroHabitacion))}/checkout`,
+    );
+  }
+
+  // Paga el total de la cuenta de la reserva con el método elegido
   pagarCuentaReserva(numeroReserva: string, metodoPago: string): Observable<Pago> {
     return this.http.post<Pago>(
       `${this.operadorUrl}/cuenta/reserva/${encodeURIComponent(numeroReserva)}/pago`,
@@ -125,6 +135,7 @@ export class ReservaService {
     );
   }
 
+  // Finaliza la estadía (el backend exige la cuenta pagada)
   finalizarReservaOperador(numeroReserva: string): Observable<ReservaOperador> {
     return this.http.put<ReservaOperador>(
       `${this.url}/${encodeURIComponent(numeroReserva)}/finalizar`,

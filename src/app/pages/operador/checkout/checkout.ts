@@ -41,7 +41,7 @@ export class OperadorCheckout implements OnInit {
     }
 
     this.reservaServicio
-      .obtenerReservaActualPorHabitacion(this.habitacionId)
+      .obtenerReservaCheckoutPorHabitacion(this.habitacionId)
       .pipe(switchMap((r) => this.reservaServicio.obtenerDetalleOperadorPorId(r.idReserva)))
       .subscribe({
         next: (reserva) => (this.reserva = reserva),
