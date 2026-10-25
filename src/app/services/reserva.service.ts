@@ -8,6 +8,7 @@ import { ReservaDetalleOperador } from '../models/reserva-detalle-operador.model
 import { ReservaIdentificadorResponse } from '../models/reserva-identificador-response.model';
 import { ReservaOperador } from '../models/reserva-operador.model';
 import { ReservaSolicitud } from '../models/reserva-solicitud.model';
+import { Pago } from '../models/pago.model';
 
 @Injectable({ providedIn: 'root' })
 export class ReservaService {
@@ -114,6 +115,20 @@ export class ReservaService {
     return this.http.post<void>(
       `${this.operadorUrl}/cuenta/reserva/${encodeURIComponent(numeroReserva)}/servicios`,
       servicios,
+    );
+  }
+
+  pagarCuentaReserva(numeroReserva: string, metodoPago: string): Observable<Pago> {
+    return this.http.post<Pago>(
+      `${this.operadorUrl}/cuenta/reserva/${encodeURIComponent(numeroReserva)}/pago`,
+      { metodoPago },
+    );
+  }
+
+  finalizarReservaOperador(numeroReserva: string): Observable<ReservaOperador> {
+    return this.http.put<ReservaOperador>(
+      `${this.url}/${encodeURIComponent(numeroReserva)}/finalizar`,
+      {},
     );
   }
 }
