@@ -9,14 +9,35 @@
       <p class="mt-1 text-sm font-medium text-gray-500">Finalización de estadía — Portal operador</p>
     </header>
 
-    <p class="mb-6 max-w-4xl rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900" role="status">
-      Vista de demostración: el check-out todavía no se registra en el backend.
-    </p>
+    @if (mensaje) {
+      <p class="mb-6 max-w-4xl rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800" role="status">
+        {{ mensaje }}
+      </p>
+    }
+    @if (mensajeError) {
+      <p class="mb-6 max-w-4xl rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700" role="alert">
+        {{ mensajeError }}
+      </p>
+    }
 
     <div class="flex max-w-4xl flex-col gap-8">
-      <app-checkout-estadia [habitacionId]="habitacionId"></app-checkout-estadia>
-      <app-checkout-consumos [consumos]="consumos"></app-checkout-consumos>
-      <app-checkout-verificaciones></app-checkout-verificaciones>
+      @if (reserva) {
+        <app-checkout-estadia [reserva]="reserva"></app-checkout-estadia>
+        <app-checkout-consumos [reserva]="reserva"></app-checkout-consumos>
+        <app-checkout-pago
+          [cuenta]="reserva.cuenta ?? null"
+          [procesando]="procesando"
+          (pagar)="pagar($event)"
+        ></app-checkout-pago>
+        <app-checkout-verificaciones
+          [cuentaPagada]="reserva.cuenta?.estado === 'PAGADA' || reserva.cuenta?.total === 0"
+          [reservaActiva]="reserva.estado === 'ACTIVA'"
+          [procesando]="procesando"
+          (finalizar)="finalizar()"
+        ></app-checkout-verificaciones>
+      } @else if (!mensajeError) {
+        <p class="text-sm text-gray-500" role="status">Cargando la reserva...</p>
+      }
 
       <a routerLink="/operador" class="inline-flex items-center gap-2 text-sm font-semibold text-[var(--azul)] hover:underline">
         <i class="bi bi-arrow-left" aria-hidden="true"></i> Volver al panel

@@ -2,30 +2,36 @@
   <h2 id="informacion-estadia" class="mb-6 block text-xs font-bold uppercase tracking-wider text-[var(--azul)]">
     Información de la estadía
   </h2>
-  <dl class="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-4">
-    <div>
-      <dt class="mb-1 block text-[0.68rem] font-bold uppercase tracking-wider text-gray-400">Huésped</dt>
-      <dd class="font-bold text-[var(--azul-oscuro)]">Valentina Ospina</dd>
-    </div>
-    <div>
-      <dt class="mb-1 block text-[0.68rem] font-bold uppercase tracking-wider text-gray-400">Habitación</dt>
-      <dd class="font-bold text-[var(--azul-oscuro)]">{{ habitacionId }} — VIP Suite</dd>
-    </div>
-    <div>
-      <dt class="mb-1 block text-[0.68rem] font-bold uppercase tracking-wider text-gray-400">Fecha entrada</dt>
-      <dd class="font-bold text-[var(--azul-oscuro)]">15 sep 2025</dd>
-    </div>
-    <div>
-      <dt class="mb-1 block text-[0.68rem] font-bold uppercase tracking-wider text-gray-400">Fecha salida</dt>
-      <dd class="font-bold text-[var(--azul-oscuro)]">19 sep 2025</dd>
-    </div>
-    <div>
-      <dt class="mb-1 block text-[0.68rem] font-bold uppercase tracking-wider text-gray-400">Total noches</dt>
-      <dd class="font-bold text-[var(--azul-oscuro)]">4 noches</dd>
-    </div>
-    <div>
-      <dt class="mb-1 block text-[0.68rem] font-bold uppercase tracking-wider text-gray-400">Reserva</dt>
-      <dd class="font-bold text-[var(--azul-oscuro)]">MHC-20250915</dd>
-    </div>
-  </dl>
+  @if (reserva) {
+    <dl class="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-4">
+      <div>
+        <dt class="mb-1 block text-[0.68rem] font-bold uppercase tracking-wider text-gray-400">Huésped</dt>
+        <dd class="font-bold text-[var(--azul-oscuro)]">{{ reserva.cliente?.nombre }} {{ reserva.cliente?.apellido }}</dd>
+      </div>
+      <div>
+        <dt class="mb-1 block text-[0.68rem] font-bold uppercase tracking-wider text-gray-400">Habitación</dt>
+        <dd class="font-bold text-[var(--azul-oscuro)]">{{ reserva.habitacion?.numero }} — {{ reserva.habitacion?.tipoHabitacion?.nombre }}</dd>
+      </div>
+      <div>
+        <dt class="mb-1 block text-[0.68rem] font-bold uppercase tracking-wider text-gray-400">Fecha entrada</dt>
+        <dd class="font-bold text-[var(--azul-oscuro)]">{{ reserva.fechaInicio | date: 'd MMM y' : 'UTC' }}</dd>
+      </div>
+      <div>
+        <dt class="mb-1 block text-[0.68rem] font-bold uppercase tracking-wider text-gray-400">Fecha salida</dt>
+        <dd class="font-bold text-[var(--azul-oscuro)]">{{ reserva.fechaFin | date: 'd MMM y' : 'UTC' }}</dd>
+      </div>
+      <div>
+        <dt class="mb-1 block text-[0.68rem] font-bold uppercase tracking-wider text-gray-400">Total noches</dt>
+        <dd class="font-bold text-[var(--azul-oscuro)]">{{ totalNoches }} noches</dd>
+      </div>
+      <div>
+        <dt class="mb-1 block text-[0.68rem] font-bold uppercase tracking-wider text-gray-400">Reserva</dt>
+        <dd class="font-bold text-[var(--azul-oscuro)]">{{ reserva.numeroReserva }}</dd>
+      </div>
+      <div>
+        <dt class="mb-1 block text-[0.68rem] font-bold uppercase tracking-wider text-gray-400">Estado</dt>
+        <dd class="font-bold text-[var(--azul-oscuro)]">{{ reserva.estado }}</dd>
+      </div>
+    </dl>
+  }
 </section>
