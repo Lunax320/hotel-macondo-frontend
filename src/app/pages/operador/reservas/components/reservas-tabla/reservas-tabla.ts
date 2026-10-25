@@ -9,8 +9,8 @@ import { ReservaOperador } from '../../../../../models/reserva-operador.model';
 })
 export class ReservasTabla {
   reservas = input<ReservaOperador[]>([]);
-  numerosCancelables = input<string[]>([]);
-  cancelandoNumero = input<string | null>(null);
+  cambiandoNumero = input<string | null>(null);
+  activacionSolicitada = output<string>();
   cancelacionSolicitada = output<string>();
 
   formatearFecha(fecha: string): string {
@@ -21,11 +21,14 @@ export class ReservasTabla {
     });
   }
 
+  activar(reserva: ReservaOperador): void {
+    if (this.cambiandoNumero() === null && reserva.estado.toUpperCase() === 'CONFIRMADA') {
+      this.activacionSolicitada.emit(reserva.numeroReserva);
+    }
+  }
+
   cancelar(reserva: ReservaOperador): void {
-    if (
-      this.cancelandoNumero() === null &&
-      this.numerosCancelables().includes(reserva.numeroReserva)
-    ) {
+    if (this.cambiandoNumero() === null && reserva.estado.toUpperCase() === 'CONFIRMADA') {
       this.cancelacionSolicitada.emit(reserva.numeroReserva);
     }
   }

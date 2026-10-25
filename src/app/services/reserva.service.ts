@@ -1,15 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { ConsumoServicioSolicitud } from '../models/consumo-servicio-solicitud.model';
 import { Habitacion } from '../models/habitacion.model';
 import { Reserva } from '../models/reserva.model';
 import { ReservaDetalleOperador } from '../models/reserva-detalle-operador.model';
+import { ReservaIdentificadorResponse } from '../models/reserva-identificador-response.model';
 import { ReservaOperador } from '../models/reserva-operador.model';
 import { ReservaSolicitud } from '../models/reserva-solicitud.model';
 
 @Injectable({ providedIn: 'root' })
 export class ReservaService {
   private url = 'http://localhost:8080/api/reserva';
+  private operadorUrl = 'http://localhost:8080/api/operador';
 
   constructor(private http: HttpClient) {}
 
@@ -23,9 +26,30 @@ export class ReservaService {
     );
   }
 
+  obtenerDetalleOperadorPorId(reservaId: number): Observable<ReservaDetalleOperador> {
+    return this.http.get<ReservaDetalleOperador>(
+      `${this.url}/id/${encodeURIComponent(String(reservaId))}`,
+    );
+  }
+
+  obtenerReservaActualPorHabitacion(
+    numeroHabitacion: string | number,
+  ): Observable<ReservaIdentificadorResponse> {
+    return this.http.get<ReservaIdentificadorResponse>(
+      `${this.url}/habitacion/${encodeURIComponent(String(numeroHabitacion))}/actual`,
+    );
+  }
+
   cancelarReservaOperador(numeroReserva: string): Observable<ReservaOperador> {
     return this.http.put<ReservaOperador>(
       `${this.url}/${encodeURIComponent(numeroReserva)}/cancelar`,
+      {},
+    );
+  }
+
+  activarReservaOperador(numeroReserva: string): Observable<ReservaOperador> {
+    return this.http.put<ReservaOperador>(
+      `${this.url}/${encodeURIComponent(numeroReserva)}/activar`,
       {},
     );
   }
@@ -81,5 +105,15 @@ export class ReservaService {
 
   cancelar(clienteId: number, reservaId: number): Observable<Reserva> {
     return this.http.put<Reserva>(`${this.url}/cliente/${clienteId}/${reservaId}/cancelar`, {});
+  }
+
+  agregarServiciosAReserva(
+    numeroReserva: string,
+    servicios: ConsumoServicioSolicitud[],
+  ): Observable<void> {
+    return this.http.post<void>(
+      `${this.operadorUrl}/cuenta/reserva/${encodeURIComponent(numeroReserva)}/servicios`,
+      servicios,
+    );
   }
 }

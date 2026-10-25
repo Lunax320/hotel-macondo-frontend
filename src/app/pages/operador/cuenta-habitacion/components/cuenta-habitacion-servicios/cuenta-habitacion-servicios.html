@@ -1,5 +1,8 @@
 <section class="rounded-2xl bg-white p-6 shadow-sm" aria-labelledby="agregar-servicio">
-  <h2 id="agregar-servicio" class="mb-4 block text-xs font-bold uppercase tracking-wider text-[var(--azul)]">
+  <h2
+    id="agregar-servicio"
+    class="mb-4 block text-xs font-bold uppercase tracking-wider text-[var(--azul)]"
+  >
     Agregar servicio
   </h2>
   <form (ngSubmit)="enviar()" class="flex flex-col items-end gap-4 sm:flex-row">
@@ -15,12 +18,14 @@
         name="servicio"
         [(ngModel)]="servicioSeleccionado"
         required
-        class="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm text-[var(--texto)] focus:border-[var(--azul)] focus:outline-none"
+        class="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-[var(--texto)] focus:border-[var(--azul)] focus:outline-none"
       >
-        <option [ngValue]="null">Seleccionar...</option>
-        @for (servicio of servicios; track servicio.id) {
-          <option [ngValue]="servicio.id">
-            {{ servicio.nombre }} — {{ servicio.precio | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
+        <option [ngValue]="null" class="bg-white text-[var(--texto)]">Seleccionar...</option>
+
+        @for (servicio of servicios(); track servicio.id) {
+          <option [ngValue]="servicio.id" class="bg-white text-[var(--texto)]">
+            {{ servicio.nombre }} —
+            {{ servicio.precio | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
           </option>
         }
       </select>
@@ -50,7 +55,7 @@
       Agregar
     </button>
   </form>
-  @if (mensaje) {
-    <p class="mt-4 text-sm text-[var(--azul-oscuro)]" role="status">{{ mensaje }}</p>
+  @if (mensajeError) {
+    <p class="mt-4 text-sm text-[var(--azul-oscuro)]" role="status">{{ mensajeError }}</p>
   }
 </section>

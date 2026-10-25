@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { ReservaService } from '../../services/reserva.service';
 
 @Component({
   imports: [FormsModule],
@@ -9,13 +10,30 @@ import { FormsModule } from '@angular/forms';
 })
 export class ModuloCuenta {
   private router = inject(Router);
+  private serviceReserva = inject(ReservaService);
 
   habitacionId = '';
+  mensajeError = '';
 
   buscarCuenta(): void {
-    const id = this.habitacionId.trim();
-    if (/^\d+$/.test(id)) {
-      this.router.navigate(['/operador/cuenta', id]);
+    const numeroHabitacion = this.habitacionId.trim();
+
+    if (!/^\d+$/.test(numeroHabitacion)) {
+      this.mensajeError = 'Ingresa un número de habitación válido.';
+      return;
     }
+
+    this.mensajeError = '';
+    this.serviceReserva.obtenerReservaActualPorHabitacion(numeroHabitacion).subscribe({
+      next: (reserva) => {
+        this.mensajeError = '';
+        this.router.navigate(['/operador/cuenta', reserva.idReserva]);
+      },
+      error: (error) => {
+        this.mensajeError =
+          error.error?.mensaje ??
+          'No se encontró una reserva activa con cuenta abierta para esa habitación.';
+      },
+    });
   }
 }
