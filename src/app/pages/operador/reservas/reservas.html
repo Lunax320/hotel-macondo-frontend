@@ -7,26 +7,26 @@
       <p class="mt-1 text-[var(--texto)]">Reservas registradas en el hotel y su estado actual.</p>
     </header>
 
-    @if (mensajeCancelacion) {
+    @if (mensajeAccion) {
       <p
         class="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800"
         role="status"
       >
-        {{ mensajeCancelacion }}
+        {{ mensajeAccion }}
       </p>
     }
 
-    @if (errorCancelacion) {
+    @if (errorAccion) {
       <p
         class="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800"
         role="alert"
       >
-        {{ errorCancelacion }}
+        {{ errorAccion }}
       </p>
       <button
         type="button"
         class="mb-5 font-semibold text-[var(--azul)] underline cursor-pointer"
-        [disabled]="cargando || cancelandoNumero !== null"
+        [disabled]="cargando || cambiandoNumero !== null"
         (click)="cargarReservas()"
       >
         Volver a consultar
@@ -58,8 +58,8 @@
       ></app-reservas-filtros>
       <app-reservas-tabla
         [reservas]="reservasFiltradas"
-        [numerosCancelables]="numerosCancelables"
-        [cancelandoNumero]="cancelandoNumero"
+        [cambiandoNumero]="cambiandoNumero"
+        (activacionSolicitada)="activarReserva($event)"
         (cancelacionSolicitada)="cancelarReserva($event)"
       ></app-reservas-tabla>
     }

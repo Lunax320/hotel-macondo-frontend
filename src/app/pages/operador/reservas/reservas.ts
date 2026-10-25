@@ -22,16 +22,16 @@ export class OperadorReservas implements OnInit, OnDestroy {
   private router = inject(Router);
   private cambiosFiltro?: Subscription;
   private carga?: Subscription;
-  private cancelacion?: Subscription;
+  private cambioEstado?: Subscription;
 
   reservas: ReservaOperador[] = [];
   textoBusqueda = '';
   filtro = 'todas';
   cargando = false;
   errorCarga = '';
-  mensajeCancelacion = '';
-  errorCancelacion = '';
-  cancelandoNumero: string | null = null;
+  mensajeAccion = '';
+  errorAccion = '';
+  cambiandoNumero: string | null = null;
 
   ngOnInit(): void {
     // Mantiene el parámetro de navegación original /operador/reservas?filtro=activas.
@@ -44,7 +44,7 @@ export class OperadorReservas implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.cambiosFiltro?.unsubscribe();
     this.carga?.unsubscribe();
-    this.cancelacion?.unsubscribe();
+    this.cambioEstado?.unsubscribe();
   }
 
   get reservasFiltradas(): ReservaOperador[] {
@@ -72,18 +72,6 @@ export class OperadorReservas implements OnInit, OnDestroy {
     return resultado;
   }
 
-  get numerosCancelables(): string[] {
-    const hoy = new Date();
-    hoy.setHours(0, 0, 0, 0);
-    return this.reservas
-      .filter(
-        (reserva) =>
-          new Date(`${reserva.fechaInicio}T00:00:00`).getTime() > hoy.getTime() &&
-          ['ACTIVA', 'CONFIRMADA', 'PENDIENTE'].includes(reserva.estado.toUpperCase()),
-      )
-      .map((reserva) => reserva.numeroReserva);
-  }
-
   actualizarBusqueda(texto: string): void {
     this.textoBusqueda = texto;
   }
@@ -95,7 +83,7 @@ export class OperadorReservas implements OnInit, OnDestroy {
   }
 
   cargarReservas(): void {
-    if (this.cargando || this.cancelandoNumero !== null) return;
+    if (this.cargando || this.cambiandoNumero !== null) return;
     this.errorCarga = '';
     this.cargando = true;
     this.carga = this.reservaService.obtenerReservasOperador().subscribe({
@@ -111,43 +99,67 @@ export class OperadorReservas implements OnInit, OnDestroy {
   }
 
   cancelarReserva(numeroReserva: string): void {
-    if (this.cargando || this.cancelandoNumero !== null) return;
-    this.errorCancelacion = '';
-    if (!this.numerosCancelables.includes(numeroReserva)) {
-      this.errorCancelacion =
-        'Solo se pueden cancelar reservas abiertas cuya entrada sea posterior a hoy.';
+    if (this.cargando || this.cambiandoNumero !== null) return;
+    this.errorAccion = '';
+    const reserva = this.reservas.find((item) => item.numeroReserva === numeroReserva);
+    if (!reserva || reserva.estado.toUpperCase() !== 'CONFIRMADA') {
+      this.errorAccion = 'Solo se pueden cancelar reservas confirmadas.';
       return;
     }
     if (!confirm(`¿Seguro que deseas cancelar la reserva ${numeroReserva}?`)) return;
 
-    this.cancelandoNumero = numeroReserva;
-    this.mensajeCancelacion = '';
-    let cancelacionConfirmada = false;
-    this.cancelacion = this.reservaService
-      .cancelarReservaOperador(numeroReserva)
+    this.cambiarEstadoReserva(numeroReserva, 'cancelar');
+  }
+
+  activarReserva(numeroReserva: string): void {
+    if (this.cargando || this.cambiandoNumero !== null) return;
+    this.errorAccion = '';
+    const reserva = this.reservas.find((item) => item.numeroReserva === numeroReserva);
+    if (!reserva || reserva.estado.toUpperCase() !== 'CONFIRMADA') {
+      this.errorAccion = 'Solo se pueden activar reservas confirmadas.';
+      return;
+    }
+
+    this.cambiarEstadoReserva(numeroReserva, 'activar');
+  }
+
+  private cambiarEstadoReserva(numeroReserva: string, accion: 'activar' | 'cancelar'): void {
+    this.cambiandoNumero = numeroReserva;
+    this.mensajeAccion = '';
+    this.errorAccion = '';
+    let cambioConfirmado = false;
+    const solicitud =
+      accion === 'activar'
+        ? this.reservaService.activarReservaOperador(numeroReserva)
+        : this.reservaService.cancelarReservaOperador(numeroReserva);
+
+    this.cambioEstado = solicitud
       .pipe(
         concatMap((reservaActualizada) => {
-          cancelacionConfirmada = true;
+          cambioConfirmado = true;
           // Refleja únicamente una respuesta ya confirmada por el servidor.
           this.reservas = this.reservas.map((reserva) =>
             reserva.numeroReserva === reservaActualizada.numeroReserva
               ? reservaActualizada
               : reserva,
           );
-          this.mensajeCancelacion = `La reserva ${numeroReserva} fue cancelada.`;
+          this.mensajeAccion =
+            accion === 'activar'
+              ? `La reserva ${numeroReserva} fue activada.`
+              : `La reserva ${numeroReserva} fue cancelada.`;
           return this.reservaService.obtenerReservasOperador();
         }),
       )
       .subscribe({
         next: (reservas) => {
           this.reservas = reservas;
-          this.cancelandoNumero = null;
+          this.cambiandoNumero = null;
         },
         error: (error: HttpErrorResponse) => {
-          this.errorCancelacion = cancelacionConfirmada
-            ? 'La cancelación se guardó, pero no fue posible recargar las reservas. Vuelve a consultar.'
+          this.errorAccion = cambioConfirmado
+            ? 'El cambio de estado se guardó, pero no fue posible recargar las reservas. Vuelve a consultar.'
             : this.mensajeError(error);
-          this.cancelandoNumero = null;
+          this.cambiandoNumero = null;
         },
       });
   }

@@ -67,7 +67,7 @@ export const routes: Routes = [
     component: OperadorBuscarCuenta,
   },
   {
-    path: 'operador/cuenta/:id',
+    path: 'operador/cuenta/:reservaId',
     component: OperadorCuentaHabitacion,
   },
   {

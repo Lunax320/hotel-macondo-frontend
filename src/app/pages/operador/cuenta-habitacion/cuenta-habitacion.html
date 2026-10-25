@@ -17,29 +17,30 @@
       </div>
     </header>
 
-    <p class="mb-6 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900" role="status">
-      Vista de demostración: los datos del huésped, la estadía, los servicios y los consumos son de ejemplo.
-      Puedes agregar o quitar consumos, pero los cambios solo se reflejan temporalmente en esta pantalla;
-      la cuenta todavía no consulta ni guarda información en el backend.
-    </p>
-
     <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
       <div class="flex flex-col gap-6 lg:col-span-2">
-        <app-cuenta-habitacion-detalles [habitacionId]="habitacionId"></app-cuenta-habitacion-detalles>
+        <app-cuenta-habitacion-detalles [reserva]="reservaDetalle"></app-cuenta-habitacion-detalles>
         <app-cuenta-habitacion-servicios
-          [servicios]="servicios"
-          [mensaje]="mensaje"
-          (agregar)="agregarServicio($event)"
+          (serviciosAgregados)="agregarServicio($event)"
         ></app-cuenta-habitacion-servicios>
         <app-cuenta-habitacion-tabla
           [consumos]="consumos"
           (eliminar)="eliminarConsumo($event)"
         ></app-cuenta-habitacion-tabla>
       </div>
-      <app-cuenta-habitacion-resumen [consumos]="consumos"></app-cuenta-habitacion-resumen>
+      <app-cuenta-habitacion-resumen
+        [consumos]="consumos"
+        (agregarServicios)="guardarServicios()"
+      ></app-cuenta-habitacion-resumen>
     </div>
+    @if (mensajeGuardado) {
+      <p class="mt-4 text-sm text-[var(--azul-oscuro)]" role="status">{{ mensajeGuardado }}</p>
+    }
 
-    <a routerLink="/operador" class="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-[var(--azul)] hover:underline">
+    <a
+      routerLink="/operador"
+      class="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-[var(--azul)] hover:underline"
+    >
       <i class="bi bi-arrow-left" aria-hidden="true"></i> Volver al panel
     </a>
   </main>

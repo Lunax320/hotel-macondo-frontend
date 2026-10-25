@@ -1,5 +1,5 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ConsumoHabitacion } from '../../../../../models/consumo-habitacion.model';
 
 @Component({
@@ -21,4 +21,6 @@ export class CuentaHabitacionResumen {
   get total(): number {
     return this.subtotal + this.impuesto;
   }
+
+  @Output() agregarServicios = new EventEmitter<void>();
 }
