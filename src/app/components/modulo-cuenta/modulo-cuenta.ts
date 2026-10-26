@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ReservaService } from '../../services/reserva.service';
@@ -7,6 +7,7 @@ import { ReservaService } from '../../services/reserva.service';
   imports: [FormsModule],
   selector: 'app-modulo-cuenta',
   templateUrl: './modulo-cuenta.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class ModuloCuenta {
   private router = inject(Router);
@@ -15,6 +16,7 @@ export class ModuloCuenta {
   habitacionId = '';
   mensajeError = '';
 
+  // Busca la reserva activa de la habitación y navega a su cuenta
   buscarCuenta(): void {
     const numeroHabitacion = this.habitacionId.trim();
 

@@ -1,4 +1,12 @@
-import { Component, EventEmitter, inject, OnInit, Output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  inject,
+  OnInit,
+  Output,
+  signal,
+} from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ServicioService } from '../../../../../services/servicio.service';
@@ -9,6 +17,7 @@ import { ConsumoHabitacion } from '../../../../../models/consumo-habitacion.mode
   imports: [CurrencyPipe, FormsModule],
   selector: 'app-cuenta-habitacion-servicios',
   templateUrl: './cuenta-habitacion-servicios.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class CuentaHabitacionServicios implements OnInit {
   @Output() serviciosAgregados = new EventEmitter<ConsumoHabitacion>();
@@ -20,6 +29,7 @@ export class CuentaHabitacionServicios implements OnInit {
 
   mensajeError: string = '';
 
+  // Carga el catálogo de servicios activos al iniciar el componente
   ngOnInit(): void {
     this.servicioService.obtenerCatalogoActivo().subscribe({
       next: (servicios) => {
@@ -32,6 +42,7 @@ export class CuentaHabitacionServicios implements OnInit {
     });
   }
 
+  // Valida el servicio elegido y emite el consumo hacia el componente padre
   enviar(): void {
     const servicio = this.servicios().find((s) => s.id === this.servicioSeleccionado);
 

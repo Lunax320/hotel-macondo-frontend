@@ -14,12 +14,8 @@ export class CuentaHabitacionResumen {
     return this.consumos.reduce((total, consumo) => total + consumo.precio * consumo.cantidad, 0);
   }
 
-  get impuesto(): number {
-    return Math.round(this.subtotal * 0.19);
-  }
-
   get total(): number {
-    return this.subtotal + this.impuesto;
+    return this.subtotal;
   }
 
   @Output() agregarServicios = new EventEmitter<void>();

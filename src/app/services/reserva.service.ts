@@ -9,6 +9,7 @@ import { ReservaIdentificadorResponse } from '../models/reserva-identificador-re
 import { ReservaOperador } from '../models/reserva-operador.model';
 import { ReservaSolicitud } from '../models/reserva-solicitud.model';
 import { Pago } from '../models/pago.model';
+import { PagoCliente } from '../models/pago-cliente.model';
 
 @Injectable({ providedIn: 'root' })
 export class ReservaService {
@@ -141,5 +142,17 @@ export class ReservaService {
       `${this.url}/${encodeURIComponent(numeroReserva)}/finalizar`,
       {},
     );
+  }
+
+  // Elimina un servicio guardado de la cuenta de la reserva
+  eliminarServicioDeReserva(numeroReserva: string, detalleId: number): Observable<void> {
+    return this.http.delete<void>(
+      `${this.operadorUrl}/cuenta/reserva/${encodeURIComponent(numeroReserva)}/servicios/${detalleId}`,
+    );
+  }
+
+  // Busca el historial de pagos de un cliente
+  buscarPagosPorCliente(clienteId: number): Observable<PagoCliente[]> {
+    return this.http.get<PagoCliente[]>(`${this.url}/cliente/${clienteId}/pagos`);
   }
 }
