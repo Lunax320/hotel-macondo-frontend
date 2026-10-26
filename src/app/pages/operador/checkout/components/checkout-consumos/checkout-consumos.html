@@ -13,16 +13,30 @@
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-100 text-sm font-medium text-[var(--texto)]">
-        @for (consumo of consumos; track consumo.concepto) {
+        @if (cuenta && cuenta.estado === 'ABIERTA') {
           <tr class="transition hover:bg-gray-50/50">
-            <td class="px-6 py-4 text-[var(--azul-oscuro)]">
-              {{ consumo.concepto }} ×{{ consumo.cantidad }}
-            </td>
+            <td class="px-6 py-4 text-[var(--azul-oscuro)]">Hospedaje ({{ reserva?.precioNoche | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }} por noche)</td>
             <td class="px-6 py-4 text-right font-bold text-[var(--azul-oscuro)]">
-              {{ consumo.cantidad * consumo.valorUnitario | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
+              {{ reserva?.total | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
             </td>
           </tr>
-        } @empty {
+          @for (consumo of cuenta.consumos; track consumo.id) {
+            <tr class="transition hover:bg-gray-50/50">
+              <td class="px-6 py-4 text-[var(--azul-oscuro)]">
+                {{ consumo.servicio || 'Servicio' }} ×{{ consumo.cantidad }}
+              </td>
+              <td class="px-6 py-4 text-right font-bold text-[var(--azul-oscuro)]">
+                {{ consumo.precio * consumo.cantidad | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
+              </td>
+            </tr>
+          }
+        }
+        @if (cuenta && cuenta.estado === 'PAGADA') {
+          <tr>
+            <td colspan="2" class="px-6 py-8 text-center text-gray-500">Cuenta pagada, sin saldo pendiente.</td>
+          </tr>
+        }
+        @if (!cuenta) {
           <tr>
             <td colspan="2" class="px-6 py-8 text-center text-gray-500">Sin consumos pendientes.</td>
           </tr>

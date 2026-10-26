@@ -1,0 +1,77 @@
+<section class="rounded-2xl bg-white p-6 shadow-sm" aria-labelledby="pago-cuenta">
+  <h2 id="pago-cuenta" class="mb-6 block text-xs font-bold uppercase tracking-wider text-[var(--azul)]">
+    Pago de cuenta
+  </h2>
+
+  @if (cuenta && cuenta.estado === 'ABIERTA') {
+    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <div class="w-full sm:max-w-xs">
+        <label for="metodoPago" class="mb-2 block text-xs font-bold uppercase tracking-wider text-gray-400">
+          Método de pago
+        </label>
+        <select
+          id="metodoPago"
+          name="metodoPago"
+          [(ngModel)]="metodoPago"
+          class="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm font-medium text-[var(--texto)] shadow-sm focus:border-[var(--azul)] focus:outline-none focus:ring-1 focus:ring-[var(--azul)]"
+        >
+          <option value="EFECTIVO">EFECTIVO</option>
+          <option value="TARJETA">TARJETA</option>
+          <option value="TRANSFERENCIA">TRANSFERENCIA</option>
+        </select>
+      </div>
+      <div class="flex flex-col items-start gap-2 sm:items-end">
+        <p class="text-sm font-medium text-gray-500">Total a pagar</p>
+        <p class="font-serif text-2xl font-bold text-[var(--azul-oscuro)]">
+          {{ cuenta.total | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
+        </p>
+        <button
+          type="button"
+          (click)="onPagar()"
+          [disabled]="procesando"
+          class="rounded-lg bg-[var(--azul)] px-6 py-2.5 text-sm font-bold text-white shadow-sm transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          Pagar cuenta
+        </button>
+      </div>
+    </div>
+  } @else if (cuenta) {
+    <div class="mb-6 rounded-lg border border-gray-100 bg-[var(--crema-claro)] px-4 py-3 text-sm font-medium text-[var(--azul-oscuro)]">
+      La cuenta está {{ cuenta.estado }}.
+    </div>
+  }
+
+  <div class="border-t border-gray-100 pt-6">
+    <h3 class="mb-4 text-xs font-bold uppercase tracking-wider text-[var(--azul)]">
+      Historial de pagos
+    </h3>
+    @if (cuenta && cuenta.pagos && cuenta.pagos.length > 0) {
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse text-left">
+          <thead>
+            <tr class="bg-[var(--crema)] text-xs font-bold uppercase tracking-wider text-[var(--azul-oscuro)]">
+              <th scope="col" class="px-4 py-3">Fecha</th>
+              <th scope="col" class="px-4 py-3">Método</th>
+              <th scope="col" class="px-4 py-3 text-right">Monto</th>
+              <th scope="col" class="px-4 py-3">Estado</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100 text-sm text-[var(--texto)]">
+            @for (pago of cuenta.pagos; track pago.id) {
+              <tr class="transition hover:bg-gray-50/50">
+                <td class="px-4 py-3">{{ pago.fechaPago | date: 'd MMM y, h:mm a' }}</td>
+                <td class="px-4 py-3">{{ pago.metodoPago }}</td>
+                <td class="px-4 py-3 text-right font-bold text-[var(--azul-oscuro)]">
+                  {{ pago.monto | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
+                </td>
+                <td class="px-4 py-3">{{ pago.estado }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <p class="text-sm text-gray-500">Sin pagos registrados.</p>
+    }
+  </div>
+</section>

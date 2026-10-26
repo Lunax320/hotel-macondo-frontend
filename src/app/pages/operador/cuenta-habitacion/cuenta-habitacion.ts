@@ -9,6 +9,8 @@ import { CuentaHabitacionResumen } from './components/cuenta-habitacion-resumen/
 import { ReservaService } from '../../../services/reserva.service';
 import { ConsumoServicioSolicitud } from '../../../models/consumo-servicio-solicitud.model';
 import { ReservaDetalleOperador } from '../../../models/reserva-detalle-operador.model';
+import { switchMap } from 'rxjs';
+import { CuentaHabitacionGuardados } from './components/cuenta-habitacion-guardados/cuenta-habitacion-guardados';
 
 @Component({
   imports: [
@@ -18,6 +20,7 @@ import { ReservaDetalleOperador } from '../../../models/reserva-detalle-operador
     CuentaHabitacionServicios,
     CuentaHabitacionTabla,
     CuentaHabitacionResumen,
+    CuentaHabitacionGuardados,
   ],
   selector: 'app-operador-cuenta-habitacion',
   templateUrl: './cuenta-habitacion.html',
@@ -35,6 +38,7 @@ export class OperadorCuentaHabitacion implements OnInit {
 
   consumos: ConsumoHabitacion[] = [];
 
+  // Carga el detalle de la reserva y su habitación al iniciar la página
   ngOnInit(): void {
     const reservaIdParametro = this.route.snapshot.paramMap.get('reservaId');
     const reservaId = Number(reservaIdParametro);
@@ -63,6 +67,7 @@ export class OperadorCuentaHabitacion implements OnInit {
     });
   }
 
+  // Agrega o acumula un servicio en la lista local antes de guardarlo
   agregarServicio(consumoNuevo: ConsumoHabitacion): void {
     this.mensajeGuardado = '';
     const existente = this.consumos.find(
@@ -104,6 +109,7 @@ export class OperadorCuentaHabitacion implements OnInit {
     this.consumos = newConsumos;
   }
 
+  // Guarda los servicios en la cuenta y recarga el detalle de la reserva
   guardarServicios(): void {
     if (this.guardando) {
       return;
@@ -122,20 +128,61 @@ export class OperadorCuentaHabitacion implements OnInit {
       cantidad: consumo.cantidad,
     }));
 
+    const reservaId = this.reservaDetalle?.id;
+    if (reservaId === undefined) {
+      this.mensajeGuardado = 'No se encontró una reserva vigente para guardar los servicios.';
+      return;
+    }
+
     this.guardando = true;
     this.mensajeGuardado = '';
-    this.reservaServicio.agregarServiciosAReserva(this.numeroReserva, datos).subscribe({
-      next: () => {
-        this.consumos = [];
-        this.mensajeGuardado = 'Los servicios se agregaron a la cuenta.';
-        this.guardando = false;
-      },
-      error: (error) => {
-        console.error('No fue posible guardar los servicios:', error);
-        this.mensajeGuardado =
-          error.error?.mensaje ?? 'No fue posible guardar los servicios en la cuenta.';
-        this.guardando = false;
-      },
-    });
+
+    this.reservaServicio
+      .agregarServiciosAReserva(this.numeroReserva, datos)
+      .pipe(switchMap(() => this.reservaServicio.obtenerDetalleOperadorPorId(reservaId)))
+      .subscribe({
+        next: (reserva) => {
+          this.reservaDetalle = reserva;
+          this.consumos = [];
+          this.mensajeGuardado = 'Los servicios se agregaron a la cuenta.';
+          this.guardando = false;
+        },
+        error: (error) => {
+          console.error('No fue posible guardar los servicios:', error);
+          this.mensajeGuardado =
+            error.error?.mensaje ?? 'No fue posible guardar los servicios en la cuenta.';
+          this.guardando = false;
+        },
+      });
+  }
+
+  // Elimina un servicio guardado de la cuenta y recarga el detalle de la reserva
+  eliminarGuardado(detalleId: number): void {
+    if (this.numeroReserva === null || this.reservaDetalle === null) {
+      this.mensajeGuardado = 'No se encontró una reserva vigente para eliminar el servicio.';
+      return;
+    }
+
+    const numeroReserva = this.numeroReserva;
+    const reservaId = this.reservaDetalle.id;
+    if (reservaId === undefined) {
+      this.mensajeGuardado = 'No se encontró una reserva vigente para eliminar el servicio.';
+      return;
+    }
+
+    this.mensajeGuardado = '';
+    this.reservaServicio
+      .eliminarServicioDeReserva(numeroReserva, detalleId)
+      .pipe(switchMap(() => this.reservaServicio.obtenerDetalleOperadorPorId(reservaId)))
+      .subscribe({
+        next: (reserva) => {
+          this.reservaDetalle = reserva;
+          this.mensajeGuardado = 'Servicio eliminado de la cuenta.';
+        },
+        error: (error) => {
+          this.mensajeGuardado =
+            error.error?.mensaje ?? 'No fue posible eliminar el servicio de la cuenta.';
+        },
+      });
   }
 }

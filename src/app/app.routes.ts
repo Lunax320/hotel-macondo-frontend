@@ -23,6 +23,7 @@ import { AdminOperadores } from './pages/admin/operadores/admin-operadores';
 import { PerfilCliente } from './pages/cliente/perfil-cliente/perfil-cliente';
 import { CrearReserva } from './pages/cliente/crear-reserva/crear-reserva';
 import { HistorialReservas } from './pages/cliente/historial-reservas/historial-reservas';
+import { HistorialPagos } from './pages/cliente/historial-pagos/historial-pagos';
 import { ReservasActivas } from './pages/cliente/reservas-activas/reservas-activas';
 
 export const routes: Routes = [
@@ -89,6 +90,10 @@ export const routes: Routes = [
   {
     path: 'cliente/:id/historial',
     component: HistorialReservas,
+  },
+  {
+    path: 'cliente/:id/pagos',
+    component: HistorialPagos,
   },
   {
     path: 'cliente/:id/reservas/nueva',

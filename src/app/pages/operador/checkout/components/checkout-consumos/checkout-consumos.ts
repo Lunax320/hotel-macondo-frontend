@@ -1,6 +1,6 @@
 import { CurrencyPipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { ConsumoCheckout } from '../../../../../models/consumo-checkout.model';
+import { ReservaDetalleOperador } from '../../../../../models/reserva-detalle-operador.model';
 
 @Component({
   imports: [CurrencyPipe],
@@ -8,12 +8,14 @@ import { ConsumoCheckout } from '../../../../../models/consumo-checkout.model';
   templateUrl: './checkout-consumos.html',
 })
 export class CheckoutConsumos {
-  @Input({ required: true }) consumos: ConsumoCheckout[] = [];
+  @Input() reserva: ReservaDetalleOperador | null = null;
 
+  get cuenta() {
+    return this.reserva?.cuenta ?? null;
+  }
+
+  // El total sale de la cuenta del backend (hospedaje + servicios)
   get total(): number {
-    return this.consumos.reduce(
-      (suma, consumo) => suma + consumo.cantidad * consumo.valorUnitario,
-      0,
-    );
+    return this.cuenta?.total ?? 0;
   }
 }

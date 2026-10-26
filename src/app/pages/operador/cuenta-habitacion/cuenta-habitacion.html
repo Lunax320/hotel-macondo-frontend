@@ -23,6 +23,10 @@
         <app-cuenta-habitacion-servicios
           (serviciosAgregados)="agregarServicio($event)"
         ></app-cuenta-habitacion-servicios>
+        <app-cuenta-habitacion-guardados
+          [cuenta]="reservaDetalle?.cuenta"
+          (eliminar)="eliminarGuardado($event)"
+        ></app-cuenta-habitacion-guardados>
         <app-cuenta-habitacion-tabla
           [consumos]="consumos"
           (eliminar)="eliminarConsumo($event)"

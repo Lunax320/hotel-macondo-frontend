@@ -29,17 +29,11 @@
             {{ subtotal | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
           </span>
         </div>
-        <div class="flex items-center justify-between text-gray-500">
-          <span>IVA (19%)</span>
-          <span class="font-bold text-[var(--azul-oscuro)]">
-            {{ impuesto | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
-          </span>
-        </div>
       </div>
       <div
         class="mb-8 mt-6 flex items-center justify-between rounded-xl bg-[var(--crema-claro)] p-4"
       >
-        <span class="text-sm font-bold text-[var(--azul)]">Total</span>
+        <span class="text-sm font-bold text-[var(--azul)]">Total a agregar</span>
         <span class="font-serif text-2xl font-bold text-[var(--azul)]">
           {{ total | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
         </span>

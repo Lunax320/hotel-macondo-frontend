@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -7,11 +7,19 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './checkout-verificaciones.html',
 })
 export class CheckoutVerificaciones {
-  cuentaSaldada = false;
+  @Input() cuentaPagada = false;
+  @Input() reservaActiva = false;
+  @Input() procesando = false;
+  @Output() finalizar = new EventEmitter<void>();
+
   llavesDevueltas = false;
   habitacionInspeccionada = false;
 
-  get verificacionesCompletas(): boolean {
-    return this.cuentaSaldada && this.llavesDevueltas && this.habitacionInspeccionada;
+  // Emitir finalización si se cumplen las verificaciones
+  onFinalizar(): void {
+    if (!this.cuentaPagada || !this.llavesDevueltas || !this.habitacionInspeccionada || !this.reservaActiva || this.procesando) {
+      return;
+    }
+    this.finalizar.emit();
   }
 }
