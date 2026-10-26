@@ -22,7 +22,7 @@ export class ReservasActivaItem {
     return (
       reserva.id !== undefined &&
       new Date(`${reserva.fechaInicio}T00:00:00`).getTime() > hoy.getTime() &&
-      ['ACTIVA', 'CONFIRMADA', 'PENDIENTE'].includes(reserva.estado.toUpperCase())
+      ['CONFIRMADA', 'PENDIENTE'].includes(reserva.estado.toUpperCase())
     );
   }
 
