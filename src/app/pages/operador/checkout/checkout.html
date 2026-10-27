@@ -30,7 +30,7 @@
           (pagar)="pagar($event)"
         ></app-checkout-pago>
         <app-checkout-verificaciones
-          [cuentaPagada]="reserva.cuenta?.estado === 'PAGADA' || reserva.cuenta?.total === 0"
+          [cuentaPagada]="cuentaSaldada"
           [reservaActiva]="reserva.estado === 'ACTIVA'"
           [procesando]="procesando"
           (finalizar)="finalizar()"
