@@ -3,7 +3,7 @@
     Pago de cuenta
   </h2>
 
-  @if (cuenta && cuenta.estado === 'ABIERTA') {
+  @if (cuenta && cuenta.estado === 'ABIERTA' && saldo > 0) {
     <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
       <div class="w-full sm:max-w-xs">
         <label for="metodoPago" class="mb-2 block text-xs font-bold uppercase tracking-wider text-gray-400">
@@ -21,9 +21,15 @@
         </select>
       </div>
       <div class="flex flex-col items-start gap-2 sm:items-end">
-        <p class="text-sm font-medium text-gray-500">Total a pagar</p>
+        @if (abonado > 0) {
+          <p class="text-sm font-medium text-gray-500">
+            Total {{ cuenta.total | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }} · Abonado
+            {{ abonado | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
+          </p>
+        }
+        <p class="text-sm font-medium text-gray-500">Saldo a pagar</p>
         <p class="font-serif text-2xl font-bold text-[var(--azul-oscuro)]">
-          {{ cuenta.total | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
+          {{ saldo | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
         </p>
         <button
           type="button"

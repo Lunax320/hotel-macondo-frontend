@@ -13,7 +13,7 @@
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-100 text-sm font-medium text-[var(--texto)]">
-        @if (cuenta && cuenta.estado === 'ABIERTA') {
+        @if (cuenta) {
           <tr class="transition hover:bg-gray-50/50">
             <td class="px-6 py-4 text-[var(--azul-oscuro)]">Hospedaje ({{ reserva?.precioNoche | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }} por noche)</td>
             <td class="px-6 py-4 text-right font-bold text-[var(--azul-oscuro)]">
@@ -33,7 +33,7 @@
         }
         @if (cuenta && cuenta.estado === 'PAGADA') {
           <tr>
-            <td colspan="2" class="px-6 py-8 text-center text-gray-500">Cuenta pagada, sin saldo pendiente.</td>
+            <td colspan="2" class="px-6 py-4 text-center text-gray-500">Cuenta pagada, sin saldo pendiente.</td>
           </tr>
         }
         @if (!cuenta) {
@@ -45,7 +45,9 @@
     </table>
   </div>
   <div class="flex items-center justify-between border-t border-gray-100 bg-[var(--crema-claro)] px-6 py-4">
-    <span class="font-serif text-xl font-bold text-[var(--azul-oscuro)]">Total</span>
+    <span class="font-serif text-xl font-bold text-[var(--azul-oscuro)]">
+      {{ cuenta?.estado === 'PAGADA' ? 'Total pagado' : 'Total' }}
+    </span>
     <span class="font-serif text-2xl font-bold text-[var(--azul)]">
       {{ total | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
     </span>

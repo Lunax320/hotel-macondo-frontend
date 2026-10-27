@@ -32,6 +32,16 @@ export class OperadorCheckout implements OnInit {
   mensajeError = '';
   procesando = false;
 
+  // La cuenta está saldada si ya se pagó o si los anticipos cubren el total (igual que el backend)
+  get cuentaSaldada(): boolean {
+    const cuenta = this.reserva?.cuenta;
+    if (!cuenta || cuenta.estado === 'PAGADA') {
+      return true;
+    }
+    const abonado = cuenta.pagos.reduce((suma, pago) => suma + pago.monto, 0);
+    return cuenta.total - abonado <= 0;
+  }
+
   // Busca la reserva activa de la habitación y luego carga su detalle con la cuenta
   ngOnInit(): void {
     this.habitacionId = this.route.snapshot.queryParamMap.get('id') ?? '';
