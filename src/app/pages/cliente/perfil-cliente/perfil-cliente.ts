@@ -35,6 +35,7 @@ export class PerfilCliente implements OnInit {
   mensajePassword = '';
   errorCuenta = '';
 
+  // Carga el perfil indicado por la ruta y precarga los campos editables.
   ngOnInit(): void {
     this.clienteId = Number(this.route.snapshot.params['id']);
     this.clienteService.buscarPorId(this.clienteId).subscribe({
@@ -51,6 +52,7 @@ export class PerfilCliente implements OnInit {
     });
   }
 
+  // Envía los cambios del perfil y sincroniza los campos con la respuesta del servidor.
   guardarDatos(): void {
     if (!this.cliente) {
       this.errorPerfil = 'No hay un perfil cargado para actualizar.';
@@ -82,6 +84,7 @@ export class PerfilCliente implements OnInit {
       });
   }
 
+  // Verifica que las contraseñas coincidan y solicita el cambio de contraseña.
   cambiarPassword(): void {
     if (this.nuevaContrasena !== this.confirmarContrasena) {
       this.errorPassword = 'Las contraseñas no coinciden.';
@@ -110,6 +113,7 @@ export class PerfilCliente implements OnInit {
       });
   }
 
+  // Solicita confirmación antes de eliminar la cuenta y vuelve al inicio si tiene éxito.
   eliminarCuenta(): void {
     if (confirm('¿Estás seguro de que deseas eliminar tu cuenta? Esta acción es irreversible.')) {
       this.errorCuenta = '';

@@ -31,6 +31,7 @@ export class Landing implements OnInit {
   tiposHabitacion: TipoHabitacion[] = [];
   testimonios: Testimonio[] = [];
 
+  // Carga los datos iniciales que necesita la página de inicio.
   ngOnInit(): void {
     this.tipoService.obtenerTodos().subscribe({
       next: (tipos) => (this.tiposHabitacion = tipos),

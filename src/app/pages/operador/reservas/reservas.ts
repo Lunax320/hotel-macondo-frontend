@@ -33,6 +33,7 @@ export class OperadorReservas implements OnInit, OnDestroy {
   errorAccion = '';
   cambiandoNumero: string | null = null;
 
+  // Sincroniza el filtro con la URL y carga las reservas del operador.
   ngOnInit(): void {
     // Mantiene el parámetro de navegación original /operador/reservas?filtro=activas.
     this.cambiosFiltro = this.route.queryParamMap.subscribe((parametros) => {
@@ -41,12 +42,14 @@ export class OperadorReservas implements OnInit, OnDestroy {
     this.cargarReservas();
   }
 
+  // Cancela las suscripciones de ruta, carga y cambio de estado al salir.
   ngOnDestroy(): void {
     this.cambiosFiltro?.unsubscribe();
     this.carga?.unsubscribe();
     this.cambioEstado?.unsubscribe();
   }
 
+  // Aplica el filtro de estado y la búsqueda normalizada sobre los datos cargados.
   get reservasFiltradas(): ReservaOperador[] {
     let resultado = this.reservas;
     // La agrupación conserva los estados abiertos de ReservaServiceImpl del backend.
@@ -72,16 +75,19 @@ export class OperadorReservas implements OnInit, OnDestroy {
     return resultado;
   }
 
+  // Actualiza el texto que se aplica a la búsqueda de reservas.
   actualizarBusqueda(texto: string): void {
     this.textoBusqueda = texto;
   }
 
+  // Navega con el filtro seleccionado para mantenerlo reflejado en la URL.
   actualizarFiltro(filtro: string): void {
     this.router.navigate(['/operador/reservas'], {
       queryParams: { filtro: filtro === 'activas' ? 'activas' : 'todas' },
     });
   }
 
+  // Carga las reservas del operador mientras no haya otra acción en curso.
   cargarReservas(): void {
     if (this.cargando || this.cambiandoNumero !== null) return;
     this.errorCarga = '';
@@ -98,6 +104,7 @@ export class OperadorReservas implements OnInit, OnDestroy {
     });
   }
 
+  // Valida el estado y la confirmación antes de solicitar la cancelación.
   cancelarReserva(numeroReserva: string): void {
     if (this.cargando || this.cambiandoNumero !== null) return;
     this.errorAccion = '';
@@ -111,6 +118,7 @@ export class OperadorReservas implements OnInit, OnDestroy {
     this.cambiarEstadoReserva(numeroReserva, 'cancelar');
   }
 
+  // Valida el estado antes de solicitar la activación de la reserva.
   activarReserva(numeroReserva: string): void {
     if (this.cargando || this.cambiandoNumero !== null) return;
     this.errorAccion = '';
@@ -123,6 +131,7 @@ export class OperadorReservas implements OnInit, OnDestroy {
     this.cambiarEstadoReserva(numeroReserva, 'activar');
   }
 
+  // Aplica el cambio de estado y recarga la lista, distinguiendo un fallo de actualización posterior al éxito.
   private cambiarEstadoReserva(numeroReserva: string, accion: 'activar' | 'cancelar'): void {
     this.cambiandoNumero = numeroReserva;
     this.mensajeAccion = '';
@@ -164,6 +173,7 @@ export class OperadorReservas implements OnInit, OnDestroy {
       });
   }
 
+  // Quita espacios y diacríticos y convierte el texto a minúsculas para facilitar la búsqueda.
   private normalizarTexto(texto: string): string {
     return texto
       .trim()
@@ -172,6 +182,7 @@ export class OperadorReservas implements OnInit, OnDestroy {
       .toLowerCase();
   }
 
+  // Usa el mensaje del backend o un texto alternativo según el fallo de conexión o respuesta.
   private mensajeError(error: HttpErrorResponse): string {
     const respuesta: unknown = error.error;
     if (

@@ -13,6 +13,7 @@ export class ReservasTabla {
   activacionSolicitada = output<string>();
   cancelacionSolicitada = output<string>();
 
+  // Formatea la fecha de la reserva para su presentación en la tabla.
   formatearFecha(fecha: string): string {
     return new Date(`${fecha}T00:00:00`).toLocaleDateString('es-CO', {
       day: '2-digit',
@@ -21,12 +22,14 @@ export class ReservasTabla {
     });
   }
 
+  // Emite la solicitud para activar la reserva seleccionada.
   activar(reserva: ReservaOperador): void {
     if (this.cambiandoNumero() === null && reserva.estado.toUpperCase() === 'CONFIRMADA') {
       this.activacionSolicitada.emit(reserva.numeroReserva);
     }
   }
 
+  // Emite la solicitud para cancelar la reserva seleccionada.
   cancelar(reserva: ReservaOperador): void {
     if (this.cambiandoNumero() === null && reserva.estado.toUpperCase() === 'CONFIRMADA') {
       this.cancelacionSolicitada.emit(reserva.numeroReserva);

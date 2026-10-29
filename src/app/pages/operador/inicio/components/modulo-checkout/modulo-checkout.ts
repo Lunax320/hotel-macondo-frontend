@@ -11,6 +11,7 @@ import { FormularioCheckout } from './components/formulario-checkout/formulario-
 export class ModuloCheckout {
   private router = inject(Router);
 
+  // Navega al checkout de la habitación indicada.
   iniciarCheckout(id: string): void {
     if (/^\d+$/.test(id)) {
       this.router.navigate(['/operador/checkout'], { queryParams: { id } });

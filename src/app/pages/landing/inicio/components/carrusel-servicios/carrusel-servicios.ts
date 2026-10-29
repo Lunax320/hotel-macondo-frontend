@@ -16,6 +16,7 @@ export class CarruselServicios implements OnInit {
   servicios: Servicio[] = [];
   slideActual: number = 0;
 
+  // Carga el catálogo de servicios que se presenta en el carrusel.
   ngOnInit(): void {
     this.servicioService.obtenerCatalogoActivo().subscribe({
       next: (servicios) => (this.servicios = servicios),
@@ -23,6 +24,7 @@ export class CarruselServicios implements OnInit {
     });
   }
 
+  // Avanza o retrocede el carrusel y mantiene el índice dentro de sus límites.
   cambiarSlide(indice: number): void {
     this.slideActual = indice;
   }

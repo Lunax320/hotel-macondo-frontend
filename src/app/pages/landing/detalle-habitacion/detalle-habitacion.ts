@@ -22,6 +22,7 @@ export class DetalleHabitacion implements OnInit {
   hayDisponibilidad = false;
   clienteId: number | null = null;
 
+  // Carga la habitación solicitada y resuelve el cliente asociado a la navegación, si existe.
   ngOnInit(): void {
     this.route.paramMap
       .pipe(
@@ -43,6 +44,7 @@ export class DetalleHabitacion implements OnInit {
     });
   }
 
+  // Obtiene un identificador de cliente válido desde los parámetros de consulta.
   private obtenerClienteId(parametros: ParamMap): number | null {
     const valor = parametros.get('clienteId');
 

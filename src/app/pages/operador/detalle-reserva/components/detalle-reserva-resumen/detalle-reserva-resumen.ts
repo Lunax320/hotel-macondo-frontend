@@ -8,6 +8,7 @@ import { ReservaDetalleOperador } from '../../../../../models/reserva-detalle-op
 export class DetalleReservaResumen {
   reserva = input.required<ReservaDetalleOperador>();
 
+  // Formatea una fecha para mostrarla en el resumen de la reserva.
   formatearFecha(fecha: string): string {
     return new Date(`${fecha}T00:00:00`).toLocaleDateString('es-CO', {
       day: '2-digit',
@@ -16,6 +17,7 @@ export class DetalleReservaResumen {
     });
   }
 
+  // Calcula las noches entre las fechas de entrada y salida.
   calcularNoches(fechaInicio: string, fechaFin: string): number {
     const [inicioAnio, inicioMes, inicioDia] = fechaInicio.split('-').map(Number);
     const [finAnio, finMes, finDia] = fechaFin.split('-').map(Number);
@@ -25,6 +27,7 @@ export class DetalleReservaResumen {
     return Math.max(0, (fin - inicio) / (24 * 60 * 60 * 1000));
   }
 
+  // Presenta el importe con el formato monetario de la interfaz.
   formatearMoneda(valor?: number): string {
     if (valor === undefined) {
       return 'No disponible';

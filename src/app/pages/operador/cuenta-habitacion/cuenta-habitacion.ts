@@ -95,6 +95,7 @@ export class OperadorCuentaHabitacion implements OnInit {
     this.consumos = [...this.consumos, consumoNuevo];
   }
 
+  // Retira de la selección local el consumo asociado al servicio indicado.
   eliminarConsumo(consumo: ConsumoHabitacion) {
     this.mensajeGuardado = '';
     // Se crea un nuevo arreglo de consumos sin el consumo que se desea eliminar

@@ -14,6 +14,7 @@ export class BuscadorDisponibilidad {
   fechaEntradaMin: string = new Date().toISOString().split('T')[0];
   fechaSalidaMin: string = '';
 
+  // Propaga el cambio de fecha de entrada y recalcula los criterios de búsqueda.
   onEntradaChange(event: Event): void {
     const inputFecha = event.target as HTMLInputElement;
     this.fechaSalidaMin = inputFecha.value;

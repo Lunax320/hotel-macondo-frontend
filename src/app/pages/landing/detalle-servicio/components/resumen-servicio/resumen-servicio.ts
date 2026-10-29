@@ -12,6 +12,7 @@ export class ResumenServicio {
   agregado = input(false);
   alternarAgregado = output<number>();
 
+  // Emite el cambio de selección del servicio para actualizar el resumen.
   alternar(): void {
     const id = this.servicio().id;
 

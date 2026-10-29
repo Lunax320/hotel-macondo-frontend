@@ -9,6 +9,7 @@ import { CuentaReserva } from '../../../../../models/cuenta-reserva.model';
 export class DetalleReservaCuenta {
   cuenta = input<CuentaReserva | null>();
 
+  // Formatea la fecha para presentarla en el detalle de la cuenta.
   formatearFecha(fecha: string, formato: 'medium' | 'short' = 'medium'): string {
     return new Intl.DateTimeFormat('es-CO', {
       dateStyle: formato,
@@ -16,6 +17,7 @@ export class DetalleReservaCuenta {
     }).format(new Date(fecha));
   }
 
+  // Presenta el importe con el formato monetario de la interfaz.
   formatearMoneda(valor: number): string {
     return new Intl.NumberFormat('es-CO', {
       style: 'currency',

@@ -32,6 +32,7 @@ export class CampoFormulario {
     return !!control && control.invalid && (control.dirty || control.touched);
   }
 
+  // Indica si el control identificado tiene errores de validación visibles.
   tieneError(clave: string): boolean {
     return !!this.formulario().get(this.nombreCampo())?.errors?.[clave];
   }

@@ -29,6 +29,7 @@ export class ReservasActivas implements OnInit {
   errorCancelacion = '';
   cancelandoId?: number;
 
+  // Lee el cliente y el resultado de navegación, y después carga sus reservas activas.
   ngOnInit(): void {
     this.clienteId = Number(this.route.snapshot.params['id']);
     const resultado = this.route.snapshot.queryParams['resultado'];
@@ -39,6 +40,7 @@ export class ReservasActivas implements OnInit {
     this.cargarReservas();
   }
 
+  // Valida el identificador y actualiza la lista de reservas activas del cliente.
   cargarReservas(): void {
     if (this.cancelandoId !== undefined) return;
     this.errorCarga = '';
@@ -59,6 +61,7 @@ export class ReservasActivas implements OnInit {
     });
   }
 
+  // Devuelve las reservas que coinciden con el estado seleccionado.
   get reservasFiltradas(): Reserva[] {
     if (this.filtroActual === 'TODOS') {
       return this.reservas;
@@ -66,10 +69,12 @@ export class ReservasActivas implements OnInit {
     return this.reservas.filter((r) => r.estado?.toUpperCase() === this.filtroActual);
   }
 
+  // Establece el estado con el que se filtra la lista visible.
   actualizarFiltro(estado: string): void {
     this.filtroActual = estado;
   }
 
+  // Cancela una reserva y recarga la lista para reflejar el estado confirmado por el servidor.
   cancelarReserva(reservaId: number): void {
     if (this.cancelandoId !== undefined || this.cargando) return;
     this.cancelandoId = reservaId;
@@ -100,6 +105,7 @@ export class ReservasActivas implements OnInit {
       });
   }
 
+  // Prioriza el mensaje recibido del backend y ofrece alternativas para fallos de conexión u operación.
   private obtenerMensajeError(error: HttpErrorResponse): string {
     const respuesta: unknown = error.error;
     if (
@@ -115,6 +121,7 @@ export class ReservasActivas implements OnInit {
       : 'No fue posible completar la consulta u operación.';
   }
 
+  // Cuenta las reservas cuyo estado coincide con el valor indicado.
   contarPorEstado(estado: string): number {
     return this.reservas.filter((r) => r.estado?.toUpperCase() === estado).length;
   }

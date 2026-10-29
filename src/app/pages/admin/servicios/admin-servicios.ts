@@ -22,6 +22,7 @@ export class AdminServicios implements OnInit {
   servicios: Servicio[] = [];
   errorServicio = '';
 
+  // Carga el catálogo de servicios al iniciar la pantalla de administración.
   ngOnInit(): void {
     this.cargarServicios();
   }

@@ -19,6 +19,7 @@ export class Servicios implements OnInit {
   categoriaSeleccionada = 'Todos';
   serviciosAgregados: number[] = [];
 
+  // Carga el catálogo activo y deriva las categorías disponibles.
   ngOnInit(): void {
     this.servicioService.obtenerCatalogoActivo().subscribe({
       next: (datos) => {
@@ -29,6 +30,7 @@ export class Servicios implements OnInit {
     });
   }
 
+  // Devuelve el catálogo completo o los servicios de la categoría seleccionada.
   get serviciosFiltrados(): Servicio[] {
     if (this.categoriaSeleccionada === 'Todos') {
       return this.servicios;
@@ -37,14 +39,17 @@ export class Servicios implements OnInit {
     return this.servicios.filter((servicio) => servicio.categoria === this.categoriaSeleccionada);
   }
 
+  // Actualiza la categoría usada para filtrar el catálogo.
   seleccionarCategoria(categoria: string): void {
     this.categoriaSeleccionada = categoria;
   }
 
+  // Comprueba si un identificador está en la selección de servicios.
   estaAgregado(id: number | undefined): boolean {
     return id !== undefined && this.serviciosAgregados.includes(id);
   }
 
+  // Agrega el servicio a la selección o lo retira si ya estaba agregado.
   alternarServicio(id: number): void {
     this.serviciosAgregados = this.serviciosAgregados.includes(id)
       ? this.serviciosAgregados.filter((servicioId) => servicioId !== id)

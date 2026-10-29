@@ -11,6 +11,7 @@ export class UsuarioService {
 
   constructor(private http: HttpClient) {}
 
+  // Envía el correo y la contraseña al endpoint de autenticación.
   autenticar(correo: string, contrasena: string): Observable<Usuario> {
     return this.http.post<Usuario>(`${this.url}/login`, { correo, contrasena });
   }
