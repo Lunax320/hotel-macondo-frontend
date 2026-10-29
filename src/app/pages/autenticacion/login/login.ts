@@ -20,10 +20,12 @@ export class Login {
   mensajeError: string = '';
   mostrarPassword: boolean = false;
 
+  // Alterna la visibilidad de la contraseña en el formulario.
   toggleMostrarPassword(): void {
     this.mostrarPassword = !this.mostrarPassword;
   }
 
+  // Valida las credenciales y dirige al usuario según su rol, conservando el tipo solicitado cuando corresponde.
   iniciarSesion(): void {
     this.mensajeError = '';
 

@@ -74,6 +74,7 @@ export class ServicioFormulario implements OnInit {
     }
   }
 
+  // Valida los datos del formulario y emite la solicitud de guardado al componente padre.
   guardar(): void {
     if (this.servicioForm.invalid) {
       return;

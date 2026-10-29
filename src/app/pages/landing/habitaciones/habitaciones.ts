@@ -20,6 +20,7 @@ export class Habitaciones implements OnInit {
   tipoId: number | null = null;
   clienteId: number | null = null;
 
+  // Observa los parámetros de consulta para aplicar filtros de capacidad y tipo.
   ngOnInit(): void {
     this.route.queryParamMap.subscribe((parametros) => {
       this.personas = this.obtenerNumeroConsulta(parametros, 'personas');
@@ -29,6 +30,7 @@ export class Habitaciones implements OnInit {
     });
   }
 
+  // Carga los tipos y filtra por identificador y capacidad según la consulta.
   private cargarTiposHabitacion(): void {
     this.tipoHabitacionService.obtenerTodos().subscribe({
       next: (todosLosTipos) => {
@@ -51,6 +53,7 @@ export class Habitaciones implements OnInit {
     });
   }
 
+  // Convierte un parámetro de consulta a número o devuelve null si no es válido.
   private obtenerNumeroConsulta(parametros: ParamMap, nombre: string): number | null {
     const valor = parametros.get(nombre);
 

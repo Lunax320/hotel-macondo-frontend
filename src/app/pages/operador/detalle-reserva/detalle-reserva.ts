@@ -38,15 +38,18 @@ export class OperadorDetalleReserva implements OnInit, OnDestroy {
   noEncontrada = false;
   errorCarga = '';
 
+  // Lee el número de reserva de la ruta y comienza a cargar su detalle.
   ngOnInit(): void {
     this.cambiosRuta = this.activatedRoute.paramMap.subscribe(() => this.cargarDetalle());
   }
 
+  // Libera la suscripción de carga al salir del detalle.
   ngOnDestroy(): void {
     this.cambiosRuta?.unsubscribe();
     this.carga?.unsubscribe();
   }
 
+  // Consulta y presenta el detalle de la reserva seleccionada.
   cargarDetalle(): void {
     this.carga?.unsubscribe();
     this.reserva = undefined;
@@ -74,6 +77,7 @@ export class OperadorDetalleReserva implements OnInit, OnDestroy {
     });
   }
 
+  // Obtiene el mensaje del backend o construye uno adecuado para el error recibido.
   private mensajeError(error: HttpErrorResponse): string {
     const respuesta: unknown = error.error;
     if (

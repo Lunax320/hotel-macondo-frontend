@@ -13,6 +13,7 @@ export class ServicioCard {
   agregado = input(false);
   alternarAgregado = output<number>();
 
+  // Emite el cambio de selección de este servicio.
   alternar(): void {
     const id = this.servicio().id;
 

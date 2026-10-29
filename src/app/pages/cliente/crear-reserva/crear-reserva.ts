@@ -64,12 +64,14 @@ export class CrearReserva implements OnInit, OnDestroy {
     ]),
   });
 
+  // Escucha los cambios de ruta para cargar los datos de creación o edición de la reserva.
   ngOnInit(): void {
     // Escucha la navegación, incluida la reutilización de esta página entre nueva y editar.
     // Las peticiones HTTP dependientes se componen dentro de cargarFormulario con mergeMap.
     this.cambiosRuta = this.route.paramMap.subscribe(() => this.cargarFormulario());
   }
 
+  // Cancela las suscripciones pendientes al abandonar el formulario.
   ngOnDestroy(): void {
     this.cambiosRuta?.unsubscribe();
     this.carga?.unsubscribe();
@@ -77,6 +79,7 @@ export class CrearReserva implements OnInit, OnDestroy {
     this.guardado?.unsubscribe();
   }
 
+  // Reinicia el estado y carga los tipos de habitación junto con los datos del cliente o de la reserva que se edita.
   cargarFormulario(): void {
     this.carga?.unsubscribe();
     this.consulta?.unsubscribe();
@@ -151,6 +154,7 @@ export class CrearReserva implements OnInit, OnDestroy {
       });
   }
 
+  // Descarta el resultado de disponibilidad cuando los criterios del formulario dejan de ser válidos.
   invalidarDisponibilidad(): void {
     this.disponibilidadConsultada = false;
     this.cantidadDisponibles = 0;
@@ -158,6 +162,7 @@ export class CrearReserva implements OnInit, OnDestroy {
     this.mensajeError = '';
   }
 
+  // Valida los criterios y consulta habitaciones disponibles para el tipo y fechas seleccionados.
   consultarDisponibilidad(): void {
     if (this.cargando || this.consultando || this.guardando || this.errorCarga) return;
     this.invalidarDisponibilidad();
@@ -181,6 +186,7 @@ export class CrearReserva implements OnInit, OnDestroy {
       });
   }
 
+  // Guarda o modifica la reserva solo si existe disponibilidad vigente para los criterios actuales.
   confirmarReserva(): void {
     if (this.cargando || this.consultando || this.guardando || this.errorCarga) return;
     this.mensajeError = '';
@@ -219,6 +225,7 @@ export class CrearReserva implements OnInit, OnDestroy {
     });
   }
 
+  // Comprueba campos requeridos, fechas, cantidad de huéspedes y capacidad del tipo antes de crear la solicitud.
   private validarFormulario(): ReservaSolicitud | undefined {
     this.formulario.markAllAsTouched();
     const valores = this.formulario.value;
@@ -244,10 +251,12 @@ export class CrearReserva implements OnInit, OnDestroy {
     return { fechaInicio: entrada, fechaFin: salida, cantidadPersonas: cantidad };
   }
 
+  // Genera una clave estable de los criterios para detectar si cambian después de consultar disponibilidad.
   private firmaCriterios(tipoId: number, datos: ReservaSolicitud): string {
     return JSON.stringify([tipoId, datos.fechaInicio, datos.fechaFin, datos.cantidadPersonas]);
   }
 
+  // Extrae el mensaje del backend y usa textos alternativos según el tipo de error.
   private obtenerMensajeError(error: HttpErrorResponse): string {
     const respuesta: unknown = error.error;
     if (
@@ -263,6 +272,7 @@ export class CrearReserva implements OnInit, OnDestroy {
       : 'No fue posible completar la operación de reserva.';
   }
 
+  // Devuelve la fecha local actual en formato apto para el límite mínimo del formulario.
   private fechaLocalActual(): string {
     const fecha = new Date();
     return `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}-${String(fecha.getDate()).padStart(2, '0')}`;

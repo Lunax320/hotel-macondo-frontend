@@ -11,6 +11,7 @@ export class FormularioCheckout {
 
   habitacionId = '';
 
+  // Valida el número de habitación y comunica la solicitud para iniciar el checkout.
   enviar(): void {
     const id = this.habitacionId.trim();
     if (/^\d+$/.test(id)) {

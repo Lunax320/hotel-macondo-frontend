@@ -10,6 +10,7 @@ import { ReservaDetalleOperador } from '../../../../../models/reserva-detalle-op
 export class CheckoutConsumos {
   @Input() reserva: ReservaDetalleOperador | null = null;
 
+  // Devuelve la cuenta de la reserva actual para mostrar sus consumos.
   get cuenta() {
     return this.reserva?.cuenta ?? null;
   }

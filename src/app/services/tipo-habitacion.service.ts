@@ -20,18 +20,22 @@ export class TipoHabitacionService {
     return this.http.get<TipoHabitacion>(`${this.url}/find/${id}`);
   }
 
+  // Obtiene la lista de tipos de habitación.
   listarTipos(): Observable<TipoHabitacion[]> {
     return this.obtenerTodos();
   }
 
+  // Envía un tipo de habitación para su creación.
   agregarTipo(tipo: TipoHabitacion): Observable<TipoHabitacion> {
     return this.http.post<TipoHabitacion>(this.url, tipo);
   }
 
+  // Envía los cambios de un tipo de habitación existente.
   actualizarTipo(tipo: TipoHabitacion): Observable<TipoHabitacion> {
     return this.http.put<TipoHabitacion>(this.url, tipo);
   }
 
+  // Solicita eliminar el tipo de habitación indicado.
   eliminarTipo(id: number): Observable<void> {
     return this.http.delete<void>(`${this.url}/delete/${id}`);
   }

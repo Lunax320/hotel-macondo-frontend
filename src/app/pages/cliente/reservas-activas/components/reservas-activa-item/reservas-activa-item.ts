@@ -15,9 +15,11 @@ export class ReservasActivaItem {
   ocupado = input(false);
   cancelando = input(false);
 
+  // Indica si la reserva admite las acciones que ofrece este elemento.
   get puedeGestionar(): boolean {
     const reserva = this.reserva();
     const hoy = new Date();
+    hoy.setDate(hoy.getDate() - 1);
     hoy.setHours(0, 0, 0, 0);
     return (
       reserva.id !== undefined &&
@@ -26,6 +28,7 @@ export class ReservasActivaItem {
     );
   }
 
+  // Emite la solicitud de cancelación para que la gestione el componente contenedor.
   onCancelar(): void {
     const id = this.reserva().id;
     if (

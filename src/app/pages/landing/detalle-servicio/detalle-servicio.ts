@@ -23,6 +23,7 @@ export class DetalleServicio implements OnInit {
   servicioAgregado = false;
   serviciosAgregados: number[] = [];
 
+  // Carga los datos del servicio indicado en la ruta y sus elementos relacionados.
   ngOnInit(): void {
     this.route.paramMap
       .pipe(
@@ -43,6 +44,7 @@ export class DetalleServicio implements OnInit {
       });
   }
 
+  // Cambia la selección del servicio y notifica el nuevo estado al resumen.
   alternarServicio(id: number): void {
     if (this.serviciosAgregados.includes(id)) {
       this.serviciosAgregados = this.serviciosAgregados.filter((item) => item !== id);
@@ -55,6 +57,7 @@ export class DetalleServicio implements OnInit {
     }
   }
 
+  // Obtiene los servicios relacionados con el servicio actual.
   private cargarRelacionados(id: number): void {
     this.servicioService.obtenerRelacionados(id).subscribe({
       next: (relacionados) => (this.serviciosRelacionados = relacionados),

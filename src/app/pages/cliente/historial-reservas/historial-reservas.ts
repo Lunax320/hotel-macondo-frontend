@@ -24,11 +24,13 @@ export class HistorialReservas implements OnInit {
   cargando = false;
   errorCarga = '';
 
+  // Obtiene el identificador de cliente de la ruta y solicita su historial.
   ngOnInit(): void {
     this.clienteId = Number(this.route.snapshot.params['id']);
     this.cargarHistorial();
   }
 
+  // Valida el cliente y carga sus reservas históricas, conservando el mensaje del backend si falla.
   cargarHistorial(): void {
     this.errorCarga = '';
     if (!Number.isInteger(this.clienteId) || this.clienteId < 1) {
@@ -55,6 +57,7 @@ export class HistorialReservas implements OnInit {
     });
   }
 
+  // Devuelve todas las reservas o solo las que coinciden con el filtro seleccionado.
   get historialFiltrado(): Reserva[] {
     if (this.filtroActual === 'TODOS') {
       return this.historial;
@@ -62,10 +65,12 @@ export class HistorialReservas implements OnInit {
     return this.historial.filter((h) => h.estado?.toUpperCase() === this.filtroActual);
   }
 
+  // Actualiza el estado usado para filtrar el historial.
   seleccionarFiltro(filtro: string): void {
     this.filtroActual = filtro;
   }
 
+  // Suma las noches de las reservas y omite duraciones inválidas o negativas.
   get nochesTotales(): number {
     return this.historial.reduce((acc, curr) => {
       const ini = new Date(curr.fechaInicio).getTime();
@@ -75,6 +80,7 @@ export class HistorialReservas implements OnInit {
     }, 0);
   }
 
+  // Cuenta las reservas del historial cuyo estado es cancelado.
   get cancelaciones(): number {
     return this.historial.filter((h) => h.estado?.toUpperCase() === 'CANCELADA').length;
   }

@@ -54,6 +54,7 @@ export class ClienteDatosForm implements OnInit {
     correo: new FormControl({ value: '', disabled: true }),
   });
 
+  // Inicializa los campos del formulario con los datos del cliente recibido.
   ngOnInit(): void {
     this.formulario.patchValue(this.cliente());
   }
