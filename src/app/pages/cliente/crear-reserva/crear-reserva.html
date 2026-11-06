@@ -49,18 +49,22 @@
             ></app-reserva-formulario>
             @if (mensajeError) {
               <p
+                id="mensajeErrorReserva"
                 class="mt-7 rounded-lg border border-[#f1b8b1] bg-[#fff4f2] p-4 font-semibold text-[#b42318]"
                 role="alert"
               >
                 {{ mensajeError }}
               </p>
             }
-            <app-reserva-disponibilidad
-              [consultada]="disponibilidadConsultada"
-              [cantidadDisponibles]="cantidadDisponibles"
-            ></app-reserva-disponibilidad>
+            <div id="cajaDisponibilidad">
+              <app-reserva-disponibilidad
+                [consultada]="disponibilidadConsultada"
+                [cantidadDisponibles]="cantidadDisponibles"
+              ></app-reserva-disponibilidad>
+            </div>
             <div class="mt-8 flex flex-col gap-3 sm:flex-row">
               <button
+                id="btnConsultarDisponibilidad"
                 class="rounded-md border-2 border-[var(--azul)] px-6 py-3 font-bold text-[var(--azul)] transition hover:bg-[var(--azul)] hover:text-white cursor-pointer disabled:opacity-60"
                 type="submit"
                 [disabled]="consultando || guardando"
@@ -69,6 +73,7 @@
               </button>
               @if (disponibilidadConsultada && cantidadDisponibles > 0) {
                 <button
+                  id="btnConfirmarReserva"
                   class="rounded-md bg-[var(--dorado)] px-6 py-3 font-bold text-[var(--azul-oscuro)] transition hover:bg-[var(--dorado-oscuro)] cursor-pointer disabled:opacity-60"
                   type="button"
                   [disabled]="consultando || guardando"
