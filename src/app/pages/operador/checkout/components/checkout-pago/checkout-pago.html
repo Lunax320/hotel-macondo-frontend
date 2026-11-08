@@ -1,12 +1,18 @@
 <section class="rounded-2xl bg-white p-6 shadow-sm" aria-labelledby="pago-cuenta">
-  <h2 id="pago-cuenta" class="mb-6 block text-xs font-bold uppercase tracking-wider text-[var(--azul)]">
+  <h2
+    id="pago-cuenta"
+    class="mb-6 block text-xs font-bold uppercase tracking-wider text-[var(--azul)]"
+  >
     Pago de cuenta
   </h2>
 
   @if (cuenta && cuenta.estado === 'ABIERTA' && saldo > 0) {
     <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
       <div class="w-full sm:max-w-xs">
-        <label for="metodoPago" class="mb-2 block text-xs font-bold uppercase tracking-wider text-gray-400">
+        <label
+          for="metodoPago"
+          class="mb-2 block text-xs font-bold uppercase tracking-wider text-gray-400"
+        >
           Método de pago
         </label>
         <select
@@ -23,7 +29,8 @@
       <div class="flex flex-col items-start gap-2 sm:items-end">
         @if (abonado > 0) {
           <p class="text-sm font-medium text-gray-500">
-            Total {{ cuenta.total | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }} · Abonado
+            Total {{ cuenta.total | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }} ·
+            Abonado
             {{ abonado | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
           </p>
         }
@@ -33,6 +40,7 @@
         </p>
         <button
           type="button"
+          id="pagar-cuenta-bton"
           (click)="onPagar()"
           [disabled]="procesando"
           class="rounded-lg bg-[var(--azul)] px-6 py-2.5 text-sm font-bold text-white shadow-sm transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-60"
@@ -42,7 +50,9 @@
       </div>
     </div>
   } @else if (cuenta) {
-    <div class="mb-6 rounded-lg border border-gray-100 bg-[var(--crema-claro)] px-4 py-3 text-sm font-medium text-[var(--azul-oscuro)]">
+    <div
+      class="mb-6 rounded-lg border border-gray-100 bg-[var(--crema-claro)] px-4 py-3 text-sm font-medium text-[var(--azul-oscuro)]"
+    >
       La cuenta está {{ cuenta.estado }}.
     </div>
   }
@@ -55,7 +65,9 @@
       <div class="overflow-x-auto">
         <table class="w-full border-collapse text-left">
           <thead>
-            <tr class="bg-[var(--crema)] text-xs font-bold uppercase tracking-wider text-[var(--azul-oscuro)]">
+            <tr
+              class="bg-[var(--crema)] text-xs font-bold uppercase tracking-wider text-[var(--azul-oscuro)]"
+            >
               <th scope="col" class="px-4 py-3">Fecha</th>
               <th scope="col" class="px-4 py-3">Método</th>
               <th scope="col" class="px-4 py-3 text-right">Monto</th>

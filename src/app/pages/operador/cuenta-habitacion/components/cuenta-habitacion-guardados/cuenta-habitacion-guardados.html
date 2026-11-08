@@ -8,7 +8,7 @@
 
   @if (cuenta) {
     <div class="overflow-x-auto">
-      <table class="w-full border-collapse text-left">
+      <table id="tablaServiciosCuenta" class="w-full border-collapse text-left">
         <thead>
           <tr
             class="bg-[var(--crema)] text-sm font-bold uppercase tracking-wider text-[var(--azul-oscuro)]"
@@ -30,7 +30,10 @@
               </td>
               <td class="px-4 py-4 text-center">{{ consumo.cantidad }}</td>
               <td class="px-4 py-4 font-bold text-[var(--azul)]">
-                {{ consumo.precio * consumo.cantidad | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
+                {{
+                  consumo.precio * consumo.cantidad
+                    | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO'
+                }}
               </td>
               <td class="px-4 py-4 text-gray-600">
                 {{ consumo.fechaRegistro | date: 'd MMM y, h:mm a' }}
