@@ -7,6 +7,7 @@
   <label class="md:col-span-2">
     <span class="mb-2 block text-sm font-bold text-[var(--azul-oscuro)]">Tipo de habitación</span>
     <select
+      id="selectTipoHabitacion"
       class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 outline-none transition focus:border-[var(--azul)] focus:ring-2 focus:ring-[var(--azul)]/15"
       formControlName="tipoId"
       required
@@ -25,6 +26,7 @@
   <label>
     <span class="mb-2 block text-sm font-bold text-[var(--azul-oscuro)]">Fecha de entrada</span>
     <input
+      id="inputFechaEntrada"
       class="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-[var(--azul)] focus:ring-2 focus:ring-[var(--azul)]/15"
       type="date"
       formControlName="fechaEntrada"
@@ -35,6 +37,7 @@
   <label>
     <span class="mb-2 block text-sm font-bold text-[var(--azul-oscuro)]">Fecha de salida</span>
     <input
+      id="inputFechaSalida"
       class="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-[var(--azul)] focus:ring-2 focus:ring-[var(--azul)]/15"
       type="date"
       formControlName="fechaSalida"
@@ -45,6 +48,7 @@
   <label class="md:col-span-2">
     <span class="mb-2 block text-sm font-bold text-[var(--azul-oscuro)]">Cantidad de personas</span>
     <input
+      id="inputCantidadPersonas"
       class="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-[var(--azul)] focus:ring-2 focus:ring-[var(--azul)]/15"
       type="number"
       formControlName="cantidadPersonas"

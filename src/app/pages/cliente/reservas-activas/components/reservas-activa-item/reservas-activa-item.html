@@ -1,5 +1,5 @@
 <div
-  class="bg-white rounded-[16px] shadow-[0_4px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.13)] flex overflow-hidden transition-shadow duration-300"
+  class="tarjeta-reserva-item bg-white rounded-[16px] shadow-[0_4px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.13)] flex overflow-hidden transition-shadow duration-300"
 >
   <div class="w-2 flex-shrink-0 bg-[var(--azul)]"></div>
 
@@ -14,7 +14,7 @@
       <h3 class="font-serif text-2xl font-bold text-[var(--azul)] mb-1">
         {{ reserva().habitacion?.tipoHabitacion?.nombre ?? 'Tipo no asignado' }}
       </h3>
-      <p class="font-sans text-sm text-gray-500 mb-2">
+      <p class="habitacion-asignada-texto font-sans text-sm text-gray-500 mb-2">
         {{ reserva().habitacion ? 'Habitación ' + reserva().habitacion?.numero + ' · ' : '' }}
         {{ reserva().cantidadPersonas }} personas
       </p>
