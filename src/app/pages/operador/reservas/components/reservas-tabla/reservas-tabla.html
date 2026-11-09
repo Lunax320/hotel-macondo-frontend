@@ -14,8 +14,10 @@
       </thead>
       <tbody class="text-sm font-medium text-[var(--texto)]">
         @for (reserva of reservas(); track reserva.id) {
-          <tr class="border-t border-gray-100">
-            <td class="px-6 py-4 font-bold text-[var(--azul)]">{{ reserva.numeroReserva }}</td>
+          <tr class="tabla-reservas border-t border-gray-100">
+            <td class="codigo-reserva px-6 py-4 font-bold text-[var(--azul)]">
+              {{ reserva.numeroReserva }}
+            </td>
             <td class="px-6 py-4 font-bold text-[var(--azul-oscuro)]">
               {{ reserva.cliente?.nombre }} {{ reserva.cliente?.apellido }}
             </td>
@@ -26,7 +28,7 @@
             <td class="px-6 py-4 text-gray-600">{{ formatearFecha(reserva.fechaFin) }}</td>
             <td class="px-6 py-4">
               <span
-                class="inline-block rounded-full border px-4 py-1 text-xs font-semibold"
+                class="estado-reserva inline-block rounded-full border px-4 py-1 text-xs font-semibold"
                 [class.border-sky-200]="reserva.estado === 'ACTIVA'"
                 [class.bg-sky-50]="reserva.estado === 'ACTIVA'"
                 [class.text-sky-600]="reserva.estado === 'ACTIVA'"
@@ -46,7 +48,7 @@
             <td class="whitespace-nowrap px-6 py-4 text-right">
               @if (reserva.estado.toUpperCase() === 'CONFIRMADA') {
                 <button
-                  class="font-medium text-emerald-700 hover:underline disabled:cursor-wait disabled:text-gray-400 disabled:no-underline"
+                  class="activar-reserva font-medium text-emerald-700 hover:underline disabled:cursor-wait disabled:text-gray-400 disabled:no-underline"
                   type="button"
                   [disabled]="cambiandoNumero() !== null"
                   (click)="activar(reserva)"
