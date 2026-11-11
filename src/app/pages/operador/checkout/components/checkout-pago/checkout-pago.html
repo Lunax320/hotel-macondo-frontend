@@ -35,7 +35,7 @@
           </p>
         }
         <p class="text-sm font-medium text-gray-500">Saldo a pagar</p>
-        <p class="font-serif text-2xl font-bold text-[var(--azul-oscuro)]">
+        <p id="saldo-pendiente" class="font-serif text-2xl font-bold text-[var(--azul-oscuro)]">
           {{ saldo | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
         </p>
         <button
@@ -79,7 +79,7 @@
               <tr class="transition hover:bg-gray-50/50">
                 <td class="px-4 py-3">{{ pago.fechaPago | date: 'd MMM y, h:mm a' }}</td>
                 <td class="px-4 py-3">{{ pago.metodoPago }}</td>
-                <td class="px-4 py-3 text-right font-bold text-[var(--azul-oscuro)]">
+                <td class="pago-monto px-4 py-3 text-right font-bold text-[var(--azul-oscuro)]">
                   {{ pago.monto | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
                 </td>
                 <td class="px-4 py-3">{{ pago.estado }}</td>
