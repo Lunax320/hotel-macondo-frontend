@@ -1,12 +1,14 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TipoHabitacion } from '../../../../../models/tipo-habitacion.model';
 
-// Imagen panorámica de cada tipo de habitación (carpeta public/images).
+// Panorámica de cada tipo, generada a partir de la foto que el tipo usa en el catálogo.
+// Superior comparte la foto de Executive, y Suite la de VIP (así lo muestra el backend).
 const PANORAMICAS: Record<string, string> = {
   Estándar: '/images/habitacion-estandar-panoramica.jpg',
-  VIP: '/images/habitacion-vip-panoramica.jpg',
+  Superior: '/images/habitacion-ejecutiva-panoramica.jpg',
+  Suite: '/images/habitacion-vip-panoramica.jpg',
   Executive: '/images/habitacion-ejecutiva-panoramica.jpg',
-  Suite: '/images/habitacion-luxury-panoramica.jpg',
+  VIP: '/images/habitacion-luxury-panoramica.jpg',
 };
 
 // Recorrido de la habitación: el visitante arrastra sobre la imagen (o usa las flechas del teclado).
