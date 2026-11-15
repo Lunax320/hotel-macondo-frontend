@@ -53,17 +53,17 @@
       <button
         type="button"
         class="font-sans text-xs font-bold text-[var(--azul)] inline-flex items-center gap-1.5 rounded-md py-1 hover:text-[var(--azul-oscuro)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--azul)]"
-        [attr.aria-expanded]="abierto()"
+        [attr.aria-expanded]="abierto"
         [attr.aria-controls]="'detalle-' + reserva().id"
         (click)="alternar()"
       >
-        {{ abierto() ? 'Ocultar detalles' : 'Ver más detalles' }}
-        <i class="bi" [class]="abierto() ? 'bi-chevron-up' : 'bi-chevron-down'" aria-hidden="true"></i>
+        {{ abierto ? 'Ocultar detalles' : 'Ver más detalles' }}
+        <i class="bi" [class]="abierto ? 'bi-chevron-up' : 'bi-chevron-down'" aria-hidden="true"></i>
       </button>
     </div>
   </div>
 </div>
-@if (abierto()) {
+@if (abierto) {
   <dl
     [id]="'detalle-' + reserva().id"
     class="m-0 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 border-t border-[var(--crema)] bg-[var(--crema-claro)] px-5 py-5 md:px-8 text-sm"
@@ -78,7 +78,7 @@
     </div>
     <div>
       <dt class="text-[0.7rem] uppercase tracking-wider text-gray-500">Noches</dt>
-      <dd class="m-0 font-semibold text-[var(--azul-oscuro)]">{{ noches() ?? 'No registrado' }}</dd>
+      <dd class="m-0 font-semibold text-[var(--azul-oscuro)]">{{ noches ?? 'No registrado' }}</dd>
     </div>
     <div>
       <dt class="text-[0.7rem] uppercase tracking-wider text-gray-500">Habitación y tipo</dt>

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, input, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Reserva } from '../../../../../models/reserva.model';
@@ -12,22 +12,9 @@ import { ComentarioService } from '../../../../../services/comentario.service';
   templateUrl: './historial-item.html',
   changeDetection: ChangeDetectionStrategy.Eager,
 })
-export class HistorialItem {
+export class HistorialItem implements OnChanges {
   reserva = input.required<Reserva>();
-  abierto = signal(false);
-
-  // Noches entre entrada y salida; null si las fechas no son válidas.
-  noches = computed(() => {
-    const r = this.reserva();
-    const n = Math.round(
-      (new Date(r.fechaFin).getTime() - new Date(r.fechaInicio).getTime()) / 86_400_000,
-    );
-    return isNaN(n) || n < 0 ? null : n;
-  });
-
-  alternar(): void {
-    this.abierto.update((v) => !v);
-  }
+  abierto = false;
 
   private comentarioService = inject(ComentarioService);
   private toast = inject(ToastService);
@@ -39,8 +26,24 @@ export class HistorialItem {
   editando = false;
   confirmandoBorrado = false;
 
-  constructor() {
-    effect(() => (this.actual = this.comentario()));
+  // Cada vez que el padre cambia el comentario de esta reserva, se copia al estado local.
+  ngOnChanges(cambios: SimpleChanges): void {
+    if (cambios['comentario']) {
+      this.actual = this.comentario();
+    }
+  }
+
+  // Noches entre entrada y salida; null si las fechas no son válidas.
+  get noches(): number | null {
+    const r = this.reserva();
+    const n = Math.round(
+      (new Date(r.fechaFin).getTime() - new Date(r.fechaInicio).getTime()) / 86_400_000,
+    );
+    return isNaN(n) || n < 0 ? null : n;
+  }
+
+  alternar(): void {
+    this.abierto = !this.abierto;
   }
 
   readonly estrellas = [1, 2, 3, 4, 5];
@@ -54,7 +57,8 @@ export class HistorialItem {
   intentado = false;
   errorServidor = '';
 
-  private contenedor = viewChild<ElementRef<HTMLElement>>('formulario');
+  // Referencia al formulario, para enfocar el primer campo con error.
+  @ViewChild('formulario') contenedor?: ElementRef<HTMLElement>;
 
   get finalizada(): boolean {
     return this.reserva().estado?.toUpperCase() === 'FINALIZADA';
@@ -135,7 +139,7 @@ export class HistorialItem {
   enviar(): void {
     this.intentado = true;
     this.errorServidor = '';
-    const el = this.contenedor()?.nativeElement;
+    const el = this.contenedor?.nativeElement;
     if (this.errorEstrellas) {
       el?.querySelector<HTMLElement>('[data-estrella]')?.focus();
       return;
