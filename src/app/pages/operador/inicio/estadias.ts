@@ -1,4 +1,4 @@
-import { catchError, forkJoin, map, Observable, of, switchMap } from 'rxjs';
+import { catchError, concatMap, from, map, Observable, of, switchMap, toArray } from 'rxjs';
 import { ReservaOperador } from '../../../models/reserva-operador.model';
 import { ReservaService } from '../../../services/reserva.service';
 
@@ -28,7 +28,10 @@ export function cargarDatosOperador(servicio: ReservaService): Observable<DatosO
           catchError(() => of(null)),
         ),
       );
-      return (saldos.length ? forkJoin(saldos) : of([] as (number | null)[])).pipe(
+      // concatMap mantiene el orden de las estadías; toArray junta los saldos en una sola lista.
+      return from(saldos).pipe(
+        concatMap((saldo) => saldo),
+        toArray(),
         map((s) => ({ reservas, enCurso: activas.map((reserva, i) => ({ reserva, saldo: s[i] })) })),
       );
     }),
