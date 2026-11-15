@@ -14,10 +14,10 @@
       role="region"
       aria-roledescription="carrusel"
       aria-label="Testimonios de huéspedes"
-      (mouseenter)="pausado.set(true)"
-      (mouseleave)="pausado.set(false)"
-      (focusin)="pausado.set(true)"
-      (focusout)="pausado.set(false)"
+      (mouseenter)="pausado = true"
+      (mouseleave)="pausado = false"
+      (focusin)="pausado = true"
+      (focusout)="pausado = false"
     >
       <div class="flex items-center gap-2 md:gap-4">
         <button type="button" class="flecha" aria-label="Testimonios anteriores" (click)="mover(-1)">
@@ -30,13 +30,13 @@
             [style.width]="anchoPista()"
             [style.transform]="desplazamiento()"
           >
-            @for (testimonio of lista(); track $index; let i = $index) {
+            @for (testimonio of lista; track $index; let i = $index) {
               <div
                 class="slide"
                 role="group"
                 aria-roledescription="diapositiva"
                 [style.flex]="'0 0 ' + anchoSlide()"
-                [attr.aria-label]="i + 1 + ' de ' + lista().length"
+                [attr.aria-label]="i + 1 + ' de ' + lista.length"
               >
                 <app-testimonio-card [testimonio]="testimonio"></app-testimonio-card>
               </div>
@@ -50,13 +50,13 @@
       </div>
 
       <div class="flex justify-center gap-2 mt-6">
-        @for (posicion of posiciones(); track posicion) {
+        @for (posicion of posiciones; track posicion) {
           <button
             type="button"
             class="punto"
-            [class.activo]="posicion === indice()"
+            [class.activo]="posicion === indice"
             [attr.aria-label]="'Ir a la posición ' + (posicion + 1)"
-            [attr.aria-current]="posicion === indice() ? 'true' : null"
+            [attr.aria-current]="posicion === indice ? 'true' : null"
             (click)="ir(posicion)"
           ></button>
         }

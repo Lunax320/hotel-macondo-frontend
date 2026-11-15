@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, inject, input, OnInit, signal } from '@angular/core';
+import { Component, input, OnDestroy, OnInit } from '@angular/core';
 import { Testimonio } from '../../../../../models/testimonio.model';
 import { TestimonioCard } from '../testimonio-card/testimonio-card';
 
@@ -23,72 +23,96 @@ const INTERVALO_MS = 5000;
   styleUrl: './landing-testimonios.scss',
   templateUrl: './landing-testimonios.html',
 })
-export class LandingTestimonios implements OnInit {
+export class LandingTestimonios implements OnInit, OnDestroy {
   testimonios = input<Testimonio[]>();
 
+  // Tarjetas visibles a la vez: 3 en escritorio, 1 en móvil.
+  visibles = 3;
+  // Posición actual del carrusel.
+  indice = 0;
+  // true mientras el cursor o el foco están sobre el carrusel: no avanza.
+  pausado = false;
+  // true si el usuario pidió menos movimiento: no avanza solo.
+  private sinMovimiento = false;
+
+  private temporizador?: ReturnType<typeof setInterval>;
+  private escritorio?: MediaQueryList;
+  private reducido?: MediaQueryList;
+
   // Comentarios reales primero; si son pocos, se completan con muestra hasta MINIMO.
-  lista = computed<Testimonio[]>(() => {
+  get lista(): Testimonio[] {
     const reales = this.testimonios() ?? [];
     const faltan = Math.max(0, MINIMO - reales.length);
     return [...reales, ...TESTIMONIOS_MUESTRA.slice(0, faltan)];
-  });
+  }
 
-  // Tarjetas visibles a la vez: 3 en escritorio, 1 en móvil.
-  visibles = signal(3);
   // Posiciones a las que puede llegar el carrusel: de 0 hasta n - visibles.
-  maxIndice = computed(() => Math.max(0, this.lista().length - this.visibles()));
-  posiciones = computed(() => Array.from({ length: this.maxIndice() + 1 }, (_, i) => i));
-
-  indice = signal(0);
-  pausado = signal(false);
-  private sinMovimiento = signal(false);
-
-  constructor() {
-    const destroyRef = inject(DestroyRef);
-    const id = setInterval(() => {
-      if (!this.pausado() && !this.sinMovimiento()) this.mover(1);
-    }, INTERVALO_MS);
-    destroyRef.onDestroy(() => clearInterval(id));
+  get maxIndice(): number {
+    return Math.max(0, this.lista.length - this.visibles);
   }
 
+  get posiciones(): number[] {
+    return Array.from({ length: this.maxIndice + 1 }, (_, i) => i);
+  }
+
+  // Lee las preferencias de pantalla, escucha sus cambios y arranca el avance automático.
   ngOnInit(): void {
-    const escritorio = window.matchMedia('(min-width: 768px)');
-    const reducido = window.matchMedia('(prefers-reduced-motion: reduce)');
-    this.visibles.set(escritorio.matches ? 3 : 1);
-    this.sinMovimiento.set(reducido.matches);
-    escritorio.addEventListener('change', (e) => {
-      this.visibles.set(e.matches ? 3 : 1);
-      this.indice.set(0);
-    });
-    reducido.addEventListener('change', (e) => this.sinMovimiento.set(e.matches));
+    this.escritorio = window.matchMedia('(min-width: 768px)');
+    this.reducido = window.matchMedia('(prefers-reduced-motion: reduce)');
+    this.visibles = this.escritorio.matches ? 3 : 1;
+    this.sinMovimiento = this.reducido.matches;
+    this.escritorio.addEventListener('change', this.alCambiarEscritorio);
+    this.reducido.addEventListener('change', this.alCambiarReducido);
+
+    this.temporizador = setInterval(() => {
+      if (!this.pausado && !this.sinMovimiento) this.mover(1);
+    }, INTERVALO_MS);
   }
+
+  // Quita los escuchas y el temporizador al salir de la página.
+  ngOnDestroy(): void {
+    clearInterval(this.temporizador);
+    this.escritorio?.removeEventListener('change', this.alCambiarEscritorio);
+    this.reducido?.removeEventListener('change', this.alCambiarReducido);
+  }
+
+  private alCambiarEscritorio = (evento: MediaQueryListEvent): void => {
+    this.visibles = evento.matches ? 3 : 1;
+    this.indice = 0;
+  };
+
+  private alCambiarReducido = (evento: MediaQueryListEvent): void => {
+    this.sinMovimiento = evento.matches;
+  };
 
   // Avanza o retrocede una posición y da la vuelta al llegar al final.
   mover(paso: number): void {
-    const max = this.maxIndice();
-    this.indice.update((i) => {
-      const siguiente = i + paso;
-      if (siguiente > max) return 0;
-      if (siguiente < 0) return max;
-      return siguiente;
-    });
+    const max = this.maxIndice;
+    const siguiente = this.indice + paso;
+    if (siguiente > max) {
+      this.indice = 0;
+    } else if (siguiente < 0) {
+      this.indice = max;
+    } else {
+      this.indice = siguiente;
+    }
   }
 
   ir(posicion: number): void {
-    this.indice.set(posicion);
+    this.indice = posicion;
   }
 
   // Desplazamiento de la pista en porcentaje de su propio ancho: una tarjeta por paso.
   desplazamiento(): string {
-    return `translateX(-${(this.indice() * 100) / this.lista().length}%)`;
+    return `translateX(-${(this.indice * 100) / this.lista.length}%)`;
   }
 
   // Ancho de la pista: todas las tarjetas, visibles/n del contenedor por tarjeta.
   anchoPista(): string {
-    return `${(this.lista().length * 100) / this.visibles()}%`;
+    return `${(this.lista.length * 100) / this.visibles}%`;
   }
 
   anchoSlide(): string {
-    return `${100 / this.lista().length}%`;
+    return `${100 / this.lista.length}%`;
   }
 }
