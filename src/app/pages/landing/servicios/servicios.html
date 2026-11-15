@@ -27,6 +27,26 @@
 <section class="mx-auto max-w-[1180px] px-5 py-12 md:py-16" aria-labelledby="catalogo-servicios">
   <h2 class="sr-only" id="catalogo-servicios">Catálogo de servicios</h2>
 
+  <div class="mb-8 flex justify-center gap-3" role="group" aria-label="Elegir vista">
+    <button
+      class="rounded-full border-2 border-[#147ba5] bg-white px-7 py-2.5 font-bold text-[#147ba5] transition hover:bg-[#e8f4f8] aria-pressed:bg-[#147ba5] aria-pressed:text-white"
+      type="button"
+      [attr.aria-pressed]="vista === 'lista'"
+      (click)="vista = 'lista'"
+    >
+      Lista
+    </button>
+    <button
+      class="rounded-full border-2 border-[#147ba5] bg-white px-7 py-2.5 font-bold text-[#147ba5] transition hover:bg-[#e8f4f8] aria-pressed:bg-[#147ba5] aria-pressed:text-white"
+      type="button"
+      [attr.aria-pressed]="vista === 'mapa'"
+      (click)="vista = 'mapa'"
+    >
+      Mapa
+    </button>
+  </div>
+
+  @if (vista === 'lista') {
   <div
     class="mb-12 flex flex-wrap justify-center gap-3"
     role="group"
@@ -61,6 +81,9 @@
       ></app-servicio-card>
     }
   </div>
+  } @else {
+    <app-mapa-hotel [servicios]="servicios"></app-mapa-hotel>
+  }
 
   <section
     class="mt-16 rounded-lg bg-[#176f91] px-6 py-14 text-center text-white shadow-[0_20px_40px_rgba(23,111,145,0.20)] md:px-12 md:py-16"

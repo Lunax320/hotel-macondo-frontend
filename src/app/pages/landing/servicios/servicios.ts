@@ -4,9 +4,10 @@ import { Servicio } from '../../../models/servicio.model';
 import { ServicioService } from '../../../services/servicio.service';
 import { ToastService } from '../../../services/toast.service';
 import { ServicioCard } from './components/servicio-card/servicio-card';
+import { MapaHotel } from './components/mapa-hotel/mapa-hotel';
 
 @Component({
-  imports: [RouterLink, ServicioCard],
+  imports: [RouterLink, ServicioCard, MapaHotel],
   selector: 'app-servicios',
   styleUrl: './servicios.scss',
   templateUrl: './servicios.html',
@@ -19,6 +20,8 @@ export class Servicios implements OnInit {
   servicios: Servicio[] = [];
   categorias: string[] = [];
   categoriaSeleccionada = 'Todos';
+  // Vista del catálogo: lista de tarjetas o mapa interactivo del hotel.
+  vista: 'lista' | 'mapa' = 'lista';
   serviciosAgregados: number[] = [];
 
   // Carga el catálogo activo y deriva las categorías disponibles.
