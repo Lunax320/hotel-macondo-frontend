@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, DoCheck, ElementRef, inject, input, OnDestroy, output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { catchError, forkJoin, map, of, Subscription } from 'rxjs';
+import { catchError, from, map, mergeMap, Observable, of, Subscription, toArray } from 'rxjs';
 import { ReservaService } from '../../../../../services/reserva.service';
 
 interface Celda {
@@ -175,7 +175,8 @@ export class ReservaCalendario implements DoCheck, OnDestroy {
     return this.claveDe(this.mes);
   }
 
-  // Una consulta por noche (hoy en adelante) del mes visible, en paralelo con forkJoin.
+  // Una consulta por noche (hoy en adelante) del mes visible. Se lanzan en paralelo con mergeMap
+  // y toArray junta los resultados en un solo subscribe.
   private cargar(): void {
     this.consulta?.unsubscribe();
     this.cargando = false;
@@ -184,7 +185,7 @@ export class ReservaCalendario implements DoCheck, OnDestroy {
     if (!clave || this.cache.has(clave)) return;
     const personas = this.personas();
     const total = new Date(this.mes.getFullYear(), this.mes.getMonth() + 1, 0).getDate();
-    const peticiones = [];
+    const peticiones: Observable<[string, boolean]>[] = [];
     for (let d = 1; d <= total; d++) {
       const dia = new Date(this.mes.getFullYear(), this.mes.getMonth(), d);
       const iso = this.iso(dia);
@@ -202,7 +203,12 @@ export class ReservaCalendario implements DoCheck, OnDestroy {
     }
     if (!peticiones.length) return;
     this.cargando = true;
-    this.consulta = forkJoin(peticiones).subscribe((pares) => {
+    this.consulta = from(peticiones)
+      .pipe(
+        mergeMap((peticion) => peticion),
+        toArray(),
+      )
+      .subscribe((pares) => {
       this.cache.set(clave, new Map(pares));
       this.cargando = false;
     });
