@@ -1,0 +1,30 @@
+@if (panoramica; as imagen) {
+  <section class="mt-10" aria-labelledby="titulo-recorrido">
+    <h2 id="titulo-recorrido" class="font-serif text-2xl font-bold text-[var(--azul-oscuro)]">
+      Recorre la habitación
+    </h2>
+    <p class="mt-1 text-sm text-[var(--texto)]">Mueve el control para mirar la habitación de lado a lado.</p>
+
+    <div class="mt-4 overflow-hidden rounded-2xl bg-black shadow-md">
+      <img
+        class="block h-auto w-[200%] max-w-none transition-transform duration-200"
+        [src]="imagen"
+        [style.transform]="desplazamiento"
+        [alt]="'Vista panorámica de la habitación ' + tipo().nombre"
+      />
+    </div>
+
+    <label class="mt-4 flex flex-col gap-2">
+      <span class="text-sm font-bold text-[var(--azul-oscuro)]">Mirar hacia un lado y el otro</span>
+      <input
+        type="range"
+        min="0"
+        max="100"
+        step="1"
+        [formControl]="posicion"
+        class="accent-[var(--azul)]"
+        aria-label="Posición del recorrido de la habitación"
+      />
+    </label>
+  </section>
+}

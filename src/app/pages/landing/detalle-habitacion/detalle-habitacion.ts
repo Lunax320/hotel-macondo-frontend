@@ -7,9 +7,10 @@ import { HabitacionService } from '../../../services/habitacion.service';
 import { TipoHabitacionService } from '../../../services/tipo-habitacion.service';
 import { ToastService } from '../../../services/toast.service';
 import { ResumenReservaHabitacion } from './components/resumen-reserva-habitacion/resumen-reserva-habitacion';
+import { RecorridoHabitacion } from './components/recorrido-habitacion/recorrido-habitacion';
 
 @Component({
-  imports: [CurrencyPipe, RouterLink, ResumenReservaHabitacion],
+  imports: [CurrencyPipe, RouterLink, ResumenReservaHabitacion, RecorridoHabitacion],
   selector: 'app-detalle-habitacion',
   styleUrl: './detalle-habitacion.scss',
   templateUrl: './detalle-habitacion.html',
