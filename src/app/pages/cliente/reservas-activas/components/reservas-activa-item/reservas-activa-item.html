@@ -16,7 +16,7 @@
       </h3>
       <p class="habitacion-asignada-texto font-sans text-sm text-gray-500 mb-2">
         {{ reserva().habitacion ? 'Habitación ' + reserva().habitacion?.numero + ' · ' : '' }}
-        {{ reserva().cantidadPersonas }} personas
+        {{ reserva().cantidadPersonas }} {{ reserva().cantidadPersonas === 1 ? 'persona' : 'personas' }}
       </p>
       <div class="flex items-center gap-1.5">
         <i class="bi bi-calendar3 text-gray-400 text-xs"></i>
@@ -33,29 +33,53 @@
         {{ reserva().estado }}
       </span>
       <span class="font-serif text-lg font-bold text-[#0e2a3f]">
-        ${{ reserva().total | number }}
+        {{ reserva().total | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
       </span>
     </div>
 
     @if (puedeGestionar) {
       <div class="flex flex-col gap-2.5 flex-none items-stretch">
-        @if (!ocupado()) {
+        @if (!ocupado() && puedeGestionar) {
           <a
             [routerLink]="['/cliente', clienteId(), 'reservas', reserva().id, 'editar']"
-            class="font-sans text-sm font-semibold text-center text-white bg-[var(--azul)] hover:bg-[#0e2a3f] rounded-lg px-5 py-2 transition-colors cursor-pointer"
+            class="btn-secundario font-sans text-sm font-semibold text-center rounded-lg px-5 h-8 inline-flex items-center py-0"
           >
             Modificar
           </a>
         }
-        <button
-          type="button"
-          [disabled]="ocupado()"
-          (click)="onCancelar()"
-          class="font-sans text-sm font-semibold text-[#e74c3c] bg-transparent border-[1.5px] border-[#e74c3c] hover:text-[#c0392b] hover:border-[#c0392b] rounded-lg px-5 py-2 transition-colors cursor-pointer"
-        >
-          {{ cancelando() ? 'Cancelando…' : 'Cancelar' }}
-        </button>
+        @if (!pidiendoConfirmacion) {
+          <button
+            type="button"
+            [disabled]="ocupado()"
+            (click)="onCancelar()"
+            class="btn-destructivo font-sans text-sm font-semibold rounded-lg px-5 h-8 inline-flex items-center py-0"
+          >
+            {{ cancelando() ? 'Cancelando…' : 'Cancelar' }}
+          </button>
+        } @else {
+          <p class="font-sans text-sm font-semibold text-[#b42318]" role="alert">
+            ¿Seguro que deseas cancelar esta reserva?
+          </p>
+          <button
+            type="button"
+            (click)="confirmarCancelacion()"
+            class="btn-peligro-solido font-sans text-sm font-semibold rounded-lg px-5 h-8 inline-flex items-center py-0"
+          >
+            Sí, cancelar
+          </button>
+          <button
+            type="button"
+            (click)="pidiendoConfirmacion = false"
+            class="btn-secundario-borde font-sans text-sm font-semibold rounded-lg px-5 h-8 inline-flex items-center py-0"
+          >
+            No, volver
+          </button>
+        }
       </div>
+    } @else {
+      <p class="font-sans text-sm text-gray-500 flex-none max-w-[14rem] text-right">
+        Reserva en curso: contacta a recepción para cambios.
+      </p>
     }
   </div>
 </div>

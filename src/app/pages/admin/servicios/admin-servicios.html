@@ -19,8 +19,24 @@
       </div>
     }
 
+    @if (servicioPendiente; as servicio) {
+      <app-confirmacion-accion
+        [titulo]="(servicio.activo ? '¿Desactivar ' : '¿Activar ') + servicio.nombre + '?'"
+        [mensaje]="
+          servicio.activo
+            ? 'Dejará de verse en el sitio. Las cuentas que ya lo usaron no cambian.'
+            : 'Volverá a verse en el sitio.'
+        "
+        [textoConfirmar]="servicio.activo ? 'Confirmar desactivación' : 'Confirmar activación'"
+        textoCancelar="Cancelar"
+        (confirmado)="confirmarEstado()"
+        (cancelado)="cancelarEstado()"
+      ></app-confirmacion-accion>
+    }
+
     <app-servicio-table
       [servicios]="servicios"
+      [cargaFallida]="!!errorServicio"
       (cambioEstadoSolicitado)="cambiarEstado($event)"
     ></app-servicio-table>
   </section>

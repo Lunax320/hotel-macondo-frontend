@@ -13,7 +13,6 @@ import { TipoHabitacionCamposDetalle } from '../tipo-habitacion-campos-detalle/t
 })
 export class TipoHabitacionForm implements OnInit {
   tipoHabitacion = input<TipoHabitacion>();
-  mensajeError = input('');
   guardado = output<TipoHabitacion>();
   cancelado = output<void>();
 
@@ -46,6 +45,21 @@ export class TipoHabitacionForm implements OnInit {
         precioNoche: tipoHabitacion.precioNoche,
       });
     }
+  }
+
+  // Nombres de los campos obligatorios que aún no son válidos.
+  faltantes(): string[] {
+    const campos = {
+      nombre: 'nombre',
+      descripcion: 'descripción',
+      imagen: 'imagen',
+      capacidadPersonas: 'capacidad',
+      precioNoche: 'precio por noche',
+    };
+
+    return Object.entries(campos)
+      .filter(([clave]) => this.tipoHabitacionForm.get(clave)?.invalid)
+      .map(([, nombre]) => nombre);
   }
 
   // Emite el tipo validado para guardarlo.

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { TipoHabitacionService } from '../../../services/tipo-habitacion.service';
 import { TestimonioService } from '../../../services/testimonio.service';
+import { ComentarioService } from '../../../services/comentario.service';
 import { TipoHabitacion } from '../../../models/tipo-habitacion.model';
 import { Testimonio } from '../../../models/testimonio.model';
 import { CarruselServicios } from './components/carrusel-servicios/carrusel-servicios';
@@ -27,6 +28,7 @@ import { LandingCta } from './components/landing-cta/landing-cta';
 export class Landing implements OnInit {
   private tipoService = inject(TipoHabitacionService);
   private testimonioService = inject(TestimonioService);
+  private comentarioService = inject(ComentarioService);
 
   tiposHabitacion: TipoHabitacion[] = [];
   testimonios: Testimonio[] = [];
@@ -38,6 +40,26 @@ export class Landing implements OnInit {
       error: (err) => console.error('Error al cargar tipos de habitacion:', err),
     });
 
+    // Comentarios publicados por el administrador; si no hay o falla, se usan los testimonios del backend.
+    this.comentarioService.publicados().subscribe({
+      next: (comentarios) => {
+        if (comentarios.length > 0) {
+          this.testimonios = comentarios.map((c) => ({
+            id: c.id,
+            texto: c.texto,
+            nombre: c.nombre,
+            ciudad: new Date(c.fechaCreacion).toLocaleDateString('es-CO', { dateStyle: 'long' }),
+            estrellas: c.calificacion,
+          }));
+        } else {
+          this.cargarTestimoniosBackend();
+        }
+      },
+      error: () => this.cargarTestimoniosBackend(),
+    });
+  }
+
+  private cargarTestimoniosBackend(): void {
     this.testimonioService.obtenerTodos().subscribe({
       next: (testimonios) => (this.testimonios = testimonios),
       error: (err) => console.error('Error al cargar testimonios:', err),

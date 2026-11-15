@@ -1,10 +1,17 @@
 <section
-  class="hidden lg:flex h-full flex-col justify-between p-8 md:p-12 bg-cover bg-center text-white"
-  style="
-    background-image:
-      linear-gradient(rgba(8, 26, 42, 0.65), rgba(8, 26, 42, 0.85)), url('/images/Playa.avif');
-  "
+  class="relative isolate hidden lg:flex h-full flex-col justify-between overflow-hidden p-8 md:p-12 bg-[var(--azul-oscuro)] text-white"
 >
+  <video
+    class="absolute inset-0 -z-10 h-full w-full object-cover"
+    src="/video/registro-spa.mp4"
+    poster="/images/Playa.avif"
+    autoplay
+    loop
+    [muted]="true"
+    playsinline
+    aria-hidden="true"
+  ></video>
+  <div class="absolute inset-0 -z-10 bg-gradient-to-b from-[rgba(8,26,42,0.65)] to-[rgba(8,26,42,0.85)]"></div>
   <div>
     <a
       routerLink="/login"

@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { CurrencyPipe } from '@angular/common';
+import { AlertaMensaje } from '../../../components/alerta-mensaje/alerta-mensaje';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { OperadorSidebar } from '../../../components/operador-sidebar/operador-sidebar';
 import { ConsumoHabitacion } from '../../../models/consumo-habitacion.model';
@@ -7,9 +9,11 @@ import { CuentaHabitacionServicios } from './components/cuenta-habitacion-servic
 import { CuentaHabitacionTabla } from './components/cuenta-habitacion-tabla/cuenta-habitacion-tabla';
 import { CuentaHabitacionResumen } from './components/cuenta-habitacion-resumen/cuenta-habitacion-resumen';
 import { ReservaService } from '../../../services/reserva.service';
+import { ToastService } from '../../../services/toast.service';
 import { ConsumoServicioSolicitud } from '../../../models/consumo-servicio-solicitud.model';
 import { ReservaDetalleOperador } from '../../../models/reserva-detalle-operador.model';
 import { switchMap } from 'rxjs';
+import { cargarDatosOperador, EstadiaConSaldo } from '../inicio/estadias';
 import { CuentaHabitacionGuardados } from './components/cuenta-habitacion-guardados/cuenta-habitacion-guardados';
 
 @Component({
@@ -21,6 +25,8 @@ import { CuentaHabitacionGuardados } from './components/cuenta-habitacion-guarda
     CuentaHabitacionTabla,
     CuentaHabitacionResumen,
     CuentaHabitacionGuardados,
+    CurrencyPipe,
+    AlertaMensaje,
   ],
   selector: 'app-operador-cuenta-habitacion',
   templateUrl: './cuenta-habitacion.html',
@@ -29,11 +35,15 @@ import { CuentaHabitacionGuardados } from './components/cuenta-habitacion-guarda
 export class OperadorCuentaHabitacion implements OnInit {
   private route = inject(ActivatedRoute);
   private reservaServicio = inject(ReservaService);
+  private toast = inject(ToastService);
 
   habitacionId = 0;
   reservaDetalle: ReservaDetalleOperador | null = null;
   numeroReserva: string | null = null;
   mensajeGuardado = '';
+  sinReserva = false;
+  cargandoLista = false;
+  estadias: EstadiaConSaldo[] = [];
   guardando = false;
 
   consumos: ConsumoHabitacion[] = [];
@@ -41,6 +51,18 @@ export class OperadorCuentaHabitacion implements OnInit {
   // Carga el detalle de la reserva y su habitación al iniciar la página
   ngOnInit(): void {
     const reservaIdParametro = this.route.snapshot.paramMap.get('reservaId');
+    if (!reservaIdParametro) {
+      this.sinReserva = true;
+      this.cargandoLista = true;
+      cargarDatosOperador(this.reservaServicio).subscribe({
+        next: (d) => {
+          this.estadias = d.enCurso;
+          this.cargandoLista = false;
+        },
+        error: () => (this.cargandoLista = false),
+      });
+      return;
+    }
     const reservaId = Number(reservaIdParametro);
     if (!reservaIdParametro || !Number.isSafeInteger(reservaId) || reservaId < 1) {
       this.mensajeGuardado = 'El identificador de la reserva no es válido.';
@@ -145,13 +167,15 @@ export class OperadorCuentaHabitacion implements OnInit {
         next: (reserva) => {
           this.reservaDetalle = reserva;
           this.consumos = [];
-          this.mensajeGuardado = 'Los servicios se agregaron a la cuenta.';
+          this.toast.mostrar('Los servicios se agregaron a la cuenta.');
           this.guardando = false;
         },
         error: (error) => {
           console.error('No fue posible guardar los servicios:', error);
-          this.mensajeGuardado =
-            error.error?.mensaje ?? 'No fue posible guardar los servicios en la cuenta.';
+          this.toast.mostrar(
+            error.error?.mensaje ?? 'No fue posible guardar los servicios en la cuenta.',
+            'error',
+          );
           this.guardando = false;
         },
       });
@@ -178,11 +202,13 @@ export class OperadorCuentaHabitacion implements OnInit {
       .subscribe({
         next: (reserva) => {
           this.reservaDetalle = reserva;
-          this.mensajeGuardado = 'Servicio eliminado de la cuenta.';
+          this.toast.mostrar('Servicio eliminado de la cuenta.');
         },
         error: (error) => {
-          this.mensajeGuardado =
-            error.error?.mensaje ?? 'No fue posible eliminar el servicio de la cuenta.';
+          this.toast.mostrar(
+            error.error?.mensaje ?? 'No fue posible eliminar el servicio de la cuenta.',
+            'error',
+          );
         },
       });
   }

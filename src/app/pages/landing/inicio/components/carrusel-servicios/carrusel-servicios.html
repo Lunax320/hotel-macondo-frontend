@@ -1,5 +1,9 @@
 <section
   id="servicios"
+  (mouseenter)="pausado.set(true)"
+  (mouseleave)="pausado.set(false)"
+  (focusin)="pausado.set(true)"
+  (focusout)="pausado.set(false)"
   class="relative h-[100svh] min-h-[760px] w-full overflow-hidden bg-[#050e18] md:h-[90vh] md:min-h-[720px]"
 >
   <div class="relative w-full h-full">

@@ -1,10 +1,16 @@
-<div
-  [class]="
-    tipo() === 'error'
-      ? 'mb-4 rounded-lg border border-red-200 bg-red-50 px-5 py-4 text-red-700'
-      : 'mb-4 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700'
-  "
-  role="alert"
->
-  {{ mensaje() }}
-</div>
+@if (tipo() === 'error') {
+  <div class="mb-4 rounded-lg border border-red-200 bg-red-50 px-5 py-4 text-red-700" role="alert">
+    {{ mensaje() }}
+  </div>
+} @else {
+  <div
+    class="mb-6 flex items-start gap-4 rounded-2xl border-2 border-emerald-300 bg-emerald-50 px-6 py-5 text-emerald-900 shadow-sm"
+    role="status"
+  >
+    <i class="bi bi-check-circle-fill mt-0.5 text-3xl text-emerald-600" aria-hidden="true"></i>
+    <div>
+      <p class="text-lg font-bold">¡Listo!</p>
+      <p class="text-base font-medium">{{ mensaje() }}</p>
+    </div>
+  </div>
+}

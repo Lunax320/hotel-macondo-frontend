@@ -1,0 +1,50 @@
+.pista {
+  display: flex;
+  transition: transform 0.6s ease;
+}
+
+.slide {
+  padding: 0 0.75rem;
+  min-width: 0;
+}
+
+.flecha {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--azul-oscuro);
+  color: var(--dorado);
+  transition: background 0.2s;
+
+  &:hover {
+    background: var(--azul);
+  }
+}
+
+.punto {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--azul-oscuro);
+  opacity: 0.25;
+  transition: opacity 0.2s, transform 0.2s;
+
+  &.activo {
+    opacity: 1;
+    background: var(--azul);
+    transform: scale(1.25);
+  }
+}
+
+.flecha:focus-visible,
+.punto:focus-visible {
+  outline: 3px solid var(--dorado);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pista {
+    transition: none;
+  }
+}

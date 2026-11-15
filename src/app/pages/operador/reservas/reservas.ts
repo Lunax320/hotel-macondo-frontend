@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { ToastService } from '../../../services/toast.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { concatMap, Subscription } from 'rxjs';
 import { OperadorSidebar } from '../../../components/operador-sidebar/operador-sidebar';
@@ -8,9 +9,10 @@ import { ReservaService } from '../../../services/reserva.service';
 import { ReservasEstadisticas } from './components/reservas-estadisticas/reservas-estadisticas';
 import { ReservasFiltros } from './components/reservas-filtros/reservas-filtros';
 import { ReservasTabla } from './components/reservas-tabla/reservas-tabla';
+import { ConfirmacionAccion } from '../../../components/confirmacion-accion/confirmacion-accion';
 
 @Component({
-  imports: [OperadorSidebar, ReservasEstadisticas, ReservasFiltros, ReservasTabla],
+  imports: [OperadorSidebar, ReservasEstadisticas, ReservasFiltros, ReservasTabla, ConfirmacionAccion],
   selector: 'app-operador-reservas',
   styleUrl: './reservas.scss',
   templateUrl: './reservas.html',
@@ -20,6 +22,7 @@ export class OperadorReservas implements OnInit, OnDestroy {
   private reservaService = inject(ReservaService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private toast = inject(ToastService);
   private cambiosFiltro?: Subscription;
   private carga?: Subscription;
   private cambioEstado?: Subscription;
@@ -29,15 +32,18 @@ export class OperadorReservas implements OnInit, OnDestroy {
   filtro = 'todas';
   cargando = false;
   errorCarga = '';
-  mensajeAccion = '';
   errorAccion = '';
   cambiandoNumero: string | null = null;
+  // Reserva cuya activación espera confirmación en pantalla
+  reservaPendienteActivar: string | null = null;
+  // Reserva cuya cancelación espera confirmación en pantalla
+  reservaPendienteCancelar: string | null = null;
 
   // Sincroniza el filtro con la URL y carga las reservas del operador.
   ngOnInit(): void {
     // Mantiene el parámetro de navegación original /operador/reservas?filtro=activas.
     this.cambiosFiltro = this.route.queryParamMap.subscribe((parametros) => {
-      this.filtro = parametros.get('filtro')?.toLowerCase() === 'activas' ? 'activas' : 'todas';
+      this.filtro = this.normalizarFiltro(parametros.get('filtro'));
     });
     this.cargarReservas();
   }
@@ -53,10 +59,13 @@ export class OperadorReservas implements OnInit, OnDestroy {
   get reservasFiltradas(): ReservaOperador[] {
     let resultado = this.reservas;
     // La agrupación conserva los estados abiertos de ReservaServiceImpl del backend.
+    if (this.filtro === 'confirmadas' || this.filtro === 'canceladas' || this.filtro === 'finalizadas') {
+      const estadosPorFiltro: Record<string, string> = { confirmadas: 'CONFIRMADA', canceladas: 'CANCELADA', finalizadas: 'FINALIZADA' };
+      const estadoFiltro = estadosPorFiltro[this.filtro];
+      resultado = resultado.filter((reserva) => reserva.estado.toUpperCase() === estadoFiltro);
+    }
     if (this.filtro === 'activas') {
-      resultado = resultado.filter((reserva) =>
-        ['ACTIVA', 'CONFIRMADA', 'PENDIENTE'].includes(reserva.estado.toUpperCase()),
-      );
+      resultado = resultado.filter((reserva) => reserva.estado.toUpperCase() === 'ACTIVA');
     }
     const busqueda = this.normalizarTexto(this.textoBusqueda);
     if (busqueda) {
@@ -80,10 +89,15 @@ export class OperadorReservas implements OnInit, OnDestroy {
     this.textoBusqueda = texto;
   }
 
+  private normalizarFiltro(valor: string | null | undefined): string {
+    const limpio = valor?.toLowerCase() ?? '';
+    return ['activas', 'confirmadas', 'canceladas', 'finalizadas'].includes(limpio) ? limpio : 'todas';
+  }
+
   // Navega con el filtro seleccionado para mantenerlo reflejado en la URL.
   actualizarFiltro(filtro: string): void {
     this.router.navigate(['/operador/reservas'], {
-      queryParams: { filtro: filtro === 'activas' ? 'activas' : 'todas' },
+      queryParams: { filtro: this.normalizarFiltro(filtro) },
     });
   }
 
@@ -113,9 +127,28 @@ export class OperadorReservas implements OnInit, OnDestroy {
       this.errorAccion = 'Solo se pueden cancelar reservas confirmadas.';
       return;
     }
-    if (!confirm(`¿Seguro que deseas cancelar la reserva ${numeroReserva}?`)) return;
+    // Primero se pide confirmación visible; la acción real se ejecuta en confirmarCancelacion()
+    this.reservaPendienteCancelar = numeroReserva;
+    this.mostrarConfirmacion();
+  }
 
-    this.cambiarEstadoReserva(numeroReserva, 'cancelar');
+  // Lleva la vista arriba para que la confirmación (fija al tope) sea visible aunque la fila esté lejos.
+  private mostrarConfirmacion(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Ejecuta la cancelación después de que el operador confirma en pantalla
+  confirmarCancelacion(): void {
+    const numeroReserva = this.reservaPendienteCancelar;
+    this.reservaPendienteCancelar = null;
+    if (numeroReserva) {
+      this.cambiarEstadoReserva(numeroReserva, 'cancelar');
+    }
+  }
+
+  // Cancela la confirmación pendiente sin cambiar nada
+  descartarCancelacion(): void {
+    this.reservaPendienteCancelar = null;
   }
 
   // Valida el estado antes de solicitar la activación de la reserva.
@@ -128,13 +161,22 @@ export class OperadorReservas implements OnInit, OnDestroy {
       return;
     }
 
-    this.cambiarEstadoReserva(numeroReserva, 'activar');
+    // Primero se pide confirmación visible; la acción real se ejecuta en confirmarActivacion()
+    this.reservaPendienteActivar = numeroReserva;
+    this.mostrarConfirmacion();
+  }
+
+  confirmarActivacion(): void {
+    const numeroReserva = this.reservaPendienteActivar;
+    this.reservaPendienteActivar = null;
+    if (numeroReserva) {
+      this.cambiarEstadoReserva(numeroReserva, 'activar');
+    }
   }
 
   // Aplica el cambio de estado y recarga la lista, distinguiendo un fallo de actualización posterior al éxito.
   private cambiarEstadoReserva(numeroReserva: string, accion: 'activar' | 'cancelar'): void {
     this.cambiandoNumero = numeroReserva;
-    this.mensajeAccion = '';
     this.errorAccion = '';
     let cambioConfirmado = false;
     const solicitud =
@@ -152,10 +194,11 @@ export class OperadorReservas implements OnInit, OnDestroy {
               ? reservaActualizada
               : reserva,
           );
-          this.mensajeAccion =
+          this.toast.mostrar(
             accion === 'activar'
               ? `La reserva ${numeroReserva} fue activada.`
-              : `La reserva ${numeroReserva} fue cancelada.`;
+              : `La reserva ${numeroReserva} fue cancelada.`,
+          );
           return this.reservaService.obtenerReservasOperador();
         }),
       )
@@ -165,9 +208,11 @@ export class OperadorReservas implements OnInit, OnDestroy {
           this.cambiandoNumero = null;
         },
         error: (error: HttpErrorResponse) => {
-          this.errorAccion = cambioConfirmado
+          // Muestra el motivo que da el backend (p. ej. habitación ya ocupada).
+          const texto = cambioConfirmado
             ? 'El cambio de estado se guardó, pero no fue posible recargar las reservas. Vuelve a consultar.'
             : this.mensajeError(error);
+          this.toast.mostrar(texto, 'error');
           this.cambiandoNumero = null;
         },
       });

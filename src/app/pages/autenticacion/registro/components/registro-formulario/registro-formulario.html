@@ -25,9 +25,9 @@
       </button>
     </form>
 
-    @if (mensajeError() || errorLocal()) {
+    @if (mensajeError()) {
       <div id="mensajeError" class="mt-4">
-        <app-alerta-mensaje [mensaje]="mensajeError() || errorLocal()"></app-alerta-mensaje>
+        <app-alerta-mensaje [mensaje]="mensajeError()"></app-alerta-mensaje>
       </div>
     }
     <div class="relative my-6 text-center">

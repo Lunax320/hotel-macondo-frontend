@@ -26,15 +26,6 @@
       </button>
     </div>
 
-    @if (mensajeError()) {
-      <div
-        class="mb-4 rounded-lg border border-red-200 bg-red-50 px-5 py-4 text-red-700"
-        role="alert"
-      >
-        {{ mensajeError() }}
-      </div>
-    }
-
     <form class="space-y-4" [formGroup]="tipoHabitacionForm" (ngSubmit)="guardar()">
       <app-tipo-habitacion-campos-basicos
         [formulario]="tipoHabitacionForm"
@@ -43,16 +34,21 @@
         [formulario]="tipoHabitacionForm"
       ></app-tipo-habitacion-campos-detalle>
 
+      @if (faltantes().length > 0) {
+        <p class="text-right text-sm font-semibold text-[#b42318]" role="status">
+          Falta: {{ faltantes().join(', ') }}.
+        </p>
+      }
       <div class="flex justify-end gap-3 border-t border-gray-100 pt-4">
         <button
-          class="rounded-lg px-5 py-2.5 text-sm font-semibold text-gray-600 transition hover:bg-gray-100"
+          class="btn-secundario-borde rounded-lg px-5 py-2.5 text-sm font-semibold"
           type="button"
           (click)="cancelar()"
         >
           Cancelar
         </button>
         <button
-          class="rounded-lg bg-[var(--dorado)] px-6 py-2.5 text-sm font-bold text-[var(--azul-oscuro)] transition hover:bg-[var(--dorado-oscuro)] disabled:cursor-not-allowed disabled:opacity-50"
+          class="btn-primario rounded-lg h-12 px-5 text-sm font-bold"
           type="submit"
           [disabled]="tipoHabitacionForm.invalid"
         >

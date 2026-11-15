@@ -1,3 +1,4 @@
+import { CurrencyPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, RouterLink } from '@angular/router';
 import { switchMap } from 'rxjs';
@@ -7,7 +8,7 @@ import { TipoHabitacionService } from '../../../services/tipo-habitacion.service
 import { ResumenReservaHabitacion } from './components/resumen-reserva-habitacion/resumen-reserva-habitacion';
 
 @Component({
-  imports: [RouterLink, ResumenReservaHabitacion],
+  imports: [CurrencyPipe, RouterLink, ResumenReservaHabitacion],
   selector: 'app-detalle-habitacion',
   styleUrl: './detalle-habitacion.scss',
   templateUrl: './detalle-habitacion.html',

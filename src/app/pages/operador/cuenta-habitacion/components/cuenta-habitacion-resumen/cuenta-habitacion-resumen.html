@@ -31,10 +31,10 @@
         </div>
       </div>
       <div
-        class="mb-8 mt-6 flex items-center justify-between rounded-xl bg-[var(--crema-claro)] p-4"
+        class="mb-8 mt-6 flex flex-col gap-1 rounded-xl bg-[var(--crema-claro)] p-4"
       >
-        <span class="text-sm font-bold text-[var(--azul)]">Total a agregar</span>
-        <span class="font-serif text-2xl font-bold text-[var(--azul)]">
+        <span class="whitespace-nowrap text-sm font-bold text-[var(--azul)]">Total a agregar</span>
+        <span class="font-serif text-2xl font-bold text-[var(--azul)] break-words">
           {{ total | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
         </span>
       </div>
@@ -43,7 +43,7 @@
       type="button"
       id="confirmar-servicios-btn"
       (click)="agregarServicios.emit()"
-      class="w-full rounded-lg bg-[var(--dorado)] px-4 py-3 text-center font-bold text-[var(--azul-oscuro)]"
+      class="btn-primario min-h-12 w-full rounded-lg px-4 py-2 text-center font-bold"
     >
       Agregar servicios a la cuenta
     </button>

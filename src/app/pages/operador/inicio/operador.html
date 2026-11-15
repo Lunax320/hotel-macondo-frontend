@@ -5,10 +5,137 @@
     <header class="mb-8 border-b border-gray-200 pb-4">
       <h1 class="font-serif text-3xl font-bold text-[var(--azul-oscuro)]">Panel Principal</h1>
       <p class="mt-1 text-sm font-medium text-gray-500">
-        Vista general del operador — Hotel Macondo
+        Hoy, {{ hoy | date: "EEEE d 'de' MMMM" : '' : 'es-CO' }} — Hotel Macondo
       </p>
     </header>
 
-    <app-operador-modulos></app-operador-modulos>
+    <!-- Accesos principales -->
+    <nav class="mb-10 grid grid-cols-1 gap-4 md:grid-cols-3" aria-label="Acciones principales">
+      <a
+        routerLink="/operador/checkout"
+        class="flex items-center gap-4 rounded-2xl bg-[var(--azul-oscuro)] p-6 text-white shadow-md transition hover:-translate-y-0.5 hover:shadow-lg"
+      >
+        <span class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-[var(--dorado)] text-2xl text-[var(--azul-oscuro)]">
+          <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
+        </span>
+        <span>
+          <span class="block font-serif text-xl font-bold">Check-out</span>
+          <span class="block text-sm text-white/70">Cobrar y finalizar una estadía</span>
+        </span>
+      </a>
+      <a
+        routerLink="/operador/cuenta"
+        class="flex items-center gap-4 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+      >
+        <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-xl text-amber-600">
+          <i class="bi bi-receipt" aria-hidden="true"></i>
+        </span>
+        <span>
+          <span class="block font-serif text-lg font-bold text-[var(--azul-oscuro)]">Cuenta Habitación</span>
+          <span class="block text-sm text-gray-500">Cargar o consultar consumos</span>
+        </span>
+      </a>
+      <a
+        routerLink="/operador/reservas"
+        class="flex items-center gap-4 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+      >
+        <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-xl text-[var(--azul)]">
+          <i class="bi bi-calendar-check" aria-hidden="true"></i>
+        </span>
+        <span>
+          <span class="block font-serif text-lg font-bold text-[var(--azul-oscuro)]">Reservas</span>
+          <span class="block text-sm text-gray-500">Listado, búsqueda y estados</span>
+        </span>
+      </a>
+    </nav>
+
+    @if (error) {
+      <p class="mb-6 rounded-xl bg-red-50 p-4 text-sm text-red-700" role="alert">{{ error }}</p>
+    }
+
+    <h2 class="mb-4 font-serif text-xl font-bold text-[var(--azul-oscuro)]">Resumen de hoy</h2>
+    <div class="mb-10 grid grid-cols-1 gap-4 sm:grid-cols-3" aria-live="polite">
+      @if (cargando) {
+        <p class="text-sm text-gray-500 sm:col-span-3" role="status">Cargando el resumen...</p>
+      }
+      @for (dato of resumen; track dato.etiqueta) {
+        <div class="rounded-2xl border border-gray-100 bg-gray-50 p-5">
+          <p class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-gray-500">
+            <i class="bi {{ dato.icono }}" aria-hidden="true"></i>{{ dato.etiqueta }}
+          </p>
+          <p class="mt-2 font-serif text-4xl font-bold text-[var(--azul-oscuro)]">{{ dato.valor }}</p>
+        </div>
+      }
+    </div>
+
+    <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
+      <section aria-labelledby="proximas-llegadas">
+        <h2 id="proximas-llegadas" class="mb-3 font-serif text-xl font-bold text-[var(--azul-oscuro)]">
+          Próximas llegadas
+        </h2>
+        @if (!cargando && proximasLlegadas.length === 0) {
+          <p class="rounded-xl border border-dashed border-gray-200 p-5 text-sm text-gray-500">
+            No hay llegadas programadas por ahora. Buen momento para ponerse al día.
+          </p>
+        } @else if (proximasLlegadas.length > 0) {
+          <ul class="divide-y divide-gray-100 rounded-2xl border border-gray-100">
+            @for (r of proximasLlegadas; track r.id) {
+              <li>
+                <a
+                  [routerLink]="['/operador/reservas', r.numeroReserva]"
+                  class="flex items-center justify-between gap-3 px-4 py-3 transition hover:bg-gray-50"
+                >
+                  <span class="min-w-0">
+                    <span class="block truncate text-sm font-bold text-[var(--azul-oscuro)]">
+                      {{ r.cliente?.nombre }} {{ r.cliente?.apellido }}
+                    </span>
+                    <span class="block text-xs text-gray-500">
+                      Hab. {{ r.habitacion?.numero }} · {{ r.numeroReserva }}
+                    </span>
+                  </span>
+                  <span class="shrink-0 text-right text-xs font-semibold text-gray-600">
+                    {{ r.fechaInicio === hoy ? 'Hoy' : (r.fechaInicio | date: 'd MMM' : '' : 'es-CO') }}
+                    <i class="bi bi-chevron-right ml-1" aria-hidden="true"></i>
+                  </span>
+                </a>
+              </li>
+            }
+          </ul>
+        }
+      </section>
+
+      <section aria-labelledby="saldos-pendientes">
+        <h2 id="saldos-pendientes" class="mb-3 font-serif text-xl font-bold text-[var(--azul-oscuro)]">
+          Cuentas con saldo pendiente
+        </h2>
+        @if (!cargando && conSaldo.length === 0) {
+          <p class="rounded-xl border border-dashed border-gray-200 p-5 text-sm text-gray-500">
+            Todo al día: ninguna cuenta tiene saldo por cobrar.
+          </p>
+        } @else if (conSaldo.length > 0) {
+          <ul class="divide-y divide-gray-100 rounded-2xl border border-gray-100">
+            @for (e of conSaldo; track e.reserva.id) {
+              <li>
+                <a
+                  [routerLink]="['/operador/cuenta', e.reserva.id]"
+                  class="flex items-center justify-between gap-3 px-4 py-3 transition hover:bg-gray-50"
+                >
+                  <span class="min-w-0">
+                    <span class="block truncate text-sm font-bold text-[var(--azul-oscuro)]">
+                      Hab. {{ e.reserva.habitacion?.numero }} · {{ e.reserva.cliente?.nombre }}
+                      {{ e.reserva.cliente?.apellido }}
+                    </span>
+                    <span class="block text-xs text-gray-500">{{ e.reserva.numeroReserva }}</span>
+                  </span>
+                  <span class="shrink-0 text-sm font-bold text-red-700">
+                    {{ e.saldo | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
+                  </span>
+                </a>
+              </li>
+            }
+          </ul>
+        }
+      </section>
+    </div>
   </section>
 </div>

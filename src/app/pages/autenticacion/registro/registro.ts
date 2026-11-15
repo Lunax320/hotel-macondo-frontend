@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { DatosRegistro } from '../../../models/datos-registro.model';
+import { ToastService } from '../../../services/toast.service';
 import { ClienteService } from '../../../services/cliente.service';
 import { RegistroPresentacion } from './components/registro-presentacion/registro-presentacion';
 import { RegistroFormulario } from './components/registro-formulario/registro-formulario';
@@ -17,6 +18,7 @@ import { RegistroFormulario } from './components/registro-formulario/registro-fo
 export class Registro {
   private clienteService = inject(ClienteService);
   private router = inject(Router);
+  private toast = inject(ToastService);
 
   mensajeError = '';
 
@@ -27,6 +29,7 @@ export class Registro {
     this.clienteService.registrar(cliente, datos.contrasena).subscribe({
       next: (clienteGuardado) => {
         if (clienteGuardado.id) {
+          this.toast.mostrar(`Cuenta creada. ¡Bienvenido, ${clienteGuardado.nombre}!`);
           this.router.navigate(['/cliente', clienteGuardado.id]);
         }
       },

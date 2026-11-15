@@ -2,14 +2,14 @@
   <table class="w-full min-w-[960px] text-left">
     <thead class="bg-[var(--crema)] text-sm uppercase tracking-wider text-[var(--azul-oscuro)]">
       <tr>
-        <th class="px-6 py-4">Habitación</th>
-        <th class="px-6 py-4">Tipo</th>
-        <th class="px-6 py-4">Número</th>
-        <th class="px-6 py-4">Piso</th>
-        <th class="px-6 py-4">Capacidad</th>
-        <th class="px-6 py-4">Precio / noche</th>
-        <th class="px-6 py-4">Estado</th>
-        <th class="px-6 py-4 text-right">Acciones</th>
+        <th scope="col" class="px-6 py-4">Habitación</th>
+        <th scope="col" class="px-6 py-4">Tipo</th>
+        <th scope="col" class="px-6 py-4">Número</th>
+        <th scope="col" class="px-6 py-4">Piso</th>
+        <th scope="col" class="px-6 py-4">Capacidad</th>
+        <th scope="col" class="px-6 py-4">Precio / noche</th>
+        <th scope="col" class="px-6 py-4">Estado</th>
+        <th scope="col" class="sticky right-0 shadow-[-6px_0_6px_-4px_rgba(0,0,0,0.12)] z-10 bg-[var(--crema)] px-6 py-4 text-right">Acciones</th>
       </tr>
     </thead>
     <tbody>
@@ -38,7 +38,7 @@
           <td class="px-6 py-4">{{ habitacion.numero }}</td>
           <td class="px-6 py-4">{{ habitacion.piso }}</td>
           <td class="px-6 py-4">{{ habitacion.capacidad }} pers.</td>
-          <td class="px-6 py-4 font-medium">$ {{ habitacion.precio.toLocaleString('es-CO') }}</td>
+          <td class="px-6 py-4 font-medium">{{ habitacion.precio | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}</td>
           <td class="px-6 py-4">
             <span
               class="rounded-full px-3 py-1 text-xs font-bold"
@@ -50,7 +50,7 @@
               {{ habitacion.estado === 'DISPONIBLE' ? 'Disponible' : 'No disponible' }}
             </span>
           </td>
-          <td class="whitespace-nowrap px-6 py-4 text-right">
+          <td class="sticky right-0 shadow-[-6px_0_6px_-4px_rgba(0,0,0,0.12)] z-[1] min-w-[15rem] bg-white px-6 py-4 text-right">
             <app-habitacion-acciones
               [habitacion]="habitacion"
               (cambioEstadoSolicitado)="cambiarEstado($event)"
@@ -59,9 +59,11 @@
           </td>
         </tr>
       } @empty {
-        <tr>
-          <td class="px-6 py-10 text-center" colspan="8">Aún no hay habitaciones registradas.</td>
-        </tr>
+        @if (!cargaFallida()) {
+          <tr>
+            <td class="px-6 py-10 text-center" colspan="8">Aún no hay habitaciones registradas.</td>
+          </tr>
+        }
       }
     </tbody>
   </table>

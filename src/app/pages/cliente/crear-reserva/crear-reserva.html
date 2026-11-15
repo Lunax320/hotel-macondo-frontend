@@ -27,7 +27,7 @@
         <p>{{ errorCarga }}</p>
         <button
           type="button"
-          class="mt-3 font-bold underline cursor-pointer"
+          class="btn-secundario mt-3 rounded-lg px-5 py-2.5 text-sm font-bold"
           (click)="cargarFormulario()"
         >
           Volver a consultar
@@ -45,6 +45,8 @@
               [formulario]="formulario"
               [tiposHabitacion]="tiposHabitacion"
               [fechaMinima]="fechaMinima"
+              [clienteId]="clienteId"
+              [reservaId]="reservaId"
               (criteriosCambiados)="invalidarDisponibilidad()"
             ></app-reserva-formulario>
             @if (mensajeError) {
@@ -65,7 +67,8 @@
             <div class="mt-8 flex flex-col gap-3 sm:flex-row">
               <button
                 id="btnConsultarDisponibilidad"
-                class="rounded-md border-2 border-[var(--azul)] px-6 py-3 font-bold text-[var(--azul)] transition hover:bg-[var(--azul)] hover:text-white cursor-pointer disabled:opacity-60"
+                class="rounded-md h-12 px-6 font-bold"
+                [class]="disponibilidadConsultada ? 'btn-secundario' : 'btn-primario'"
                 type="submit"
                 [disabled]="consultando || guardando"
               >
@@ -74,7 +77,7 @@
               @if (disponibilidadConsultada && cantidadDisponibles > 0) {
                 <button
                   id="btnConfirmarReserva"
-                  class="rounded-md bg-[var(--dorado)] px-6 py-3 font-bold text-[var(--azul-oscuro)] transition hover:bg-[var(--dorado-oscuro)] cursor-pointer disabled:opacity-60"
+                  class="btn-primario rounded-md h-12 px-6 font-bold"
                   type="button"
                   [disabled]="consultando || guardando"
                   (click)="confirmarReserva()"

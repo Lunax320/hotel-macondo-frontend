@@ -1,6 +1,9 @@
+<app-toast></app-toast>
+
 @if (mostrarNavbar) {
   <app-navbar></app-navbar>
 }
+
 
 <main>
   <router-outlet (activate)="actualizarLayoutGlobal()"></router-outlet>

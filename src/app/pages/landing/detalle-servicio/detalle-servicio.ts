@@ -1,3 +1,4 @@
+import { CurrencyPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { switchMap } from 'rxjs';
@@ -7,7 +8,7 @@ import { ResumenServicio } from './components/resumen-servicio/resumen-servicio'
 import { ServicioRelacionadoCard } from './components/servicio-relacionado-card/servicio-relacionado-card';
 
 @Component({
-  imports: [RouterLink, ResumenServicio, ServicioRelacionadoCard],
+  imports: [CurrencyPipe, RouterLink, ResumenServicio, ServicioRelacionadoCard],
   selector: 'app-detalle-servicio',
   styleUrl: './detalle-servicio.scss',
   templateUrl: './detalle-servicio.html',

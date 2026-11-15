@@ -1,7 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Servicio } from '../../../../../models/servicio.model';
 import { ServicioService } from '../../../../../services/servicio.service';
+
+// Tiempo que cada servicio permanece visible antes de pasar al siguiente.
+const INTERVALO_MS = 6000;
 
 @Component({
   imports: [RouterLink],
@@ -15,6 +18,18 @@ export class CarruselServicios implements OnInit {
 
   servicios: Servicio[] = [];
   slideActual: number = 0;
+  pausado = signal(false);
+
+  constructor() {
+    const destroyRef = inject(DestroyRef);
+    // Avanza solo, en bucle, salvo que el cursor o el foco estén sobre el carrusel.
+    const id = setInterval(() => {
+      if (!this.pausado() && this.servicios.length > 1) {
+        this.cambiarSlide((this.slideActual + 1) % this.servicios.length);
+      }
+    }, INTERVALO_MS);
+    destroyRef.onDestroy(() => clearInterval(id));
+  }
 
   // Carga el catálogo de servicios que se presenta en el carrusel.
   ngOnInit(): void {
@@ -24,8 +39,9 @@ export class CarruselServicios implements OnInit {
     });
   }
 
-  // Avanza o retrocede el carrusel y mantiene el índice dentro de sus límites.
+  // Cambia al servicio indicado y mantiene el índice dentro de sus límites.
   cambiarSlide(indice: number): void {
-    this.slideActual = indice;
+    const n = this.servicios.length;
+    this.slideActual = n === 0 ? 0 : ((indice % n) + n) % n;
   }
 }

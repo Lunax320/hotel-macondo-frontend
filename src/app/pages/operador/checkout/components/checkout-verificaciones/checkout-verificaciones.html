@@ -87,15 +87,42 @@
       Estadía finalizada.
     </p>
   }
-  <button
-    type="button"
-    id="finalizar-estadia-btn"
-    (click)="onFinalizar()"
-    [disabled]="
-      !(cuentaPagada && llavesDevueltas && habitacionInspeccionada && reservaActiva && !procesando)
-    "
-    class="w-full rounded-lg bg-[var(--azul)] py-4 text-center text-base font-bold text-white shadow-sm transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-60"
-  >
-    Finalizar estadía
-  </button>
+  @if (!confirmando) {
+    <button
+      type="button"
+      id="finalizar-estadia-btn"
+      (click)="confirmando = true"
+      [disabled]="
+        !(cuentaPagada && llavesDevueltas && habitacionInspeccionada && reservaActiva && !procesando)
+      "
+      class="btn-primario w-full rounded-lg py-4 text-center text-base font-bold shadow-sm"
+    >
+      Finalizar estadía
+    </button>
+    @if (reservaActiva && faltantes.length > 0) {
+      <p class="text-sm text-gray-600" role="status">Falta confirmar: {{ faltantes.join(', ') }}.</p>
+    }
+  } @else {
+    <p class="text-sm font-semibold text-[var(--azul-oscuro)]" role="alert">
+      ¿Finalizar la estadía? Esta acción no se puede deshacer.
+    </p>
+    <div class="flex gap-2">
+      <button
+        type="button"
+        id="confirmar-finalizar-btn"
+        (click)="onFinalizar()"
+        [disabled]="procesando"
+        class="btn-primario flex-1 rounded-lg py-3 text-sm font-bold shadow-sm"
+      >
+        Sí, finalizar
+      </button>
+      <button
+        type="button"
+        (click)="confirmando = false"
+        class="btn-secundario-borde flex-1 rounded-lg py-3 text-sm font-semibold"
+      >
+        Cancelar
+      </button>
+    </div>
+  }
 </section>

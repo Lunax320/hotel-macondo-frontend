@@ -7,6 +7,30 @@
   </h2>
 
   @if (cuenta) {
+    @if (pendiente !== null) {
+      <!-- Confirmación fuera de la tabla: siempre visible, sin desplazar la tabla -->
+      <div class="flex flex-wrap items-center justify-between gap-3 bg-amber-50 px-6 py-4">
+        <p class="text-sm font-semibold text-[var(--azul-oscuro)]" role="alert">
+          ¿Eliminar {{ nombrePendiente() }} de la cuenta?
+        </p>
+        <div class="flex gap-2">
+          <button
+            type="button"
+            (click)="confirmar(pendiente)"
+            class="btn-peligro-solido rounded-lg h-8 inline-flex items-center px-3 text-xs font-semibold"
+          >
+            Sí, eliminar
+          </button>
+          <button
+            type="button"
+            (click)="pendiente = null"
+            class="btn-secundario-borde rounded-lg h-8 inline-flex items-center px-3 text-xs font-semibold"
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+    }
     <div class="overflow-x-auto">
       <table id="tablaServiciosCuenta" class="w-full border-collapse text-left">
         <thead>
@@ -41,8 +65,8 @@
               <td class="px-6 py-4 text-center">
                 <button
                   type="button"
-                  (click)="eliminar.emit(consumo.id)"
-                  class="inline-flex items-center gap-1.5 rounded-lg bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-600 transition hover:bg-red-100"
+                  (click)="pendiente = consumo.id"
+                  class="btn-destructivo inline-flex items-center gap-1.5 rounded-lg h-8 inline-flex items-center px-3 text-xs font-semibold"
                   [attr.aria-label]="'Eliminar servicio: ' + consumo.servicio"
                 >
                   <i class="bi bi-trash" aria-hidden="true"></i> Eliminar

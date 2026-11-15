@@ -1,11 +1,16 @@
 <header
   class="relative flex min-h-[360px] items-center justify-center overflow-hidden px-5 py-20 md:min-h-[420px]"
 >
-  <img
+  <video
     class="absolute inset-0 h-full w-full object-cover"
-    src="/images/HabitacionLuxury.avif"
-    alt="Interior de una habitación del Hotel Macondo"
-  />
+    src="/video/habitaciones-suite.mp4"
+    poster="/images/HabitacionLuxury.avif"
+    autoplay
+    loop
+    [muted]="true"
+    playsinline
+    aria-label="Interior de una habitación del Hotel Macondo con vista al mar"
+  ></video>
   <div class="absolute inset-0 bg-[rgba(14,42,63,0.62)]" aria-hidden="true"></div>
   <div class="relative z-10 mx-auto max-w-3xl text-center text-white">
     <p class="mb-5 text-xs font-bold uppercase tracking-[2px] text-[var(--dorado)]">Hospedaje</p>

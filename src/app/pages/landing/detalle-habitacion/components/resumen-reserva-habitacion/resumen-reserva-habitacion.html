@@ -11,7 +11,7 @@
         Precio por noche
       </span>
       <strong class="mt-2 block font-serif text-2xl leading-8 text-[var(--azul)]">
-        Desde ${{ tipo.precioNoche.toLocaleString('es-CO') }} COP
+        Desde {{ tipo.precioNoche | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
       </strong>
     </div>
     <dl class="mt-6 divide-y divide-gray-200 text-sm">

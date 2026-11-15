@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { NavbarCliente } from '../../../components/navbar-cliente/navbar-cliente';
 import { Cliente } from '../../../models/cliente.model';
 import { ClienteService } from '../../../services/cliente.service';
+import { ToastService } from '../../../services/toast.service';
 import { PerfilResumen } from './components/perfil-resumen/perfil-resumen';
 
 @Component({
@@ -17,6 +18,7 @@ export class PerfilCliente implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private clienteService = inject(ClienteService);
+  private toast = inject(ToastService);
 
   clienteId = 0;
   cliente?: Cliente;
@@ -30,9 +32,10 @@ export class PerfilCliente implements OnInit {
   nuevaContrasena = '';
   confirmarContrasena = '';
   errorPerfil = '';
-  mensajePerfil = '';
+  errorTelefono = '';
   errorPassword = '';
-  mensajePassword = '';
+  errorActual = '';
+  errorConfirmar = '';
   errorCuenta = '';
 
   // Carga el perfil indicado por la ruta y precarga los campos editables.
@@ -60,14 +63,19 @@ export class PerfilCliente implements OnInit {
     }
 
     this.errorPerfil = '';
-    this.mensajePerfil = '';
+    this.errorTelefono = '';
+    // Solo dígitos, + opcional al inicio, entre 7 y 15 dígitos.
+    if (!/^\+?\d{7,15}$/.test(this.telefono.trim())) {
+      this.errorTelefono = 'El teléfono debe tener solo dígitos (con + opcional al inicio), entre 7 y 15.';
+      return;
+    }
     this.clienteService
       .actualizar({
         ...this.cliente,
         nombre: this.nombre,
         apellido: this.apellido,
         correo: this.correo,
-        telefono: this.telefono,
+        telefono: this.telefono.trim(),
       })
       .subscribe({
         next: (cliente) => {
@@ -76,7 +84,7 @@ export class PerfilCliente implements OnInit {
           this.apellido = cliente.apellido;
           this.correo = cliente.correo;
           this.telefono = cliente.telefono;
-          this.mensajePerfil = 'Los datos del perfil se actualizaron correctamente.';
+          this.toast.mostrar('Tus datos se actualizaron correctamente.');
         },
         error: (err) => {
           this.errorPerfil = err.error?.mensaje ?? 'No fue posible actualizar el perfil.';
@@ -86,13 +94,14 @@ export class PerfilCliente implements OnInit {
 
   // Verifica que las contraseñas coincidan y solicita el cambio de contraseña.
   cambiarPassword(): void {
+    this.errorPassword = '';
+    this.errorActual = '';
+    this.errorConfirmar = '';
     if (this.nuevaContrasena !== this.confirmarContrasena) {
-      this.errorPassword = 'Las contraseñas no coinciden.';
+      this.errorConfirmar = 'Las contraseñas no coinciden.';
       return;
     }
 
-    this.errorPassword = '';
-    this.mensajePassword = '';
     this.clienteService
       .cambiarContrasena(
         this.clienteId,
@@ -105,24 +114,32 @@ export class PerfilCliente implements OnInit {
           this.contrasenaActual = '';
           this.nuevaContrasena = '';
           this.confirmarContrasena = '';
-          this.mensajePassword = 'La contraseña se actualizó correctamente.';
+          this.toast.mostrar('Tu contraseña se actualizó correctamente.');
         },
         error: (err) => {
-          this.errorPassword = err.error?.mensaje ?? 'No fue posible cambiar la contraseña.';
+          const mensaje: string = err.error?.mensaje ?? 'No fue posible cambiar la contraseña.';
+          // El backend a veces responde "Correo o contraseña incorrectos": aquí es la contraseña actual.
+          if (/correo/i.test(mensaje)) this.errorActual = 'La contraseña actual no es correcta.';
+          else this.errorPassword = mensaje;
         },
       });
   }
 
-  // Solicita confirmación antes de eliminar la cuenta y vuelve al inicio si tiene éxito.
+  // Primer clic: muestra la confirmación en pantalla (la cuenta es irreversible)
+  pidiendoEliminarCuenta = false;
+
+  // Segundo clic: elimina la cuenta y vuelve al inicio si tiene éxito.
   eliminarCuenta(): void {
-    if (confirm('¿Estás seguro de que deseas eliminar tu cuenta? Esta acción es irreversible.')) {
-      this.errorCuenta = '';
-      this.clienteService.eliminarCuenta(this.clienteId).subscribe({
-        next: () => this.router.navigateByUrl('/'),
-        error: (err) => {
-          this.errorCuenta = err.error?.mensaje ?? 'No fue posible eliminar la cuenta.';
-        },
-      });
-    }
+    this.pidiendoEliminarCuenta = false;
+    this.errorCuenta = '';
+    this.clienteService.eliminarCuenta(this.clienteId).subscribe({
+      next: () => {
+        this.toast.mostrar('Tu cuenta fue eliminada.');
+        this.router.navigateByUrl('/');
+      },
+      error: (err) => {
+        this.errorCuenta = err.error?.mensaje ?? 'No fue posible eliminar la cuenta.';
+      },
+    });
   }
 }

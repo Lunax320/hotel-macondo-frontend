@@ -1,0 +1,28 @@
+<section class="mb-10 max-w-xl" aria-labelledby="titulo-comentarios">
+  <h2 id="titulo-comentarios" class="mb-1 font-serif text-2xl font-bold text-[var(--azul-oscuro)]">
+    Comentarios de huéspedes
+  </h2>
+  <p class="mb-3 text-sm">
+    Escribe el número del comentario para publicarlo en la portada. El listado de pendientes
+    requiere un endpoint nuevo.
+  </p>
+  <form class="flex items-end gap-3" (ngSubmit)="publicar()">
+    <label class="flex flex-col text-sm font-semibold">
+      Número del comentario
+      <input
+        type="number"
+        min="1"
+        name="comentarioId"
+        [(ngModel)]="comentarioId"
+        required
+        class="mt-1 h-12 rounded-lg border border-gray-300 px-3 font-normal"
+      />
+    </label>
+    <button type="submit" class="btn-primario h-12 rounded-lg px-8 font-bold">Publicar</button>
+  </form>
+  @if (intentado && (comentarioId === null || comentarioId < 1)) {
+    <p class="mt-3 text-sm font-semibold text-[#b42318]" role="status">
+      Falta: número del comentario (1 o mayor).
+    </p>
+  }
+</section>

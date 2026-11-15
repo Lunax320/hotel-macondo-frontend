@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ConsumoServicioSolicitud } from '../models/consumo-servicio-solicitud.model';
 import { Habitacion } from '../models/habitacion.model';
@@ -16,7 +16,7 @@ export class ReservaService {
   private url = 'http://localhost:8080/api/reserva';
   private operadorUrl = 'http://localhost:8080/api/operador';
 
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   // Obtiene las reservas visibles para la operación del hotel.
   obtenerReservasOperador(): Observable<ReservaOperador[]> {

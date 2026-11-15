@@ -13,7 +13,7 @@
       </header>
 
       <button
-        class="flex shrink-0 items-center justify-center gap-2 rounded-lg bg-[var(--dorado)] px-5 py-2.5 text-sm font-bold text-[var(--azul-oscuro)] shadow-sm transition hover:bg-[var(--dorado-oscuro)]"
+        class="btn-primario flex shrink-0 items-center justify-center gap-2 rounded-lg h-12 px-5 text-sm font-bold shadow-sm"
         type="button"
         (click)="abrirNuevoTipo()"
       >
@@ -53,7 +53,6 @@
 @if (formularioVisible) {
   <app-tipo-habitacion-form
     [tipoHabitacion]="tipoHabitacionSeleccionado"
-    [mensajeError]="errorTipo"
     (guardado)="guardarTipoHabitacion($event)"
     (cancelado)="cerrarFormulario()"
   ></app-tipo-habitacion-form>

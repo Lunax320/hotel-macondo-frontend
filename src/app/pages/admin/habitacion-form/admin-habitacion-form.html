@@ -39,6 +39,11 @@
         <app-habitacion-campos-detalle
           [formulario]="habitacionForm"
         ></app-habitacion-campos-detalle>
+        @if (faltantes().length > 0) {
+          <p class="mt-6 text-sm font-semibold text-[#b42318]" role="status">
+            Falta: {{ faltantes().join(', ') }}.
+          </p>
+        }
         <app-botones-formulario-habitacion
           [esEdicion]="esEdicion"
           [deshabilitado]="habitacionForm.invalid"
@@ -47,7 +52,7 @@
       </form>
     } @else {
       <a
-        class="inline-flex rounded-lg bg-[var(--azul)] px-6 py-3 font-bold text-white"
+        class="btn-secundario inline-flex rounded-lg px-6 py-3 font-bold"
         routerLink="/admin/habitaciones"
       >
         Volver al inventario

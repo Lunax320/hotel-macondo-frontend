@@ -5,6 +5,7 @@ import { AlertaMensaje } from '../../../components/alerta-mensaje/alerta-mensaje
 import { EncabezadoAdmin } from '../../../components/encabezado-admin/encabezado-admin';
 import { Servicio } from '../../../models/servicio.model';
 import { ServicioService } from '../../../services/servicio.service';
+import { ToastService } from '../../../services/toast.service';
 import { ServicioFormulario } from './components/servicio-formulario/servicio-formulario';
 
 // Página para crear (/admin/servicios/nuevo) o editar (/admin/servicios/editar/:id) un servicio.
@@ -20,6 +21,7 @@ export class AdminServicioForm implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private servicioService = inject(ServicioService);
+  private toast = inject(ToastService);
 
   servicio?: Servicio;
   esEdicion = false;
@@ -60,9 +62,14 @@ export class AdminServicioForm implements OnInit {
         : this.servicioService.agregarServicio(servicio);
 
     peticion$.subscribe({
-      next: () => this.router.navigate(['/admin/servicios']),
+      next: () => {
+        this.toast.mostrar(
+          `Servicio ${servicio.nombre} ${this.esEdicion ? 'actualizado' : 'creado'}.`,
+        );
+        this.router.navigate(['/admin/servicios']);
+      },
       error: (error) =>
-        (this.errorServicio = error.error?.mensaje ?? 'No fue posible guardar el servicio.'),
+        this.toast.mostrar(error.error?.mensaje ?? 'No fue posible guardar el servicio.', 'error'),
     });
   }
 }

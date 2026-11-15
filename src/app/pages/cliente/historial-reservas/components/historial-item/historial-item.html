@@ -1,9 +1,10 @@
 <div
-  class="bg-white rounded-[16px] shadow-[0_4px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.13)] flex overflow-hidden transition-shadow duration-300"
+  class="bg-white rounded-[16px] shadow-[0_4px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.13)] overflow-hidden transition-shadow duration-300"
 >
+<div class="flex">
   <div
     class="w-2 flex-shrink-0"
-    [class]="reserva().estado?.toUpperCase() === 'FINALIZADA' ? 'bg-[#27ae60]' : 'bg-[#e74c3c]'"
+    [class]="reserva().estado?.toUpperCase() === 'FINALIZADA' ? 'bg-[#27ae60]' : 'bg-[#b42318]'"
   ></div>
 
   <div class="flex-1 p-5 md:p-6 flex items-center flex-wrap gap-4 md:gap-6">
@@ -19,7 +20,7 @@
       </h3>
       <p class="font-sans text-[0.78rem] text-gray-500 mb-0">
         {{ reserva().habitacion ? 'Habitación ' + reserva().habitacion?.numero + ' · ' : '' }}
-        {{ reserva().cantidadPersonas }} personas
+        {{ reserva().cantidadPersonas }} {{ reserva().cantidadPersonas === 1 ? 'persona' : 'personas' }}
       </p>
 
       <div class="flex items-center gap-1.5 mt-2">
@@ -32,7 +33,7 @@
 
     <div class="flex-none">
       <span class="font-serif text-lg md:text-xl font-bold text-[var(--azul)]">
-        ${{ reserva().total | number }}
+        {{ reserva().total | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
       </span>
     </div>
 
@@ -42,11 +43,164 @@
         [class]="
           reserva().estado?.toUpperCase() === 'FINALIZADA'
             ? 'text-[#27ae60] bg-[#27ae60]/10 border-[#27ae60]/30'
-            : 'text-[#e74c3c] bg-[#e74c3c]/10 border-[#e74c3c]/30'
+            : 'text-[#b42318] bg-[#b42318]/10 border-[#b42318]/30'
         "
       >
         {{ reserva().estado }}
       </span>
     </div>
+    <div class="basis-full">
+      <button
+        type="button"
+        class="font-sans text-xs font-bold text-[var(--azul)] inline-flex items-center gap-1.5 rounded-md py-1 hover:text-[var(--azul-oscuro)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--azul)]"
+        [attr.aria-expanded]="abierto()"
+        [attr.aria-controls]="'detalle-' + reserva().id"
+        (click)="alternar()"
+      >
+        {{ abierto() ? 'Ocultar detalles' : 'Ver más detalles' }}
+        <i class="bi" [class]="abierto() ? 'bi-chevron-up' : 'bi-chevron-down'" aria-hidden="true"></i>
+      </button>
+    </div>
   </div>
+</div>
+@if (abierto()) {
+  <dl
+    [id]="'detalle-' + reserva().id"
+    class="m-0 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 border-t border-[var(--crema)] bg-[var(--crema-claro)] px-5 py-5 md:px-8 text-sm"
+  >
+    <div>
+      <dt class="text-[0.7rem] uppercase tracking-wider text-gray-500">Entrada</dt>
+      <dd class="m-0 font-semibold text-[var(--azul-oscuro)]">{{ reserva().fechaInicio | date: 'd MMM y' }}</dd>
+    </div>
+    <div>
+      <dt class="text-[0.7rem] uppercase tracking-wider text-gray-500">Salida</dt>
+      <dd class="m-0 font-semibold text-[var(--azul-oscuro)]">{{ reserva().fechaFin | date: 'd MMM y' }}</dd>
+    </div>
+    <div>
+      <dt class="text-[0.7rem] uppercase tracking-wider text-gray-500">Noches</dt>
+      <dd class="m-0 font-semibold text-[var(--azul-oscuro)]">{{ noches() ?? 'No registrado' }}</dd>
+    </div>
+    <div>
+      <dt class="text-[0.7rem] uppercase tracking-wider text-gray-500">Habitación y tipo</dt>
+      <dd class="m-0 font-semibold text-[var(--azul-oscuro)]">
+        {{ reserva().habitacion ? 'N.º ' + reserva().habitacion?.numero : 'No registrado' }}
+        · {{ reserva().habitacion?.tipoHabitacion?.nombre ?? 'Tipo no asignado' }}
+      </dd>
+    </div>
+    <div>
+      <dt class="text-[0.7rem] uppercase tracking-wider text-gray-500">Personas</dt>
+      <dd class="m-0 font-semibold text-[var(--azul-oscuro)]">{{ reserva().cantidadPersonas }}</dd>
+    </div>
+    <div>
+      <dt class="text-[0.7rem] uppercase tracking-wider text-gray-500">Total</dt>
+      <dd class="m-0 font-semibold text-[var(--azul-oscuro)]">
+        {{ reserva().total | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
+      </dd>
+    </div>
+    <div>
+      <dt class="text-[0.7rem] uppercase tracking-wider text-gray-500">Método de pago</dt>
+      <dd class="m-0 font-semibold text-gray-500">No registrado</dd>
+    </div>
+    <div>
+      <dt class="text-[0.7rem] uppercase tracking-wider text-gray-500">Servicios consumidos</dt>
+      <dd class="m-0 font-semibold text-gray-500">No registrado</dd>
+    </div>
+    <div>
+      <dt class="text-[0.7rem] uppercase tracking-wider text-gray-500">Estado</dt>
+      <dd class="m-0 font-semibold text-[var(--azul-oscuro)]">{{ reserva().estado }}</dd>
+    </div>
+  </dl>
+}
+
+  @if (finalizada) {
+    <div class="border-t border-[#e8e0d8] px-5 md:px-6 py-4">
+      @if (errorServidor && !formAbierto) {
+        <p class="rounded-lg border border-[#f1b8b1] bg-[#fff4f2] p-3 text-[#b42318] text-sm mb-3" role="alert">{{ errorServidor }}</p>
+      }
+      @if (actual && !formAbierto) {
+        <div class="flex flex-col gap-2">
+          <div class="text-xl leading-none" [attr.aria-label]="'Calificación: ' + actual.calificacion + ' de 5'" role="img">
+            @for (n of estrellas; track n) {
+              <span [class]="n <= actual.calificacion ? 'text-[#f5a623]' : 'text-gray-300'">&#9733;</span>
+            }
+          </div>
+          <p class="m-0 text-sm text-[#0e2a3f] whitespace-pre-line break-words">{{ actual.texto }}</p>
+          <p class="m-0 text-xs font-semibold" [class]="actual.publicado ? 'text-[#27ae60]' : 'text-gray-500'">
+            {{ actual.publicado ? 'Publicado en la portada' : 'Pendiente de publicación' }}
+          </p>
+          @if (confirmandoBorrado) {
+            <div class="flex flex-col gap-2 mt-1" role="alertdialog" aria-label="Confirmar eliminación">
+              <p class="m-0 text-sm font-semibold text-[#b42318]">¿Eliminar tu comentario?</p>
+              <div class="flex gap-3 flex-wrap">
+                <button type="button" class="btn-peligro-solido rounded-lg px-5 py-2.5 text-sm font-bold" [disabled]="enviando" (click)="eliminar()">Sí, eliminar</button>
+                <button type="button" class="btn-secundario-borde rounded-lg px-5 py-2.5 text-sm font-bold" (click)="cancelarBorrado()">No, volver</button>
+              </div>
+            </div>
+          } @else {
+            <div class="flex gap-3 flex-wrap mt-1">
+              <button type="button" class="btn-secundario rounded-lg px-5 py-2.5 text-sm font-bold" (click)="editar()">Editar</button>
+              <button type="button" class="btn-destructivo rounded-lg px-5 py-2.5 text-sm font-bold" (click)="pedirBorrado()">Eliminar</button>
+            </div>
+          }
+        </div>
+      } @else if (!formAbierto) {
+        <button type="button" class="btn-secundario-borde rounded-lg px-5 py-2.5 text-sm font-bold" (click)="abrir()">
+          Dejar un comentario
+        </button>
+      } @else {
+        <form #formulario (submit)="$event.preventDefault(); enviar()" novalidate class="flex flex-col gap-3">
+          <fieldset class="m-0 p-0 border-0">
+            <legend class="text-sm font-semibold text-[#0e2a3f] mb-1">Tu calificación</legend>
+            <div class="flex gap-1">
+              @for (n of estrellas; track n) {
+                <button
+                  type="button"
+                  data-estrella
+                  class="text-3xl leading-none p-1 min-w-[44px] min-h-[44px]"
+                  [class]="n <= calificacion ? 'text-[#f5a623]' : 'text-gray-300'"
+                  [attr.aria-pressed]="n === calificacion"
+                  [attr.aria-label]="n + (n === 1 ? ' estrella' : ' estrellas')"
+                  (click)="elegir(n)"
+                >&#9733;</button>
+              }
+            </div>
+            @if (intentado && errorEstrellas) {
+              <p class="text-[#b42318] text-sm mt-1" role="alert">{{ errorEstrellas }}</p>
+            }
+          </fieldset>
+
+          <div>
+            <label class="text-sm font-semibold text-[#0e2a3f]" [attr.for]="'comentario-' + reserva().id">Tu comentario</label>
+            <textarea
+              [id]="'comentario-' + reserva().id"
+              name="texto"
+              rows="4"
+              [maxLength]="maximo"
+              class="w-full rounded-lg border border-[#d6ccc2] p-3 text-sm mt-1"
+              [value]="texto"
+              (input)="texto = $any($event.target).value"
+              [attr.aria-invalid]="intentado && !!errorTexto"
+            ></textarea>
+            <div class="flex justify-between gap-2 text-xs mt-1">
+              <span class="text-[#b42318]" role="alert">{{ intentado ? errorTexto : '' }}</span>
+              <span class="text-gray-500">{{ texto.length }}/{{ maximo }}</span>
+            </div>
+          </div>
+
+          @if (errorServidor) {
+            <p class="rounded-lg border border-[#f1b8b1] bg-[#fff4f2] p-3 text-[#b42318] text-sm" role="alert">{{ errorServidor }}</p>
+          }
+
+          <div class="flex gap-3 flex-wrap">
+            <button type="submit" class="btn-primario rounded-lg px-5 py-2.5 text-sm font-bold" [disabled]="enviando">
+              {{ editando ? 'Guardar cambios' : 'Enviar comentario' }}
+            </button>
+            <button type="button" class="btn-secundario-borde rounded-lg px-5 py-2.5 text-sm font-bold" (click)="cancelar()">
+              Cancelar
+            </button>
+          </div>
+        </form>
+      }
+    </div>
+  }
 </div>

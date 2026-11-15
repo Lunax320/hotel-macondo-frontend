@@ -13,6 +13,7 @@ import { ClienteSaludo } from './components/cliente-saludo/cliente-saludo';
 import { ReservaActivaCard } from './components/reserva-activa-card/reserva-activa-card';
 import { ReservaActivaVacia } from './components/reserva-activa-vacia/reserva-activa-vacia';
 import { AccesoRapido } from './components/acceso-rapido/acceso-rapido';
+import { ClienteEstadisticas } from './components/cliente-estadisticas/cliente-estadisticas';
 import { ServiciosRecomendados } from './components/servicios-recomendados/servicios-recomendados';
 
 // Panel principal con el resumen de la estancia y recomendaciones del cliente.
@@ -24,6 +25,7 @@ import { ServiciosRecomendados } from './components/servicios-recomendados/servi
     ReservaActivaCard,
     ReservaActivaVacia,
     AccesoRapido,
+    ClienteEstadisticas,
     ServiciosRecomendados,
   ],
   templateUrl: './cliente.html',
@@ -40,6 +42,7 @@ export class PortalCliente implements OnInit {
   cliente?: Cliente;
   reservaActiva?: Reserva;
   habitacionActiva?: Habitacion | null;
+  activas: Reserva[] = [];
   cantidadActivas = 0;
   cantidadHistorial = 0;
   recomendaciones: Servicio[] = [];
@@ -68,6 +71,7 @@ export class PortalCliente implements OnInit {
       )
       .subscribe({
         next: (activas) => {
+          this.activas = activas;
           this.cantidadActivas = activas.length;
           this.reservaActiva = activas[0];
           // La API ya incluye la habitación y su tipo; no repetir esa consulta.
@@ -86,6 +90,27 @@ export class PortalCliente implements OnInit {
     this.servicioService
       .buscarRecomendaciones()
       .subscribe({ next: (servicios) => (this.recomendaciones = servicios) });
+  }
+
+  // Reservas activas cuya llegada es posterior a hoy.
+  get proximas(): number {
+    const hoy = new Date().toLocaleDateString('en-CA');
+    return this.activas.filter((r) => r.fechaInicio > hoy).length;
+  }
+
+  // Noches de todas las reservas activas.
+  get nochesActivas(): number {
+    return this.activas.reduce((total, r) => total + this.nochesReserva(r), 0);
+  }
+
+  // Rango en texto: "del 19 al 22 de noviembre".
+  rangoFechas(reserva: Reserva): string {
+    const ini = new Date(`${reserva.fechaInicio}T00:00:00`);
+    const fin = new Date(`${reserva.fechaFin}T00:00:00`);
+    const mes = (f: Date) => new Intl.DateTimeFormat('es-CO', { month: 'long' }).format(f);
+    return ini.getMonth() === fin.getMonth()
+      ? `del ${ini.getDate()} al ${fin.getDate()} de ${mes(fin)}`
+      : `del ${ini.getDate()} de ${mes(ini)} al ${fin.getDate()} de ${mes(fin)}`;
   }
 
   // Calcula las noches entre las fechas de inicio y fin de la reserva.

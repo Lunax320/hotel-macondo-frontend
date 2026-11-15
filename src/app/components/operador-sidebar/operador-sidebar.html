@@ -1,5 +1,5 @@
 <nav
-  class="flex min-h-screen w-full flex-col justify-between bg-[var(--azul-oscuro)] p-6 text-white md:w-64"
+  class="flex min-h-screen w-full flex-col justify-between bg-[var(--azul-oscuro)] p-6 text-white md:sticky md:top-0 md:h-screen md:w-64 md:self-start md:overflow-y-auto"
   aria-label="Portal Operador"
 >
   <div>
@@ -43,6 +43,7 @@
         <i class="bi bi-receipt mr-2" aria-hidden="true"></i>
         Cuenta Habitación
       </a>
+      <!-- El check-out necesita el número de habitación: se pide desde el panel del operador -->
       <a class="rounded-lg px-4 py-3 transition hover:bg-white/10" routerLink="/operador/checkout">
         <i class="bi bi-box-arrow-right mr-2" aria-hidden="true"></i>
         Check-out

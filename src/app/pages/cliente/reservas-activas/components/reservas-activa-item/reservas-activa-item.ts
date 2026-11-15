@@ -1,11 +1,11 @@
 import { Component, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Reserva } from '../../../../../models/reserva.model';
-import { DecimalPipe } from '@angular/common';
+import { CurrencyPipe, DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-reservas-activa-item',
-  imports: [RouterLink, DecimalPipe],
+  imports: [RouterLink, CurrencyPipe],
   templateUrl: './reservas-activa-item.html',
 })
 export class ReservasActivaItem {
@@ -28,15 +28,21 @@ export class ReservasActivaItem {
     );
   }
 
-  // Emite la solicitud de cancelación para que la gestione el componente contenedor.
+  // Primer clic: pide confirmación visible en la tarjeta (no usa confirm() del navegador)
+  pidiendoConfirmacion = false;
+
+  // Pide confirmar antes de cancelar
   onCancelar(): void {
+    if (this.puedeGestionar && !this.ocupado() && this.reserva().id !== undefined) {
+      this.pidiendoConfirmacion = true;
+    }
+  }
+
+  // Segundo clic: emite la cancelación para que la gestione el componente contenedor
+  confirmarCancelacion(): void {
     const id = this.reserva().id;
-    if (
-      this.puedeGestionar &&
-      !this.ocupado() &&
-      id !== undefined &&
-      confirm('¿Seguro que deseas cancelar esta reserva?')
-    ) {
+    this.pidiendoConfirmacion = false;
+    if (id !== undefined) {
       this.cancelar.emit(id);
     }
   }

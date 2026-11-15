@@ -1,12 +1,17 @@
 <header
   class="relative flex min-h-[360px] items-center justify-center overflow-hidden px-5 py-20 md:min-h-[420px]"
 >
-  <img
+  <video
     class="absolute inset-0 h-full w-full object-cover"
-    src="/images/PlayaPriv.avif"
-    alt="Playa del Hotel Macondo"
-  />
-  <div class="absolute inset-0 bg-black/45" aria-hidden="true"></div>
+    src="/video/servicios-restaurante.mp4"
+    poster="/images/Restaurante.avif"
+    autoplay
+    loop
+    [muted]="true"
+    playsinline
+    aria-label="Restaurante del Hotel Macondo frente al mar al atardecer"
+  ></video>
+  <div class="absolute inset-0 bg-black/60" aria-hidden="true"></div>
   <div class="relative z-10 mx-auto max-w-3xl text-center text-white">
     <p class="mb-5 text-xs font-bold uppercase text-[#ffc94d]">Hotel Macondo</p>
     <h1 class="font-['Playfair_Display'] text-5xl font-bold !text-white md:text-6xl">

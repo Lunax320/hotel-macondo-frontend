@@ -9,10 +9,58 @@
       </h2>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
-      @for (testimonio of testimonios(); track testimonio.id) {
-        <app-testimonio-card [testimonio]="testimonio"></app-testimonio-card>
-      }
+    <div
+      class="carrusel mx-auto max-w-6xl"
+      role="region"
+      aria-roledescription="carrusel"
+      aria-label="Testimonios de huéspedes"
+      (mouseenter)="pausado.set(true)"
+      (mouseleave)="pausado.set(false)"
+      (focusin)="pausado.set(true)"
+      (focusout)="pausado.set(false)"
+    >
+      <div class="flex items-center gap-2 md:gap-4">
+        <button type="button" class="flecha" aria-label="Testimonios anteriores" (click)="mover(-1)">
+          <i class="bi bi-chevron-left" aria-hidden="true"></i>
+        </button>
+
+        <div class="ventana flex-1 overflow-hidden py-3">
+          <div
+            class="pista"
+            [style.width]="anchoPista()"
+            [style.transform]="desplazamiento()"
+          >
+            @for (testimonio of lista(); track $index; let i = $index) {
+              <div
+                class="slide"
+                role="group"
+                aria-roledescription="diapositiva"
+                [style.flex]="'0 0 ' + anchoSlide()"
+                [attr.aria-label]="i + 1 + ' de ' + lista().length"
+              >
+                <app-testimonio-card [testimonio]="testimonio"></app-testimonio-card>
+              </div>
+            }
+          </div>
+        </div>
+
+        <button type="button" class="flecha" aria-label="Testimonios siguientes" (click)="mover(1)">
+          <i class="bi bi-chevron-right" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div class="flex justify-center gap-2 mt-6">
+        @for (posicion of posiciones(); track posicion) {
+          <button
+            type="button"
+            class="punto"
+            [class.activo]="posicion === indice()"
+            [attr.aria-label]="'Ir a la posición ' + (posicion + 1)"
+            [attr.aria-current]="posicion === indice() ? 'true' : null"
+            (click)="ir(posicion)"
+          ></button>
+        }
+      </div>
     </div>
   </div>
 </section>

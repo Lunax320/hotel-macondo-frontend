@@ -6,6 +6,7 @@ import { Habitacion } from '../../../models/habitacion.model';
 import { TipoHabitacion } from '../../../models/tipo-habitacion.model';
 import { HabitacionService } from '../../../services/habitacion.service';
 import { TipoHabitacionService } from '../../../services/tipo-habitacion.service';
+import { ToastService } from '../../../services/toast.service';
 import { HabitacionCamposBasicos } from './components/habitacion-campos-basicos/habitacion-campos-basicos';
 import { HabitacionCamposDetalle } from './components/habitacion-campos-detalle/habitacion-campos-detalle';
 import { BotonesFormularioHabitacion } from './components/botones-formulario-habitacion/botones-formulario-habitacion';
@@ -31,6 +32,7 @@ export class AdminHabitacionForm implements OnInit {
   private router = inject(Router);
   private habitacionService = inject(HabitacionService);
   private tipoHabitacionService = inject(TipoHabitacionService);
+  private toast = inject(ToastService);
 
   tiposHabitacion: TipoHabitacion[] = [];
   habitacionId?: number;
@@ -79,9 +81,24 @@ export class AdminHabitacionForm implements OnInit {
     });
   }
 
+  // Nombres de los campos obligatorios que aún no son válidos.
+  faltantes(): string[] {
+    const campos = {
+      tipoHabitacion: 'tipo de habitación',
+      nombre: 'nombre',
+      numero: 'número',
+      piso: 'piso',
+      capacidad: 'capacidad',
+      precio: 'precio',
+    };
+
+    return Object.entries(campos)
+      .filter(([clave]) => this.habitacionForm.get(clave)?.invalid)
+      .map(([, nombre]) => nombre);
+  }
+
   // Valida y guarda la habitación.
   guardar(): void {
-    this.errorHabitacion = '';
     this.habitacionForm.markAllAsTouched();
 
     if (this.habitacionForm.invalid || !this.habitacionEncontrada) {
@@ -105,7 +122,7 @@ export class AdminHabitacionForm implements OnInit {
     );
 
     if (!tipoHabitacion) {
-      this.errorHabitacion = 'El tipo de habitación no existe.';
+      this.toast.mostrar('El tipo de habitación no existe.', 'error');
       return;
     }
 
@@ -126,9 +143,14 @@ export class AdminHabitacionForm implements OnInit {
       : this.habitacionService.agregarHabitacion(habitacion);
 
     guardado.subscribe({
-      next: () => this.router.navigate(['/admin/habitaciones']),
+      next: () => {
+        this.toast.mostrar(
+          `Habitación ${habitacion.nombre} ${this.esEdicion ? 'actualizada' : 'creada'}.`,
+        );
+        this.router.navigate(['/admin/habitaciones']);
+      },
       error: (error) =>
-        (this.errorHabitacion = error.error?.mensaje ?? 'No fue posible guardar la habitación.'),
+        this.toast.mostrar(error.error?.mensaje ?? 'No fue posible guardar la habitación.', 'error'),
     });
   }
 

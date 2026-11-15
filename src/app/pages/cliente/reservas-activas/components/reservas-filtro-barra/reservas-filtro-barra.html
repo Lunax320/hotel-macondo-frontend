@@ -10,11 +10,11 @@
     <button
       type="button"
       (click)="seleccionar('TODOS')"
-      class="font-sans text-xs font-semibold px-4 py-1.5 rounded-full border-2 transition-all cursor-pointer"
+      class="font-sans text-xs font-semibold h-8 px-4 inline-flex items-center rounded-full"
       [class]="
         filtroSeleccionado === 'TODOS'
-          ? 'border-[var(--azul)] bg-[var(--azul)] text-white'
-          : 'border-gray-100 text-gray-500 hover:border-[var(--azul)] bg-transparent'
+          ? 'btn-secundario'
+          : 'btn-secundario-borde'
       "
     >
       Todos
@@ -22,11 +22,11 @@
     <button
       type="button"
       (click)="seleccionar('ACTIVA')"
-      class="font-sans text-xs font-semibold px-4 py-1.5 rounded-full border-2 transition-all cursor-pointer"
+      class="font-sans text-xs font-semibold h-8 px-4 inline-flex items-center rounded-full"
       [class]="
         filtroSeleccionado === 'ACTIVA'
-          ? 'border-[var(--azul)] bg-[var(--azul)] text-white'
-          : 'border-gray-100 text-gray-500 hover:border-[var(--azul)] bg-transparent'
+          ? 'btn-secundario'
+          : 'btn-secundario-borde'
       "
     >
       Activa
@@ -34,11 +34,11 @@
     <button
       type="button"
       (click)="seleccionar('CONFIRMADA')"
-      class="font-sans text-xs font-semibold px-4 py-1.5 rounded-full border-2 transition-all cursor-pointer"
+      class="font-sans text-xs font-semibold h-8 px-4 inline-flex items-center rounded-full"
       [class]="
         filtroSeleccionado === 'CONFIRMADA'
-          ? 'border-[var(--azul)] bg-[var(--azul)] text-white'
-          : 'border-gray-100 text-gray-500 hover:border-[var(--azul)] bg-transparent'
+          ? 'btn-secundario'
+          : 'btn-secundario-borde'
       "
     >
       Confirmada
@@ -46,11 +46,11 @@
     <button
       type="button"
       (click)="seleccionar('PENDIENTE')"
-      class="font-sans text-xs font-semibold px-4 py-1.5 rounded-full border-2 transition-all cursor-pointer"
+      class="font-sans text-xs font-semibold h-8 px-4 inline-flex items-center rounded-full"
       [class]="
         filtroSeleccionado === 'PENDIENTE'
-          ? 'border-[var(--azul)] bg-[var(--azul)] text-white'
-          : 'border-gray-100 text-gray-500 hover:border-[var(--azul)] bg-transparent'
+          ? 'btn-secundario'
+          : 'btn-secundario-borde'
       "
     >
       Pendiente

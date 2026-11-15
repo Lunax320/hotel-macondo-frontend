@@ -22,7 +22,7 @@
         <div>
           <small class="uppercase text-gray-400 text-xs font-bold">Desde</small><br />
           <span class="font-serif text-[1.4rem] font-bold text-[var(--azul-oscuro)]">
-            ${{ tipo.precioNoche.toLocaleString('es-CO') }}
+            {{ tipo.precioNoche | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
           </span>
           <small class="text-gray-400 text-xs">/noche</small>
         </div>

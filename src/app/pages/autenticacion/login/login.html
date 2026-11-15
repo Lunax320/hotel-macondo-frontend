@@ -1,12 +1,19 @@
 <main class="grid grid-cols-1 lg:grid-cols-2 min-h-[calc(100vh-76px)]">
   <!-- SECCION IZQUIERDA (VISUAL Y TEXTOS) -->
   <section
-    class="flex flex-col justify-between p-8 md:p-12 bg-cover bg-center text-white"
-    style="
-      background-image:
-        linear-gradient(rgba(8, 26, 42, 0.65), rgba(8, 26, 42, 0.85)), url('/images/Playa.avif');
-    "
+    class="relative isolate flex flex-col justify-between overflow-hidden p-8 md:p-12 bg-[var(--azul-oscuro)] text-white"
   >
+    <video
+      class="absolute inset-0 -z-10 h-full w-full object-cover"
+      src="/video/login-macondo.mp4"
+      poster="/images/Playa.avif"
+      autoplay
+      loop
+      [muted]="true"
+      playsinline
+      aria-hidden="true"
+    ></video>
+    <div class="absolute inset-0 -z-10 bg-gradient-to-b from-[rgba(8,26,42,0.65)] to-[rgba(8,26,42,0.85)]"></div>
     <div>
       <a
         routerLink="/"
@@ -56,12 +63,7 @@
 
       <!-- Alerta -->
       @if (mensajeError) {
-        <div
-          class="mb-5 p-3.5 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl flex items-center gap-2.5"
-        >
-          <i class="bi bi-exclamation-triangle-fill text-red-500 text-sm flex-shrink-0"></i>
-          <span>{{ mensajeError }}</span>
-        </div>
+        <app-alerta-mensaje [mensaje]="mensajeError" tipo="error"></app-alerta-mensaje>
       }
 
       <form (ngSubmit)="iniciarSesion()">
@@ -73,7 +75,7 @@
             Correo electrónico
           </label>
           <div
-            class="flex items-center bg-gray-50 border border-gray-200 rounded-lg focus-within:border-[var(--azul)] transition px-3"
+            class="flex items-center bg-gray-50 border border-gray-200 rounded-lg focus-within:border-[var(--azul)] focus-within:ring-2 focus-within:ring-[var(--azul)]/20 hover:border-gray-300 transition px-3"
           >
             <span class="text-gray-400 pl-2">
               <i class="bi bi-envelope"></i>
@@ -98,7 +100,7 @@
             Contraseña
           </label>
           <div
-            class="flex items-center bg-gray-50 border border-gray-200 rounded-lg focus-within:border-[var(--azul)] transition px-3"
+            class="flex items-center bg-gray-50 border border-gray-200 rounded-lg focus-within:border-[var(--azul)] focus-within:ring-2 focus-within:ring-[var(--azul)]/20 hover:border-gray-300 transition px-3"
           >
             <span class="text-gray-400 pl-2">
               <i class="bi bi-lock"></i>
@@ -114,7 +116,7 @@
             />
             <button
               type="button"
-              class="text-gray-400 pr-2 cursor-pointer hover:text-[var(--azul)] transition"
+              class="text-gray-400 pr-2 cursor-pointer hover:text-[var(--azul)] focus-visible:outline-2 focus-visible:outline-[var(--azul)] rounded transition"
               (click)="toggleMostrarPassword()"
             >
               <i
@@ -127,15 +129,15 @@
         </div>
 
         <div class="text-right mb-6">
-          <a href="#" class="text-sm text-[var(--azul)] font-medium hover:underline">
-            ¿Olvidaste tu contraseña?
-          </a>
+          <span class="text-sm text-gray-400 font-medium" aria-disabled="true">
+            ¿Olvidaste tu contraseña? (próximamente)
+          </span>
         </div>
 
         <button
           type="submit"
           id="loginBtnSubmit"
-          class="w-full bg-[var(--dorado)] text-[var(--azul-oscuro)] font-bold rounded-lg py-3 border-2 border-[var(--dorado)] hover:bg-[var(--dorado-oscuro)] hover:border-[var(--dorado-oscuro)] transition"
+          class="w-full bg-[var(--dorado)] text-[var(--azul-oscuro)] font-bold rounded-lg py-3 border-2 border-[var(--dorado)] hover:bg-[var(--dorado-oscuro)] hover:border-[var(--dorado-oscuro)] focus-visible:ring-2 focus-visible:ring-[var(--azul)] focus-visible:outline-none active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed transition"
         >
           Iniciar Sesión
         </button>

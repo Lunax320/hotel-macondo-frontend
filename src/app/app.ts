@@ -2,10 +2,11 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { Navbar } from './components/navbar/navbar';
 import { Footer } from './components/footer/footer';
+import { Toast } from './components/toast/toast';
 
 // Componente raiz: navbar y footer globales alrededor del router-outlet.
 @Component({
-  imports: [RouterOutlet, Navbar, Footer],
+  imports: [RouterOutlet, Navbar, Footer, Toast],
   selector: 'app-root',
   styleUrl: './app.scss',
   // Angular 22 usa OnPush por defecto; Eager actualiza la vista cuando responde el backend.

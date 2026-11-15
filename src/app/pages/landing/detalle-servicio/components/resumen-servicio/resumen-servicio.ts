@@ -1,8 +1,9 @@
+import { CurrencyPipe } from '@angular/common';
 import { Component, input, output } from '@angular/core';
 import { Servicio } from '../../../../../models/servicio.model';
 
 @Component({
-  imports: [],
+  imports: [CurrencyPipe, ],
   selector: 'app-resumen-servicio',
   styleUrl: './resumen-servicio.scss',
   templateUrl: './resumen-servicio.html',

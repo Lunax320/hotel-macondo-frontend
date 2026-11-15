@@ -13,7 +13,7 @@
       </header>
 
       <a
-        class="shrink-0 rounded-lg bg-[var(--dorado)] px-8 py-3 text-center font-bold text-[var(--azul-oscuro)] transition hover:bg-[var(--dorado-oscuro)]"
+        class="btn-primario shrink-0 rounded-lg h-12 px-8 text-center font-bold"
         routerLink="/admin/habitaciones/nueva"
       >
         Nueva habitación
@@ -40,8 +40,28 @@
       ></app-confirmacion-accion>
     }
 
+    @if (habitacionPendienteEstado; as habitacion) {
+      <app-confirmacion-accion
+        [titulo]="
+          (habitacion.estado === 'DISPONIBLE' ? '¿Deshabilitar ' : '¿Habilitar ') +
+          habitacion.nombre +
+          '?'
+        "
+        [mensaje]="
+          habitacion.estado === 'DISPONIBLE'
+            ? 'No se podrá reservar hasta que se habilite de nuevo.'
+            : 'Volverá a estar disponible para reservar.'
+        "
+        [textoConfirmar]="habitacion.estado === 'DISPONIBLE' ? 'Confirmar deshabilitación' : 'Confirmar habilitación'"
+        textoCancelar="Cancelar"
+        (confirmado)="confirmarEstado()"
+        (cancelado)="cancelarEstado()"
+      ></app-confirmacion-accion>
+    }
+
     <app-habitacion-table
       [habitaciones]="habitaciones"
+      [cargaFallida]="!!errorHabitacion"
       (cambioEstadoSolicitado)="cambiarEstado($event)"
       (eliminacionSolicitada)="solicitarEliminacion($event)"
     ></app-habitacion-table>

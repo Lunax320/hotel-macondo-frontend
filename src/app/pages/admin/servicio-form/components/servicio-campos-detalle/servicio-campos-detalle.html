@@ -1,12 +1,29 @@
 <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-  <app-campo-formulario
-    [formulario]="formulario()"
-    nombreCampo="imagen"
-    etiqueta="Imagen"
-    [opciones]="imagenesDisponibles()"
-    textoOpcionVacia="Seleccionar imagen..."
-    [errores]="erroresImagen"
-  ></app-campo-formulario>
+  <div [formGroup]="formulario()">
+    <label class="mb-1.5 block text-sm font-semibold text-[var(--azul-oscuro)]" for="imagen">
+      Imagen
+    </label>
+    <select
+      class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-[var(--texto)] focus:border-[var(--azul)] focus:outline-none"
+      id="imagen"
+      formControlName="imagen"
+    >
+      <option value="">Seleccionar imagen...</option>
+      @for (ruta of imagenesDisponibles(); track ruta) {
+        <option [value]="ruta">{{ nombreImagen(ruta) }}</option>
+      }
+    </select>
+    @if (formulario().get('imagen')?.value; as ruta) {
+      <img
+        class="mt-2 h-20 w-32 rounded-lg bg-[var(--crema)] object-cover"
+        [src]="ruta"
+        [alt]="'Vista previa: ' + nombreImagen(ruta)"
+      />
+    }
+    @if (formulario().get('imagen')?.invalid && formulario().get('imagen')?.touched) {
+      <p class="mt-1 text-sm text-red-600">La imagen es obligatoria.</p>
+    }
+  </div>
 
   <app-campo-formulario
     [formulario]="formulario()"

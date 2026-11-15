@@ -8,4 +8,6 @@ import { Component, input } from '@angular/core';
 export class MensajeErrorCampo {
   mostrar = input(false);
   mensaje = input('');
+  // Id del mensaje, para que el campo lo anuncie con aria-describedby.
+  idError = input('');
 }

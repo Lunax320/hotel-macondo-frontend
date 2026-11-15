@@ -19,7 +19,7 @@
           id="metodoPago"
           name="metodoPago"
           [(ngModel)]="metodoPago"
-          class="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm font-medium text-[var(--texto)] shadow-sm focus:border-[var(--azul)] focus:outline-none focus:ring-1 focus:ring-[var(--azul)]"
+          class="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm font-medium text-[var(--texto)] shadow-sm hover:border-gray-300 focus:border-[var(--azul)] focus:outline-none focus:ring-2 focus:ring-[var(--azul)]/20 transition"
         >
           <option value="EFECTIVO">EFECTIVO</option>
           <option value="TARJETA">TARJETA</option>
@@ -38,15 +38,40 @@
         <p id="saldo-pendiente" class="font-serif text-2xl font-bold text-[var(--azul-oscuro)]">
           {{ saldo | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
         </p>
-        <button
-          type="button"
-          id="pagar-cuenta-bton"
-          (click)="onPagar()"
-          [disabled]="procesando"
-          class="rounded-lg bg-[var(--azul)] px-6 py-2.5 text-sm font-bold text-white shadow-sm transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          Pagar cuenta
-        </button>
+        @if (!confirmando) {
+          <button
+            type="button"
+            id="pagar-cuenta-bton"
+            (click)="confirmando = true"
+            [disabled]="procesando"
+            class="btn-primario rounded-lg h-12 px-6 text-sm font-bold shadow-sm active:scale-[0.98]"
+          >
+            Pagar cuenta
+          </button>
+        } @else {
+          <p class="text-sm font-semibold text-[var(--azul-oscuro)]" role="alert">
+            ¿Confirmas el pago de
+            {{ saldo | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }} con {{ metodoPago }}?
+          </p>
+          <div class="flex gap-2">
+            <button
+              type="button"
+              id="confirmar-pago-bton"
+              (click)="onPagar()"
+              [disabled]="procesando"
+              class="btn-primario rounded-lg h-12 px-5 text-sm font-bold shadow-sm"
+            >
+              Sí, pagar
+            </button>
+            <button
+              type="button"
+              (click)="confirmando = false"
+              class="btn-secundario-borde rounded-lg px-5 py-2.5 text-sm font-semibold"
+            >
+              Cancelar
+            </button>
+          </div>
+        }
       </div>
     </div>
   } @else if (cuenta) {

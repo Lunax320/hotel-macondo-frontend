@@ -16,7 +16,7 @@
       <span
         class="absolute bottom-3 right-0 rounded-l-md bg-[var(--dorado)] px-5 py-2 text-sm font-bold text-[var(--azul-oscuro)]"
       >
-        Desde ${{ tipo.precioNoche.toLocaleString('es-CO') }}
+        Desde {{ tipo.precioNoche | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
       </span>
     </div>
 

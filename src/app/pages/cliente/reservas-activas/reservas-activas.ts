@@ -4,6 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { concatMap } from 'rxjs';
 import { NavbarCliente } from '../../../components/navbar-cliente/navbar-cliente';
 import { Reserva } from '../../../models/reserva.model';
+import { ToastService } from '../../../services/toast.service';
 import { ReservaService } from '../../../services/reserva.service';
 import { ReservasFiltroBarra } from './components/reservas-filtro-barra/reservas-filtro-barra';
 import { ReservasActivaItem } from './components/reservas-activa-item/reservas-activa-item';
@@ -19,24 +20,19 @@ import { ReservasMetricasResumen } from './components/reservas-metricas-resumen/
 export class ReservasActivas implements OnInit {
   private route = inject(ActivatedRoute);
   private reservaService = inject(ReservaService);
+  private toast = inject(ToastService);
 
   clienteId = 0;
   reservas: Reserva[] = [];
   filtroActual = 'TODOS';
   cargando = false;
   errorCarga = '';
-  mensajeOperacion = '';
   errorCancelacion = '';
   cancelandoId?: number;
 
-  // Lee el cliente y el resultado de navegación, y después carga sus reservas activas.
+  // Lee el cliente y después carga sus reservas activas.
   ngOnInit(): void {
     this.clienteId = Number(this.route.snapshot.params['id']);
-    const resultado = this.route.snapshot.queryParams['resultado'];
-    const numero = this.route.snapshot.queryParams['numero'];
-    if ((resultado === 'creada' || resultado === 'modificada') && typeof numero === 'string') {
-      this.mensajeOperacion = `La reserva ${numero} fue ${resultado} correctamente.`;
-    }
     this.cargarReservas();
   }
 
@@ -79,7 +75,6 @@ export class ReservasActivas implements OnInit {
     if (this.cancelandoId !== undefined || this.cargando) return;
     this.cancelandoId = reservaId;
     this.errorCancelacion = '';
-    this.mensajeOperacion = '';
     let cancelacionConfirmada = false;
     this.reservaService
       .cancelar(this.clienteId, reservaId)
@@ -87,7 +82,7 @@ export class ReservasActivas implements OnInit {
         concatMap((reserva) => {
           cancelacionConfirmada = true;
           this.reservas = this.reservas.filter((item) => item.id !== reserva.id);
-          this.mensajeOperacion = `La reserva ${reserva.numeroReserva} fue cancelada. Puedes consultarla en el historial.`;
+          this.toast.mostrar(`La reserva ${reserva.numeroReserva} fue cancelada. Puedes consultarla en el historial.`);
           return this.reservaService.buscarActivasPorCliente(this.clienteId);
         }),
       )

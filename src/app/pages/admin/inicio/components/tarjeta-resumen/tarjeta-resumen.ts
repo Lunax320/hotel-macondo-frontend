@@ -16,7 +16,7 @@ export class TarjetaResumen {
   claseValor = input('text-4xl');
   detallePrefijo = input('');
   // Número que se muestra en negrita dentro del detalle; null si no lleva.
-  detalleValor = input<number | null>(null);
+  detalleValor = input<number | string | null>(null);
   detalleSufijo = input('');
   enlace = input('');
 }
