@@ -1,3 +1,4 @@
+import { API_BASE } from '../config/api';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -13,8 +14,8 @@ import { PagoCliente } from '../models/pago-cliente.model';
 
 @Injectable({ providedIn: 'root' })
 export class ReservaService {
-  private url = 'http://localhost:8080/api/reserva';
-  private operadorUrl = 'http://localhost:8080/api/operador';
+  private url = `${API_BASE}/api/reserva`;
+  private operadorUrl = `${API_BASE}/api/operador`;
 
   constructor(private http: HttpClient) {}
 

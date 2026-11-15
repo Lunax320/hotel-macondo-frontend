@@ -1,3 +1,4 @@
+import { API_BASE } from '../config/api';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -8,7 +9,7 @@ import { Servicio } from '../models/servicio.model';
 })
 export class ServicioService {
   private http = inject(HttpClient);
-  private url = 'http://localhost:8080/api/servicio';
+  private url = `${API_BASE}/api/servicio`;
 
   // Catálogo activo (Landing, Servicios)
   obtenerCatalogoActivo(): Observable<Servicio[]> {

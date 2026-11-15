@@ -1,3 +1,4 @@
+import { API_BASE } from '../config/api';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -9,7 +10,7 @@ import { Cliente } from '../models/cliente.model';
 })
 export class ClienteService {
   private http = inject(HttpClient);
-  private url = 'http://localhost:8080/api/cliente';
+  private url = `${API_BASE}/api/cliente`;
 
   // Busca un cliente por su id.
   buscarPorId(id: number): Observable<Cliente> {

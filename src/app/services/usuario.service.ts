@@ -1,3 +1,4 @@
+import { API_BASE } from '../config/api';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -7,7 +8,7 @@ import { Usuario } from '../models/usuario.model';
   providedIn: 'root',
 })
 export class UsuarioService {
-  private url = 'http://localhost:8080/api/auth';
+  private url = `${API_BASE}/api/auth`;
 
   constructor(private http: HttpClient) {}
 

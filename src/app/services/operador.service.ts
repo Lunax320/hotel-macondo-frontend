@@ -1,3 +1,4 @@
+import { API_BASE } from '../config/api';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -7,7 +8,7 @@ import { Operador } from '../models/operador.model';
 @Injectable({ providedIn: 'root' })
 export class OperadorService {
   private http = inject(HttpClient);
-  private url = 'http://localhost:8080/api/operador';
+  private url = `${API_BASE}/api/operador`;
 
   // Lista todos los operadores.
   listar(): Observable<Operador[]> {

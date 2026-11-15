@@ -1,3 +1,4 @@
+import { API_BASE } from '../config/api';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -9,7 +10,7 @@ import { TipoHabitacion } from '../models/tipo-habitacion.model';
 })
 export class HabitacionService {
   private http = inject(HttpClient);
-  private url = 'http://localhost:8080/api/habitacion';
+  private url = `${API_BASE}/api/habitacion`;
 
   hayDisponibilidadPorTipo(tipoHabitacion: TipoHabitacion): boolean {
     // Si el tipo existe y tiene capacidad configurada se asume disponible
