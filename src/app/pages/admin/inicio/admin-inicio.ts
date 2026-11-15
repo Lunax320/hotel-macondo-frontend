@@ -10,7 +10,6 @@ import { ServicioService } from '../../../services/servicio.service';
 import { TipoHabitacionService } from '../../../services/tipo-habitacion.service';
 import { TarjetaResumen } from './components/tarjeta-resumen/tarjeta-resumen';
 import { BienvenidaAdmin } from './components/bienvenida-admin/bienvenida-admin';
-import { PublicarComentario } from './components/publicar-comentario/publicar-comentario';
 
 interface BarraEstado {
   etiqueta: string;
@@ -34,7 +33,7 @@ interface DiaOcupacion {
 
 // Resume la información administrativa del hotel.
 @Component({
-  imports: [AdminSidebar, TarjetaResumen, BienvenidaAdmin, RouterLink, PublicarComentario],
+  imports: [AdminSidebar, TarjetaResumen, BienvenidaAdmin, RouterLink],
   selector: 'app-admin-inicio',
   templateUrl: './admin-inicio.html',
   changeDetection: ChangeDetectionStrategy.Eager,
