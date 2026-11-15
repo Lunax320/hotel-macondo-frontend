@@ -156,13 +156,7 @@ export class HistorialItem {
       this.comentarioService
         .actualizar(this.actual.id, this.clienteId(), { calificacion: this.calificacion, texto })
         .subscribe({
-          next: (c) => {
-            this.actual = c;
-            this.enviando = false;
-            this.formAbierto = false;
-            this.editando = false;
-            this.toast.mostrar('Comentario actualizado. Vuelve a revisión antes de publicarse.');
-          },
+          next: (c) => this.publicarYCerrar(c, 'Comentario actualizado y publicado en la portada.'),
           error: alFallar,
         });
       return;
@@ -170,20 +164,39 @@ export class HistorialItem {
     this.comentarioService
       .crear({ clienteId: this.clienteId(), reservaId, calificacion: this.calificacion, texto })
       .subscribe({
-        next: (c) => {
-          this.actual = {
-            id: c.id,
-            reservaId,
-            calificacion: this.calificacion,
-            texto,
-            fechaCreacion: c.fechaCreacion,
-            publicado: false,
-          };
-          this.enviando = false;
-          this.formAbierto = false;
-          this.toast.mostrar('Gracias, tu comentario quedó pendiente de publicación.');
-        },
+        next: (c) =>
+          this.publicarYCerrar(
+            {
+              id: c.id,
+              reservaId,
+              calificacion: this.calificacion,
+              texto,
+              fechaCreacion: c.fechaCreacion,
+              publicado: false,
+            },
+            'Gracias, tu comentario ya está publicado en la portada.',
+          ),
         error: alFallar,
       });
+  }
+
+  // Publica el comentario recién guardado para que aparezca en la portada sin revisión previa.
+  private publicarYCerrar(comentario: ComentarioCliente, mensajeOk: string): void {
+    this.comentarioService.publicar(comentario.id).subscribe({
+      next: () => {
+        this.actual = { ...comentario, publicado: true };
+        this.enviando = false;
+        this.formAbierto = false;
+        this.editando = false;
+        this.toast.mostrar(mensajeOk);
+      },
+      error: () => {
+        this.actual = { ...comentario, publicado: false };
+        this.enviando = false;
+        this.formAbierto = false;
+        this.editando = false;
+        this.toast.mostrar('Tu comentario se guardó, pero no se pudo publicar. Intenta de nuevo.', 'error');
+      },
+    });
   }
 }
