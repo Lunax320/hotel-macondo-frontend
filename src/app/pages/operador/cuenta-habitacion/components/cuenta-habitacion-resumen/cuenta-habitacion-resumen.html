@@ -1,0 +1,51 @@
+<aside class="lg:col-span-1" aria-labelledby="resumen-cuenta">
+  <div
+    class="flex h-auto flex-col justify-between rounded-2xl border border-gray-100 bg-white p-6 shadow-md lg:sticky lg:top-8"
+  >
+    <div>
+      <h2 id="resumen-cuenta" class="mb-6 font-serif text-2xl font-bold text-[var(--azul-oscuro)]">
+        Agregar consumos
+      </h2>
+      <div class="space-y-3 border-b border-gray-100 pb-6 text-sm">
+        @for (consumo of consumos; track consumo.servicioId) {
+          <div class="flex items-center justify-between text-gray-600">
+            <span
+              >{{ consumo.nombre }}
+              <small class="font-normal text-gray-400">×{{ consumo.cantidad }}</small></span
+            >
+            <span class="font-bold text-[var(--azul-oscuro)]">
+              {{
+                consumo.precio * consumo.cantidad
+                  | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO'
+              }}
+            </span>
+          </div>
+        }
+      </div>
+      <div class="space-y-2 border-b border-gray-100 py-4 text-sm">
+        <div class="flex items-center justify-between text-gray-500">
+          <span>Subtotal</span>
+          <span class="font-bold text-[var(--azul-oscuro)]">
+            {{ subtotal | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
+          </span>
+        </div>
+      </div>
+      <div
+        class="mb-8 mt-6 flex flex-col gap-1 rounded-xl bg-[var(--crema-claro)] p-4"
+      >
+        <span class="whitespace-nowrap text-sm font-bold text-[var(--azul)]">Total a agregar</span>
+        <span class="font-serif text-2xl font-bold text-[var(--azul)] break-words">
+          {{ total | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
+        </span>
+      </div>
+    </div>
+    <button
+      type="button"
+      id="confirmar-servicios-btn"
+      (click)="agregarServicios.emit()"
+      class="btn-primario min-h-12 w-full rounded-lg px-4 py-2 text-center font-bold"
+    >
+      Agregar servicios a la cuenta
+    </button>
+  </div>
+</aside>

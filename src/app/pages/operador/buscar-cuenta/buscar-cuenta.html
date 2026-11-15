@@ -1,0 +1,59 @@
+<div class="flex min-h-screen flex-col bg-white text-[var(--texto)] md:flex-row">
+  <app-operador-sidebar></app-operador-sidebar>
+
+  <main class="min-w-0 flex-1 p-6 md:p-10">
+    <header class="mb-8 border-b border-gray-200 pb-4">
+      <h1 class="font-serif text-3xl font-bold text-[var(--azul-oscuro)] md:text-4xl">Cuenta de habitación</h1>
+      <p class="mt-1 text-sm font-medium text-gray-500">
+        Elige una habitación de la lista o busca por número para consultar sus consumos.
+      </p>
+    </header>
+
+    <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px]">
+      <section aria-labelledby="lista-estadias" class="min-w-0">
+        <h2 id="lista-estadias" class="mb-3 font-serif text-xl font-bold text-[var(--azul-oscuro)]">
+          Huéspedes en casa
+        </h2>
+
+        @if (cargando()) {
+          <p class="text-sm text-gray-500" role="status">Cargando estadías...</p>
+        } @else if (error()) {
+          <p class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
+            {{ error() }}
+          </p>
+        } @else if (estadias.length === 0) {
+          <div class="rounded-2xl border border-dashed border-gray-300 p-8 text-center">
+            <i class="bi bi-door-closed text-3xl text-[var(--dorado-oscuro)]" aria-hidden="true"></i>
+            <p class="mt-3 font-serif text-xl font-bold text-[var(--azul-oscuro)]">No hay huéspedes en casa</p>
+            <p class="mt-1 text-sm text-gray-500">Cuando alguien haga check-in, aparecerá aquí para cargarle consumos.</p>
+          </div>
+        } @else {
+          <ul class="divide-y divide-gray-100 rounded-2xl border border-gray-100">
+            @for (e of estadias; track e.reserva.id) {
+              <li>
+                <a
+                  [routerLink]="['/operador/cuenta', e.reserva.id]"
+                  class="flex w-full items-center justify-between gap-3 px-4 py-3 transition hover:bg-gray-50 focus-visible:bg-gray-50"
+                >
+                  <span class="min-w-0">
+                    <span class="block text-sm font-bold text-[var(--azul-oscuro)]">Habitación {{ e.reserva.habitacion?.numero }}</span>
+                    <span class="block truncate text-xs text-gray-500">{{ e.reserva.cliente?.nombre }} {{ e.reserva.cliente?.apellido }}</span>
+                  </span>
+                  @if ((e.saldo ?? 0) > 0) {
+                    <span class="shrink-0 text-sm font-bold text-red-700">{{ e.saldo | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}</span>
+                  } @else {
+                    <span class="shrink-0 text-xs font-bold text-emerald-700">Sin saldo</span>
+                  }
+                </a>
+              </li>
+            }
+          </ul>
+        }
+      </section>
+
+      <section aria-label="Buscar cuenta por número" class="w-full">
+        <app-modulo-cuenta></app-modulo-cuenta>
+      </section>
+    </div>
+  </main>
+</div>

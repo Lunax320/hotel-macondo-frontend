@@ -1,0 +1,70 @@
+<div class="grid grid-cols-1 gap-6 md:grid-cols-2" [formGroup]="formulario()">
+  <div>
+    <label class="mb-2 block text-sm font-bold text-[var(--azul-oscuro)]" for="tipo-habitacion">
+      Tipo de habitación
+    </label>
+    <select
+      class="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 focus:border-[var(--azul)] focus:outline-none"
+      id="tipo-habitacion"
+      formControlName="tipoHabitacion"
+      (change)="formulario().get('tipoHabitacion')?.markAsTouched(); tipoCambiado.emit()"
+    >
+      <option value="">Seleccionar tipo...</option>
+      @for (tipo of tiposHabitacion(); track tipo.id) {
+        <option [value]="tipo.id">{{ tipo.nombre }}</option>
+      }
+    </select>
+    @if (
+      formulario().get('tipoHabitacion')?.touched && formulario().get('tipoHabitacion')?.invalid
+    ) {
+      <small class="mt-1 block text-red-600">El tipo de habitación es obligatorio.</small>
+    }
+  </div>
+
+  <div>
+    <label class="mb-2 block text-sm font-bold text-[var(--azul-oscuro)]" for="nombre"
+      >Nombre</label
+    >
+    <input
+      class="w-full rounded-lg border border-gray-200 px-4 py-3 focus:border-[var(--azul)] focus:outline-none"
+      id="nombre"
+      type="text"
+      formControlName="nombre"
+      placeholder="Habitación 301"
+    />
+    @if (formulario().get('nombre')?.touched && formulario().get('nombre')?.invalid) {
+      <small class="mt-1 block text-red-600">Ingresa un nombre de 3 a 100 caracteres.</small>
+    }
+  </div>
+
+  <div>
+    <label class="mb-2 block text-sm font-bold text-[var(--azul-oscuro)]" for="etiqueta"
+      >Etiqueta</label
+    >
+    <input
+      class="w-full rounded-lg border border-gray-200 px-4 py-3 focus:border-[var(--azul)] focus:outline-none"
+      id="etiqueta"
+      type="text"
+      formControlName="etiqueta"
+      placeholder="EXCLUSIVA"
+    />
+  </div>
+
+  <div>
+    <label class="mb-2 block text-sm font-bold text-[var(--azul-oscuro)]" for="numero"
+      >Número</label
+    >
+    <input
+      class="w-full rounded-lg border border-gray-200 px-4 py-3 focus:border-[var(--azul)] focus:outline-none"
+      id="numero"
+      type="text"
+      formControlName="numero"
+      placeholder="301"
+    />
+    @if (formulario().get('numero')?.touched && formulario().get('numero')?.invalid) {
+      <small class="mt-1 block text-red-600"
+        >El número es obligatorio y admite hasta 10 caracteres.</small
+      >
+    }
+  </div>
+</div>

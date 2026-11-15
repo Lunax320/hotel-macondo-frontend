@@ -1,0 +1,36 @@
+<section class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+  <h2
+    class="mb-4 flex items-center gap-2 font-serif text-xl font-bold text-[var(--azul-oscuro)]"
+  >
+    <i class="bi bi-door-open text-[var(--azul)]" aria-hidden="true"></i>
+    Habitación
+  </h2>
+  @if (habitacion(); as habitacionActual) {
+    <dl class="space-y-2 text-sm">
+      <div class="flex justify-between gap-4">
+        <dt class="text-gray-500">Número</dt>
+        <dd class="text-right font-semibold">{{ habitacionActual.numero }}</dd>
+      </div>
+      <div class="flex justify-between gap-4">
+        <dt class="text-gray-500">Nombre</dt>
+        <dd class="text-right font-semibold">{{ habitacionActual.nombre }}</dd>
+      </div>
+      <div class="flex justify-between gap-4">
+        <dt class="text-gray-500">Piso</dt>
+        <dd class="text-right font-semibold">{{ habitacionActual.piso ?? 'No especificado' }}</dd>
+      </div>
+      <div class="flex justify-between gap-4">
+        <dt class="text-gray-500">Tipo</dt>
+        <dd class="text-right font-semibold">
+          {{ habitacionActual.tipoHabitacion?.nombre ?? 'No especificado' }}
+        </dd>
+      </div>
+      <div class="flex justify-between gap-4">
+        <dt class="text-gray-500">Capacidad</dt>
+        <dd class="text-right font-semibold">{{ habitacionActual.capacidad }} personas</dd>
+      </div>
+    </dl>
+  } @else {
+    <p class="text-sm text-gray-500">Sin habitación asignada.</p>
+  }
+</section>

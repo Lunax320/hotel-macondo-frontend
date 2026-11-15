@@ -1,0 +1,19 @@
+<a
+  class="block rounded-2xl bg-white p-6 shadow-sm transition hover:shadow-md"
+  [routerLink]="enlace()"
+>
+  <div class="mb-4 flex items-center justify-between">
+    <span class="text-[0.7rem] font-bold uppercase tracking-[3px] text-[var(--azul)]">
+      {{ etiqueta() }}
+    </span>
+    <i class="bi {{ icono() }} text-2xl text-[var(--dorado)]"></i>
+  </div>
+  <p class="font-serif font-bold text-[var(--azul-oscuro)] {{ claseValor() }}">{{ valor() }}</p>
+  <p class="mt-1 text-sm text-gray-500">
+    {{ detallePrefijo() }}
+    @if (detalleValor() !== null) {
+      <strong class="text-[var(--azul-oscuro)]">{{ detalleValor() }}</strong>
+    }
+    {{ detalleSufijo() }}
+  </p>
+</a>

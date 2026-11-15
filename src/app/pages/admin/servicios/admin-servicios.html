@@ -1,0 +1,43 @@
+<div class="flex flex-col bg-white md:flex-row">
+  <app-admin-sidebar seccionActiva="servicios"></app-admin-sidebar>
+
+  <section class="min-w-0 flex-1 p-6 md:p-10">
+    <app-encabezado-admin
+      titulo="Servicios"
+      descripcion="Catálogo de experiencias que se pueden cargar a la cuenta del huésped."
+      textoBoton="Nuevo Servicio"
+      iconoBoton="bi-plus-lg"
+      rutaBoton="/admin/servicios/nuevo"
+    ></app-encabezado-admin>
+
+    @if (errorServicio) {
+      <div
+        class="mb-4 rounded-lg border border-red-200 bg-red-50 px-5 py-4 text-red-700"
+        role="alert"
+      >
+        {{ errorServicio }}
+      </div>
+    }
+
+    @if (servicioPendiente; as servicio) {
+      <app-confirmacion-accion
+        [titulo]="(servicio.activo ? '¿Desactivar ' : '¿Activar ') + servicio.nombre + '?'"
+        [mensaje]="
+          servicio.activo
+            ? 'Dejará de verse en el sitio. Las cuentas que ya lo usaron no cambian.'
+            : 'Volverá a verse en el sitio.'
+        "
+        [textoConfirmar]="servicio.activo ? 'Confirmar desactivación' : 'Confirmar activación'"
+        textoCancelar="Cancelar"
+        (confirmado)="confirmarEstado()"
+        (cancelado)="cancelarEstado()"
+      ></app-confirmacion-accion>
+    }
+
+    <app-servicio-table
+      [servicios]="servicios"
+      [cargaFallida]="!!errorServicio"
+      (cambioEstadoSolicitado)="cambiarEstado($event)"
+    ></app-servicio-table>
+  </section>
+</div>

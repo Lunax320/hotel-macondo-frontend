@@ -1,0 +1,59 @@
+<div
+  class="bg-white rounded-xl p-4 md:px-6 md:py-4 shadow-[0_4px_20px_rgba(0,0,0,0.07)] flex items-center gap-6 flex-wrap mb-7"
+>
+  <div class="flex items-center gap-2">
+    <i class="bi bi-search text-gray-400"></i>
+    <span class="font-sans text-sm font-semibold text-gray-600">Estado:</span>
+  </div>
+
+  <div class="flex gap-2 flex-wrap">
+    <button
+      type="button"
+      (click)="seleccionar('TODOS')"
+      class="font-sans text-xs font-semibold h-8 px-4 inline-flex items-center rounded-full"
+      [class]="
+        filtroSeleccionado === 'TODOS'
+          ? 'btn-secundario'
+          : 'btn-secundario-borde'
+      "
+    >
+      Todos
+    </button>
+    <button
+      type="button"
+      (click)="seleccionar('ACTIVA')"
+      class="font-sans text-xs font-semibold h-8 px-4 inline-flex items-center rounded-full"
+      [class]="
+        filtroSeleccionado === 'ACTIVA'
+          ? 'btn-secundario'
+          : 'btn-secundario-borde'
+      "
+    >
+      Activa
+    </button>
+    <button
+      type="button"
+      (click)="seleccionar('CONFIRMADA')"
+      class="font-sans text-xs font-semibold h-8 px-4 inline-flex items-center rounded-full"
+      [class]="
+        filtroSeleccionado === 'CONFIRMADA'
+          ? 'btn-secundario'
+          : 'btn-secundario-borde'
+      "
+    >
+      Confirmada
+    </button>
+    <button
+      type="button"
+      (click)="seleccionar('PENDIENTE')"
+      class="font-sans text-xs font-semibold h-8 px-4 inline-flex items-center rounded-full"
+      [class]="
+        filtroSeleccionado === 'PENDIENTE'
+          ? 'btn-secundario'
+          : 'btn-secundario-borde'
+      "
+    >
+      Pendiente
+    </button>
+  </div>
+</div>

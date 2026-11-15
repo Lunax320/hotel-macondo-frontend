@@ -1,0 +1,35 @@
+@if (panoramica; as imagen) {
+  <section class="mt-10" aria-labelledby="titulo-recorrido">
+    <h2 id="titulo-recorrido" class="font-serif text-2xl font-bold text-[var(--azul-oscuro)]">
+      Recorre la habitación
+    </h2>
+    <p class="mt-1 text-sm text-[var(--texto)]">
+      Arrastra la imagen de lado a lado para mirar la habitación, o usa las flechas del teclado.
+    </p>
+
+    <div
+      class="mt-4 cursor-grab touch-pan-y select-none overflow-hidden rounded-2xl bg-black shadow-md active:cursor-grabbing focus-visible:outline-2 focus-visible:outline-[var(--azul)]"
+      role="slider"
+      tabindex="0"
+      aria-label="Recorrido de la habitación"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      [attr.aria-valuenow]="posicion"
+      (pointerdown)="iniciarArrastre($event)"
+      (pointermove)="arrastrar($event)"
+      (pointerup)="terminarArrastre()"
+      (pointerleave)="terminarArrastre()"
+      (pointercancel)="terminarArrastre()"
+      (keydown.arrowleft)="mover(-5)"
+      (keydown.arrowright)="mover(5)"
+    >
+      <img
+        class="pointer-events-none block h-auto w-[200%] max-w-none"
+        [src]="imagen"
+        [style.transform]="desplazamiento"
+        [alt]="'Vista panorámica de la habitación ' + tipo().nombre"
+        draggable="false"
+      />
+    </div>
+  </section>
+}

@@ -1,0 +1,69 @@
+<div class="overflow-x-auto rounded-2xl bg-white shadow-sm">
+  <table class="w-full min-w-[760px] text-left">
+    <thead class="bg-[var(--crema)] text-sm uppercase tracking-wider text-[var(--azul-oscuro)]">
+      <tr>
+        <th scope="col" class="px-6 py-4">ID</th>
+        <th scope="col" class="px-6 py-4">Tipo</th>
+        <th scope="col" class="px-6 py-4">Descripción</th>
+        <th scope="col" class="px-6 py-4">Capacidad</th>
+        <th scope="col" class="px-6 py-4">Precio / noche</th>
+        <th scope="col" class="sticky right-0 shadow-[-6px_0_6px_-4px_rgba(0,0,0,0.12)] z-10 bg-[var(--crema)] px-6 py-4 text-right">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (tipoHabitacion of tiposHabitacion(); track tipoHabitacion.id) {
+        <tr class="border-t border-gray-100">
+          <td class="px-6 py-4">{{ tipoHabitacion.id }}</td>
+          <td class="px-6 py-4">
+            <div class="flex items-center gap-3">
+              <img
+                class="h-12 w-12 rounded-lg bg-[var(--crema)] object-cover"
+                [src]="tipoHabitacion.imagen"
+                [alt]="tipoHabitacion.nombre"
+              />
+              <div>
+                <p class="font-medium text-[var(--azul-oscuro)]">
+                  {{ tipoHabitacion.nombre }}
+                </p>
+                <p class="text-sm text-[var(--texto)]">Categoría</p>
+              </div>
+            </div>
+          </td>
+          <td class="max-w-xs truncate px-6 py-4 text-sm text-[var(--texto)]">
+            {{ tipoHabitacion.descripcion }}
+          </td>
+          <td class="px-6 py-4">{{ tipoHabitacion.capacidadPersonas }} pers.</td>
+          <td class="px-6 py-4 font-medium">
+            {{ tipoHabitacion.precioNoche | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
+          </td>
+          <td class="sticky right-0 shadow-[-6px_0_6px_-4px_rgba(0,0,0,0.12)] z-[1] whitespace-nowrap bg-white px-6 py-4 text-right">
+            <button
+              class="btn-secundario mr-2 inline-flex items-center gap-1 rounded-lg h-8 inline-flex items-center px-3 text-sm font-medium"
+              type="button"
+              (click)="editar(tipoHabitacion)"
+              [attr.aria-label]="'Editar tipo ' + tipoHabitacion.nombre"
+            >
+              <i class="bi bi-pencil-square" aria-hidden="true"></i>
+              Editar
+            </button>
+            <button
+              class="btn-destructivo inline-flex items-center gap-1 rounded-lg h-8 inline-flex items-center px-3 text-sm font-medium"
+              type="button"
+              (click)="eliminar(tipoHabitacion)"
+              [attr.aria-label]="'Eliminar tipo ' + tipoHabitacion.nombre"
+            >
+              <i class="bi bi-trash" aria-hidden="true"></i>
+              Eliminar
+            </button>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td class="px-6 py-10 text-center" colspan="6">
+            Aún no hay tipos de habitación registrados.
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

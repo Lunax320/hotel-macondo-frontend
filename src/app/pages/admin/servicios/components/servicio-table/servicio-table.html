@@ -1,0 +1,65 @@
+<div class="overflow-x-auto rounded-2xl bg-white shadow-sm">
+  <table class="w-full min-w-[720px] text-left">
+    <thead class="bg-[var(--crema)] text-sm uppercase tracking-wider text-[var(--azul-oscuro)]">
+      <tr>
+        <th scope="col" class="px-4 py-3">#</th>
+        <th scope="col" class="px-4 py-3">Servicio</th>
+        <th scope="col" class="px-4 py-3">Categoría</th>
+        <th scope="col" class="px-4 py-3">Precio</th>
+        <th scope="col" class="whitespace-nowrap px-4 py-3">Estado</th>
+        <th scope="col" class="sticky right-0 shadow-[-6px_0_6px_-4px_rgba(0,0,0,0.12)] z-10 bg-[var(--crema)] px-4 py-3 text-right">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (servicio of servicios(); track servicio.id) {
+        <tr class="border-t border-gray-100 align-top">
+          <td class="px-4 py-3">{{ servicio.id }}</td>
+          <td class="px-4 py-3">
+            <div class="flex items-center gap-3">
+              <img
+                class="h-10 w-10 shrink-0 rounded-lg bg-[var(--crema)] object-cover"
+                [src]="servicio.imagen"
+                [alt]="servicio.nombre"
+              />
+              <p class="font-medium text-[var(--azul-oscuro)]">{{ servicio.nombre }}</p>
+            </div>
+          </td>
+          <td class="px-4 py-3">{{ servicio.categoria }}</td>
+          <td class="whitespace-nowrap px-4 py-3 font-medium">
+            {{ servicio.precio | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
+          </td>
+          <td class="whitespace-nowrap px-4 py-3">
+            <app-estado-badge [activo]="servicio.activo"></app-estado-badge>
+            @if (servicio.destacado) {
+              <span
+                class="ml-1 rounded-full bg-[var(--dorado)] px-3 py-1 text-xs font-bold text-[var(--azul-oscuro)]"
+                >Destacado</span
+              >
+            }
+          </td>
+          <td class="sticky right-0 shadow-[-6px_0_6px_-4px_rgba(0,0,0,0.12)] z-[1] whitespace-nowrap bg-white px-4 py-3 text-right">
+            <a
+              class="btn-secundario inline-block rounded-lg h-8 inline-flex items-center px-3 text-sm font-medium"
+              [routerLink]="['/admin/servicios/editar', servicio.id]"
+              [attr.aria-label]="'Editar servicio ' + servicio.nombre"
+              >Editar</a
+            ><button
+              class="btn-secundario ml-2 rounded-lg h-8 inline-flex items-center px-3 text-sm font-medium"
+              type="button"
+              (click)="cambiarEstado(servicio)"
+              [attr.aria-label]="(servicio.activo ? 'Desactivar' : 'Activar') + ' servicio ' + servicio.nombre"
+            >
+              {{ servicio.activo ? 'Desactivar' : 'Activar' }}
+            </button>
+          </td>
+        </tr>
+      } @empty {
+        @if (!cargaFallida()) {
+          <tr>
+            <td class="px-6 py-10 text-center" colspan="6">Aún no hay servicios registrados.</td>
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+</div>

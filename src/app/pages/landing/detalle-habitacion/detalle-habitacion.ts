@@ -1,0 +1,62 @@
+import { CurrencyPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ActivatedRoute, ParamMap, RouterLink } from '@angular/router';
+import { switchMap } from 'rxjs';
+import { TipoHabitacion } from '../../../models/tipo-habitacion.model';
+import { HabitacionService } from '../../../services/habitacion.service';
+import { TipoHabitacionService } from '../../../services/tipo-habitacion.service';
+import { ToastService } from '../../../services/toast.service';
+import { ResumenReservaHabitacion } from './components/resumen-reserva-habitacion/resumen-reserva-habitacion';
+import { RecorridoHabitacion } from './components/recorrido-habitacion/recorrido-habitacion';
+
+@Component({
+  imports: [CurrencyPipe, RouterLink, ResumenReservaHabitacion, RecorridoHabitacion],
+  selector: 'app-detalle-habitacion',
+  styleUrl: './detalle-habitacion.scss',
+  templateUrl: './detalle-habitacion.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+export class DetalleHabitacion implements OnInit {
+  private route = inject(ActivatedRoute);
+  private habitacionService = inject(HabitacionService);
+  private tipoHabitacionService = inject(TipoHabitacionService);
+  private toast = inject(ToastService);
+
+  tipoHabitacion?: TipoHabitacion;
+  hayDisponibilidad = false;
+  clienteId: number | null = null;
+
+  // Carga la habitación solicitada y resuelve el cliente asociado a la navegación, si existe.
+  ngOnInit(): void {
+    this.route.paramMap
+      .pipe(
+        switchMap((parametros) => {
+          const id = Number(parametros.get('id'));
+          return this.tipoHabitacionService.obtenerPorId(id);
+        })
+      )
+      .subscribe({
+        next: (tipo) => {
+          this.tipoHabitacion = tipo;
+          this.hayDisponibilidad = tipo ? this.habitacionService.hayDisponibilidadPorTipo(tipo) : false;
+        },
+        error: () => this.toast.mostrar('No fue posible cargar esta habitación. Intenta más tarde.', 'error'),
+      });
+
+    this.route.queryParamMap.subscribe((parametros) => {
+      this.clienteId = this.obtenerClienteId(parametros);
+    });
+  }
+
+  // Obtiene un identificador de cliente válido desde los parámetros de consulta.
+  private obtenerClienteId(parametros: ParamMap): number | null {
+    const valor = parametros.get('clienteId');
+
+    if (valor === null || valor.trim() === '') {
+      return null;
+    }
+
+    const numero = Number(valor);
+    return Number.isFinite(numero) ? numero : null;
+  }
+}

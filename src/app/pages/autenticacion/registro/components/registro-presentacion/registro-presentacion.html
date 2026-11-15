@@ -1,0 +1,39 @@
+<section
+  class="relative isolate hidden lg:flex h-full flex-col justify-between overflow-hidden p-8 md:p-12 bg-[var(--azul-oscuro)] text-white"
+>
+  <video
+    class="absolute inset-0 -z-10 h-full w-full object-cover"
+    src="/video/registro-spa.mp4"
+    poster="/images/Playa.avif"
+    autoplay
+    loop
+    [muted]="true"
+    playsinline
+    aria-hidden="true"
+  ></video>
+  <div class="absolute inset-0 -z-10 bg-gradient-to-b from-[rgba(8,26,42,0.65)] to-[rgba(8,26,42,0.85)]"></div>
+  <div>
+    <a
+      routerLink="/login"
+      class="inline-flex items-center gap-2 mb-10 text-white hover:text-[var(--dorado)] transition font-medium text-sm"
+      ><span
+        class="w-8 h-8 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center"
+        >←</span
+      ><span>Iniciar sesión</span></a
+    >
+  </div>
+  <div class="max-w-md my-auto">
+    <h1 class="!text-5xl font-serif font-bold mb-4 !text-white">Tu historia comienza aquí</h1>
+    <p class="font-serif italic text-xl text-[var(--dorado)] leading-relaxed mb-6">
+      "El secreto de una buena vejez no es otra cosa que un pacto honrado con la soledad."
+    </p>
+    <p class="text-white/70 text-[0.95rem] leading-relaxed">
+      Únete a Hotel Macondo y accede a reservas exclusivas, servicios personalizados y la magia del
+      Caribe colombiano en cada visita.
+    </p>
+  </div>
+  <div class="flex justify-between items-center text-xs text-white/50 pt-8">
+    <span>&copy; 2026 Hotel Macondo</span
+    ><span class="font-serif italic text-[var(--dorado)]">Cartagena, Colombia</span>
+  </div>
+</section>

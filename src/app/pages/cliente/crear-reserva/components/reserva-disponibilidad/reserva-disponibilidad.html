@@ -1,0 +1,19 @@
+@if (consultada()) {
+  <div
+    class="mt-7 rounded-lg border p-4"
+    role="status"
+    [class]="
+      cantidadDisponibles() > 0
+        ? 'border-[#9ad7b6] bg-[#effaf4] text-[#166534]'
+        : 'border-[#f1b8b1] bg-[#fff4f2] text-[#b42318]'
+    "
+  >
+    <p class="font-semibold">
+      {{
+        cantidadDisponibles() > 0
+          ? cantidadDisponibles() + ' habitación(es) disponible(s) para las fechas seleccionadas.'
+          : 'No hay habitaciones disponibles con esos criterios.'
+      }}
+    </p>
+  </div>
+}

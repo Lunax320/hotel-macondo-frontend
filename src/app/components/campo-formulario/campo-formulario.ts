@@ -1,0 +1,50 @@
+import { Component, input } from '@angular/core';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ErrorCampo } from '../../models/error-campo.model';
+import { MensajeErrorCampo } from '../mensaje-error-campo/mensaje-error-campo';
+
+// Un campo de formulario reutilizable: etiqueta + input/textarea/select + sus mensajes de error.
+// Recibe el FormGroup del formulario padre y el nombre del control que debe pintar.
+@Component({
+  imports: [ReactiveFormsModule, MensajeErrorCampo],
+  selector: 'app-campo-formulario',
+  styleUrl: './campo-formulario.scss',
+  templateUrl: './campo-formulario.html',
+})
+export class CampoFormulario {
+  formulario = input<FormGroup>(new FormGroup({}));
+  nombreCampo = input('');
+  etiqueta = input('');
+  tipo = input('text');
+  placeholder = input('');
+  // Si se pasa un ícono (ej. 'bi-person') el input se pinta con ícono a la izquierda.
+  icono = input('');
+  // Si filas > 0 se pinta un textarea.
+  filas = input(0);
+  // Si hay opciones se pinta un select.
+  opciones = input<string[]>([]);
+  textoOpcionVacia = input('Seleccionar...');
+  errores = input<ErrorCampo[]>([]);
+
+  // Los errores se muestran apenas el usuario toca o escribe en el campo.
+  mostrarErrores(): boolean {
+    const control = this.formulario().get(this.nombreCampo());
+    return !!control && control.invalid && (control.dirty || control.touched);
+  }
+
+  // Id del primer mensaje de error visible; el input lo referencia con aria-describedby.
+  idError(): string | null {
+    if (!this.mostrarErrores()) return null;
+    const error = this.errores().find((e) => this.tieneError(e.clave));
+    return error ? this.idMensaje(error.clave) : null;
+  }
+
+  idMensaje(clave: string): string {
+    return `${this.nombreCampo()}-error-${clave}`;
+  }
+
+  // Indica si el control identificado tiene errores de validación visibles.
+  tieneError(clave: string): boolean {
+    return !!this.formulario().get(this.nombreCampo())?.errors?.[clave];
+  }
+}

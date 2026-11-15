@@ -1,0 +1,230 @@
+<div class="min-h-screen bg-gradient-to-b from-[#e3ecef] to-[#f5e6d3] flex flex-col font-sans">
+  <app-navbar-cliente [clienteId]="clienteId"></app-navbar-cliente>
+
+  <main class="flex-1 max-w-[900px] mx-auto w-full px-6 py-12">
+    <div class="mb-8">
+      <h1 class="font-serif text-3xl md:text-4xl font-bold text-[#0e2a3f] mb-2">Mi Perfil</h1>
+      <p class="font-sans text-sm text-gray-500 m-0">
+        Gestiona tu información personal y preferencias
+      </p>
+    </div>
+
+    @if (cliente) {
+      <app-perfil-resumen
+        [nombreCompleto]="cliente.nombre + ' ' + cliente.apellido"
+        [correo]="cliente.correo"
+      ></app-perfil-resumen>
+    }
+
+    <!-- FORMULARIO DE DATOS PERSONALES -->
+    <div class="bg-white rounded-[20px] p-8 shadow-[0_8px_32px_rgba(0,0,0,0.05)] mb-6">
+      <div class="flex justify-between items-center mb-7">
+        <div>
+          <h3 class="font-serif text-xl font-bold text-[#0e2a3f] mb-1">Datos personales</h3>
+          <p class="font-sans text-[0.78rem] text-gray-500 m-0">
+            Información de tu cuenta y preferencias de contacto
+          </p>
+        </div>
+      </div>
+
+      <form (ngSubmit)="guardarDatos()">
+        @if (errorPerfil) {
+          <p class="mb-4 text-sm text-red-600" role="alert">{{ errorPerfil }}</p>
+        }
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+          <div>
+            <label
+              class="block font-sans text-[0.7rem] font-bold text-[var(--azul)] mb-1.5 uppercase tracking-wider"
+            >
+              <i class="bi bi-person mr-1"></i> Nombre
+            </label>
+            <input
+              type="text"
+              name="nombre"
+              [(ngModel)]="nombre"
+              required
+              class="w-full bg-[#faf8f6] border-[1.5px] border-[rgba(26,117,159,0.2)] text-gray-700 text-sm font-sans rounded-xl px-4 py-3 outline-none focus:border-[var(--azul)] focus:bg-white transition-all"
+            />
+          </div>
+
+          <div>
+            <label
+              class="block font-sans text-[0.7rem] font-bold text-[var(--azul)] mb-1.5 uppercase tracking-wider"
+            >
+              <i class="bi bi-person mr-1"></i> Apellido
+            </label>
+            <input
+              type="text"
+              name="apellido"
+              [(ngModel)]="apellido"
+              required
+              class="w-full bg-[#faf8f6] border-[1.5px] border-[rgba(26,117,159,0.2)] text-gray-700 text-sm font-sans rounded-xl px-4 py-3 outline-none focus:border-[var(--azul)] focus:bg-white transition-all"
+            />
+          </div>
+
+          <div>
+            <label
+              class="block font-sans text-[0.7rem] font-bold text-[var(--azul)] mb-1.5 uppercase tracking-wider"
+            >
+              <i class="bi bi-envelope mr-1"></i> Correo electrónico
+            </label>
+            <input
+              type="email"
+              name="correo"
+              [(ngModel)]="correo"
+              required
+              class="w-full bg-[#faf8f6] border-[1.5px] border-[rgba(26,117,159,0.2)] text-gray-700 text-sm font-sans rounded-xl px-4 py-3 outline-none focus:border-[var(--azul)] focus:bg-white transition-all"
+            />
+          </div>
+
+          <div>
+            <label
+              class="block font-sans text-[0.7rem] font-bold text-[var(--azul)] mb-1.5 uppercase tracking-wider"
+            >
+              <i class="bi bi-telephone mr-1"></i> Teléfono
+            </label>
+            <input
+              type="tel"
+              name="telefono"
+              [(ngModel)]="telefono"
+              required
+              class="w-full bg-[#faf8f6] border-[1.5px] border-[rgba(26,117,159,0.2)] text-gray-700 text-sm font-sans rounded-xl px-4 py-3 outline-none focus:border-[var(--azul)] focus:bg-white transition-all"
+            />
+            @if (errorTelefono) {
+              <p class="mt-1 text-sm text-red-600" role="alert">{{ errorTelefono }}</p>
+            }
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-3">
+          <button
+            type="submit"
+            class="btn-primario font-sans text-[0.85rem] font-bold rounded-lg h-12 px-7 shadow-sm"
+          >
+            Guardar cambios
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- TARJETA DE CONTRASEÑA -->
+    <div
+      class="bg-white rounded-[20px] p-8 shadow-[0_8px_32px_rgba(0,0,0,0.05)] border-t-4 border-[var(--dorado)] mb-6"
+    >
+      <div class="flex justify-between items-center mb-7">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <i class="bi bi-key text-[var(--dorado)] text-lg"></i>
+            <h3 class="font-serif text-xl font-bold text-[#0e2a3f] m-0">Cambiar contraseña</h3>
+          </div>
+          <p class="font-sans text-[0.78rem] text-gray-500 m-0">
+            Actualiza tu contraseña de acceso al portal
+          </p>
+        </div>
+      </div>
+
+      <form (ngSubmit)="cambiarPassword()" class="flex flex-col gap-5 max-w-[420px]">
+        @if (errorPassword) {
+          <p class="text-sm text-red-600" role="alert">{{ errorPassword }}</p>
+        }
+        <div>
+          <label
+            class="block font-sans text-[0.7rem] font-bold text-[var(--azul)] mb-1.5 uppercase tracking-wider"
+          >
+            Contraseña actual
+          </label>
+          <input
+            type="password"
+            name="contrasenaActual"
+            [(ngModel)]="contrasenaActual"
+            class="w-full bg-[#faf8f6] border-[1.5px] border-[rgba(26,117,159,0.2)] rounded-xl px-4 py-3"
+            required
+          />
+          @if (errorActual) {
+            <p class="mt-1 text-sm text-red-600" role="alert">{{ errorActual }}</p>
+          }
+        </div>
+
+        <div>
+          <label
+            class="block font-sans text-[0.7rem] font-bold text-[var(--azul)] mb-1.5 uppercase tracking-wider"
+          >
+            Nueva contraseña
+          </label>
+          <input
+            type="password"
+            name="nuevaContrasena"
+            [(ngModel)]="nuevaContrasena"
+            class="w-full bg-[#faf8f6] border-[1.5px] border-[rgba(26,117,159,0.2)] rounded-xl px-4 py-3"
+            required
+          />
+        </div>
+
+        <div>
+          <label
+            class="block font-sans text-[0.7rem] font-bold text-[var(--azul)] mb-1.5 uppercase tracking-wider"
+          >
+            Confirmar contraseña
+          </label>
+          <input
+            type="password"
+            name="confirmarContrasena"
+            [(ngModel)]="confirmarContrasena"
+            class="w-full bg-[#faf8f6] border-[1.5px] border-[rgba(26,117,159,0.2)] rounded-xl px-4 py-3"
+            required
+          />
+          @if (errorConfirmar) {
+            <p class="mt-1 text-sm text-red-600" role="alert">{{ errorConfirmar }}</p>
+          }
+        </div>
+
+        <button
+          type="submit"
+          class="btn-secundario font-sans text-sm font-semibold rounded-lg px-5 h-12 flex items-center gap-2 w-fit"
+        >
+          <i class="bi bi-pencil-square"></i> Cambiar
+        </button>
+      </form>
+    </div>
+
+    <!-- ZONA DE PELIGRO -->
+    <div class="bg-[#fff8f8] border border-[#fde8e8] rounded-[20px] p-8 shadow-sm">
+      <h3 class="font-serif text-lg font-bold text-[#b42318] mb-2">Zona de peligro</h3>
+      <p class="font-sans text-[0.78rem] text-gray-500 mb-4">
+        Estas acciones son irreversibles. Por favor, procede con cuidado.
+      </p>
+      @if (errorCuenta) {
+        <p class="mb-4 text-sm text-red-600" role="alert">{{ errorCuenta }}</p>
+      }
+      @if (!pidiendoEliminarCuenta) {
+        <button
+          type="button"
+          (click)="pidiendoEliminarCuenta = true"
+          class="btn-destructivo inline-block font-sans text-[0.8rem] font-semibold rounded-lg px-5 h-12"
+        >
+          Eliminar mi cuenta
+        </button>
+      } @else {
+        <p class="mb-4 font-sans text-sm font-semibold text-[#b42318]" role="alert">
+          ¿Seguro que deseas eliminar tu cuenta? Esta acción es irreversible.
+        </p>
+        <div class="flex gap-3">
+          <button
+            type="button"
+            (click)="eliminarCuenta()"
+            class="btn-peligro-solido font-sans text-sm font-semibold rounded-lg px-5 h-12"
+          >
+            Sí, eliminar mi cuenta
+          </button>
+          <button
+            type="button"
+            (click)="pidiendoEliminarCuenta = false"
+            class="btn-secundario-borde font-sans text-sm font-semibold rounded-lg px-5 h-12"
+          >
+            No, volver
+          </button>
+        </div>
+      }
+    </div>
+  </main>
+</div>

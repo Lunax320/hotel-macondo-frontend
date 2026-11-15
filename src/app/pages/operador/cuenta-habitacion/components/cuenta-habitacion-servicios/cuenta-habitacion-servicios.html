@@ -1,0 +1,62 @@
+<section class="rounded-2xl bg-white p-6 shadow-sm" aria-labelledby="agregar-servicio">
+  <h2
+    id="agregar-servicio"
+    class="mb-4 block text-xs font-bold uppercase tracking-wider text-[var(--azul)]"
+  >
+    Agregar servicio
+  </h2>
+  <form (ngSubmit)="enviar()" class="flex flex-col items-end gap-4 sm:flex-row">
+    <div class="w-full flex-1">
+      <label
+        for="servicio"
+        class="mb-2 block text-[0.68rem] font-bold uppercase tracking-wider text-gray-500"
+      >
+        Servicio
+      </label>
+      <select
+        id="servicio"
+        name="servicio"
+        [(ngModel)]="servicioSeleccionado"
+        required
+        class="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-[var(--texto)] focus:border-[var(--azul)] focus:outline-none"
+      >
+        <option [ngValue]="null" class="bg-white text-[var(--texto)]">Seleccionar...</option>
+
+        @for (servicio of servicios(); track servicio.id) {
+          <option [ngValue]="servicio.id" class="bg-white text-[var(--texto)]">
+            {{ servicio.nombre }} —
+            {{ servicio.precio | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
+          </option>
+        }
+      </select>
+    </div>
+    <div class="w-full sm:w-24">
+      <label
+        for="cantidad"
+        class="mb-2 block text-[0.68rem] font-bold uppercase tracking-wider text-gray-500"
+      >
+        Cant.
+      </label>
+      <input
+        id="cantidad"
+        name="cantidad"
+        type="number"
+        min="1"
+        step="1"
+        required
+        [(ngModel)]="cantidad"
+        class="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-center text-sm text-[var(--texto)] focus:border-[var(--azul)] focus:outline-none"
+      />
+    </div>
+    <button
+      type="submit"
+      id="agregar-servicios-btn"
+      class="btn-secundario w-full rounded-lg px-6 h-12 text-sm font-bold sm:w-auto"
+    >
+      Agregar
+    </button>
+  </form>
+  @if (mensajeError) {
+    <p class="mt-4 text-sm text-[var(--azul-oscuro)]" role="status">{{ mensajeError }}</p>
+  }
+</section>

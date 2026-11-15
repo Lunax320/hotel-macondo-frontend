@@ -1,0 +1,67 @@
+<section
+  class="mb-6 flex flex-col items-stretch justify-between gap-4 lg:flex-row lg:items-center"
+  aria-label="Buscar y filtrar reservas"
+>
+  <label class="relative w-full lg:w-1/2">
+    <span class="sr-only">Buscar reserva</span>
+    <i
+      class="bi bi-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+      aria-hidden="true"
+    ></i>
+    <input
+      #campoBusqueda
+      type="search"
+      placeholder="Buscar código, cliente o habitación..."
+      class="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-11 pr-4 text-sm text-[var(--texto)] shadow-sm focus:border-[var(--azul)] focus:outline-none"
+      [value]="textoBusqueda()"
+      (input)="busquedaCambiada.emit(campoBusqueda.value)"
+    />
+  </label>
+  <div
+    class="flex w-full flex-wrap justify-start gap-2 text-xs font-semibold lg:w-auto lg:justify-end"
+    role="group"
+    aria-label="Filtrar reservas"
+  >
+    <button
+      class="h-8 rounded-full px-5 shadow-sm"
+      [class]="
+        filtro() === 'todas'
+          ? 'btn-secundario'
+          : 'btn-secundario-borde'
+      "
+      type="button"
+      [attr.aria-pressed]="filtro() === 'todas'"
+      (click)="filtroCambiado.emit('todas')"
+    >
+      Todas
+    </button>
+    <button
+      class="h-8 rounded-full px-5 shadow-sm"
+      [class]="
+        filtro() === 'activas'
+          ? 'btn-secundario'
+          : 'btn-secundario-borde'
+      "
+      type="button"
+      [attr.aria-pressed]="filtro() === 'activas'"
+      (click)="filtroCambiado.emit('activas')"
+    >
+      Activas
+    </button>
+    @for (opcion of opcionesEstado; track opcion.valor) {
+      <button
+        class="h-8 rounded-full px-5 shadow-sm"
+        [class]="
+          filtro() === opcion.valor
+            ? 'btn-secundario'
+            : 'btn-secundario-borde'
+        "
+        type="button"
+        [attr.aria-pressed]="filtro() === opcion.valor"
+        (click)="filtroCambiado.emit(opcion.valor)"
+      >
+        {{ opcion.etiqueta }}
+      </button>
+    }
+  </div>
+</section>

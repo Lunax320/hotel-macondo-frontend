@@ -1,0 +1,19 @@
+<div class="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-5 py-4 text-amber-900">
+  <p class="font-bold">{{ titulo() }}</p>
+  <p class="mt-1 text-sm">{{ mensaje() }}</p>
+  <div class="mt-4 flex flex-wrap gap-3">
+    <button
+      class="btn-peligro-solido rounded-lg px-5 py-2 font-bold"
+      type="button"
+      (click)="confirmado.emit()"
+    >
+      {{ textoConfirmar() }}</button
+    ><button
+      class="btn-secundario-borde rounded-lg px-5 py-2 font-bold"
+      type="button"
+      (click)="cancelado.emit()"
+    >
+      {{ textoCancelar() }}
+    </button>
+  </div>
+</div>

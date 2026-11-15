@@ -1,0 +1,101 @@
+<div class="flex min-h-screen flex-col bg-white font-sans text-[var(--texto)] md:flex-row">
+  <app-operador-sidebar></app-operador-sidebar>
+
+  <main class="min-w-0 flex-1 overflow-y-auto p-6 md:p-10">
+    @if (mensajeGuardado) {
+      <app-alerta-mensaje [mensaje]="mensajeGuardado" tipo="error"></app-alerta-mensaje>
+    }
+
+    @if (sinReserva) {
+      <header class="mb-6 border-b border-gray-200 pb-4">
+        <h1 class="font-serif text-3xl font-bold text-[var(--azul-oscuro)] md:text-4xl">Cuenta de habitación</h1>
+        <p class="mt-1 text-sm font-medium text-gray-500">Elige una estadía en curso para cargarle consumos</p>
+      </header>
+      @if (cargandoLista) {
+        <p class="text-sm text-gray-500" role="status">Cargando estadías...</p>
+      } @else if (estadias.length === 0) {
+        <div class="rounded-2xl border border-dashed border-gray-300 p-8 text-center">
+          <i class="bi bi-door-closed text-3xl text-[var(--dorado-oscuro)]" aria-hidden="true"></i>
+          <p class="mt-3 font-serif text-xl font-bold text-[var(--azul-oscuro)]">No hay huéspedes en casa</p>
+          <p class="mt-1 text-sm text-gray-500">Cuando alguien haga check-in, aparecerá aquí para cargarle consumos.</p>
+        </div>
+      } @else {
+        <section aria-labelledby="lista-cuenta-habitacion" class="max-w-3xl">
+          <h2 id="lista-cuenta-habitacion" class="mb-3 font-serif text-xl font-bold text-[var(--azul-oscuro)]">Estadías en curso</h2>
+          <ul class="divide-y divide-gray-100 rounded-2xl border border-gray-100">
+            @for (e of estadias; track e.reserva.id) {
+              <li>
+                <a
+                  [routerLink]="['/operador/cuenta', e.reserva.id]"
+                  class="flex w-full items-center justify-between gap-3 px-4 py-3 transition hover:bg-gray-50"
+                >
+                  <span class="min-w-0">
+                    <span class="block text-sm font-bold text-[var(--azul-oscuro)]">Habitación {{ e.reserva.habitacion?.numero }}</span>
+                    <span class="block truncate text-xs text-gray-500">{{ e.reserva.cliente?.nombre }} {{ e.reserva.cliente?.apellido }}</span>
+                  </span>
+                  @if ((e.saldo ?? 0) > 0) {
+                    <span class="shrink-0 text-sm font-bold text-red-700">{{ e.saldo | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}</span>
+                  } @else {
+                    <span class="shrink-0 text-xs font-bold text-emerald-700">Sin saldo</span>
+                  }
+                </a>
+              </li>
+            }
+          </ul>
+        </section>
+      }
+    } @else {
+
+    <header class="mb-6 flex items-center gap-4 border-b border-gray-200 pb-4">
+      @if (habitacionId > 0) {
+        <div
+          class="flex h-14 w-14 items-center justify-center rounded-full bg-[var(--azul)] font-serif text-2xl font-bold text-white shadow-sm"
+          aria-hidden="true"
+        >
+          {{ habitacionId }}
+        </div>
+      }
+      <div>
+        <h1 class="font-serif text-3xl font-bold text-[var(--azul-oscuro)] md:text-4xl">
+          @if (habitacionId > 0) {
+            Cuenta habitación {{ habitacionId }}
+          } @else {
+            Cuenta de habitación
+          }
+        </h1>
+        <p class="text-sm font-medium text-gray-500">Cuenta de consumos</p>
+      </div>
+    </header>
+
+    @if (reservaDetalle) {
+      <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        <div class="flex flex-col gap-6 lg:col-span-2">
+          <app-cuenta-habitacion-detalles [reserva]="reservaDetalle"></app-cuenta-habitacion-detalles>
+          <app-cuenta-habitacion-servicios
+            (serviciosAgregados)="agregarServicio($event)"
+          ></app-cuenta-habitacion-servicios>
+          <app-cuenta-habitacion-guardados
+            [cuenta]="reservaDetalle?.cuenta"
+            (eliminar)="eliminarGuardado($event)"
+          ></app-cuenta-habitacion-guardados>
+          <app-cuenta-habitacion-tabla
+            [consumos]="consumos"
+            (eliminar)="eliminarConsumo($event)"
+          ></app-cuenta-habitacion-tabla>
+        </div>
+        <app-cuenta-habitacion-resumen
+          [consumos]="consumos"
+          (agregarServicios)="guardarServicios()"
+        ></app-cuenta-habitacion-resumen>
+      </div>
+    }
+
+    <a
+      routerLink="/operador"
+      class="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-[var(--azul)] hover:underline"
+    >
+      <i class="bi bi-arrow-left" aria-hidden="true"></i> Volver al panel
+    </a>
+    }
+  </main>
+</div>

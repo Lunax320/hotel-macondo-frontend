@@ -1,0 +1,45 @@
+<section
+  class="rounded-3xl bg-gradient-to-br from-[var(--azul-oscuro)] to-[var(--azul)] p-6 text-white shadow-[0_16px_35px_rgba(14,42,63,0.25)] md:p-9"
+>
+  <div class="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
+    <p class="text-sm text-white/80">{{ fechaActual() }}</p>
+    <a
+      class="text-sm font-bold text-[var(--dorado)] hover:underline focus-visible:outline-2 focus-visible:outline-[var(--dorado)]"
+      [routerLink]="rutaPerfil()"
+      >Ver perfil <i class="bi bi-arrow-right"></i
+    ></a>
+  </div>
+  <h1
+    id="nombreCliente"
+    class="mt-4 break-words font-serif text-4xl font-bold !text-white md:text-5xl"
+  >
+    Hola, {{ nombre() }} {{ apellido() }}
+  </h1>
+  <div class="mt-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between" role="status">
+    @if (cargando()) {
+      <p class="text-white/80">Buscando tus reservas…</p>
+    } @else if (cantidadActivas() > 0) {
+      <p class="max-w-xl text-lg text-white/90">
+        Tienes {{ cantidadActivas() }}
+        {{ cantidadActivas() === 1 ? 'reserva activa' : 'reservas activas' }}:
+        <strong class="text-white"
+          >{{ tipo() ?? 'Sin habitación asignada' }} · Habitación {{ numeroHabitacion() }}</strong
+        >, {{ rango() }}.
+      </p>
+      <a
+        class="inline-flex h-12 shrink-0 items-center justify-center rounded-lg bg-[var(--dorado)] px-5 font-bold text-[var(--azul-oscuro)] transition hover:brightness-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        [routerLink]="rutaReservas()"
+        >Ver más detalles</a
+      >
+    } @else {
+      <p class="max-w-xl text-lg text-white/90">
+        Aún no tienes una estadía en camino. Macondo te espera con la puerta abierta.
+      </p>
+      <a
+        class="inline-flex h-12 shrink-0 items-center justify-center rounded-lg bg-[var(--dorado)] px-5 font-bold text-[var(--azul-oscuro)] transition hover:brightness-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        [routerLink]="rutaNueva()"
+        >Reservar una estadía</a
+      >
+    }
+  </div>
+</section>

@@ -1,0 +1,8 @@
+<span
+  class="rounded-full px-3 py-1 text-xs font-bold"
+  [class.bg-green-100]="activo()"
+  [class.text-green-700]="activo()"
+  [class.bg-gray-200]="!activo()"
+  [class.text-gray-600]="!activo()"
+  >{{ activo() ? 'Activo' : 'Inactivo' }}</span
+>

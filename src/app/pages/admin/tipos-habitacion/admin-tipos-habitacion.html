@@ -1,0 +1,59 @@
+<div class="flex flex-col bg-white md:flex-row">
+  <app-admin-sidebar seccionActiva="tipos_habitacion"></app-admin-sidebar>
+
+  <section class="min-w-0 flex-1 p-6 md:p-10">
+    <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <header>
+        <h1 class="font-serif text-3xl font-bold text-[var(--azul-oscuro)] md:text-4xl">
+          Tipos de Habitación
+        </h1>
+        <p class="mt-1 text-[var(--texto)]">
+          Catálogo de categorías, capacidades y tarifas base de hospedaje.
+        </p>
+      </header>
+
+      <button
+        class="btn-primario flex shrink-0 items-center justify-center gap-2 rounded-lg h-12 px-5 text-sm font-bold shadow-sm"
+        type="button"
+        (click)="abrirNuevoTipo()"
+      >
+        <i class="bi bi-plus-lg" aria-hidden="true"></i>
+        Nuevo Tipo
+      </button>
+    </div>
+
+    @if (errorTipo) {
+      <div
+        class="mb-4 rounded-lg border border-red-200 bg-red-50 px-5 py-4 text-red-700"
+        role="alert"
+      >
+        {{ errorTipo }}
+      </div>
+    }
+
+    @if (tipoHabitacionPendienteEliminar; as tipoHabitacion) {
+      <app-confirmacion-accion
+        [titulo]="'¿Eliminar ' + tipoHabitacion.nombre + '?'"
+        mensaje="Esta acción no se puede deshacer."
+        textoConfirmar="Confirmar eliminación"
+        textoCancelar="Cancelar"
+        (confirmado)="confirmarEliminacion()"
+        (cancelado)="cancelarEliminacion()"
+      ></app-confirmacion-accion>
+    }
+
+    <app-tipo-habitacion-table
+      [tiposHabitacion]="tiposHabitacion"
+      (edicionSolicitada)="abrirEdicion($event)"
+      (eliminacionSolicitada)="solicitarEliminacion($event)"
+    ></app-tipo-habitacion-table>
+  </section>
+</div>
+
+@if (formularioVisible) {
+  <app-tipo-habitacion-form
+    [tipoHabitacion]="tipoHabitacionSeleccionado"
+    (guardado)="guardarTipoHabitacion($event)"
+    (cancelado)="cerrarFormulario()"
+  ></app-tipo-habitacion-form>
+}

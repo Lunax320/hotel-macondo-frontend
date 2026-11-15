@@ -1,0 +1,26 @@
+@if (toast.aviso; as aviso) {
+  <div class="pointer-events-none fixed inset-x-0 top-24 z-[60] flex justify-center px-4">
+    <div
+      [class]="aviso.tipo === 'exito'
+        ? 'border-emerald-400 bg-emerald-700 text-white'
+        : 'border-red-400 bg-red-600 text-white'"
+      class="pointer-events-auto flex max-w-xl items-center gap-4 rounded-2xl border-2 px-6 py-5 shadow-2xl"
+      [attr.role]="aviso.tipo === 'exito' ? 'status' : 'alert'"
+    >
+      <i
+        [class]="aviso.tipo === 'exito' ? 'bi bi-check-circle-fill' : 'bi bi-exclamation-octagon-fill'"
+        class="text-3xl"
+        aria-hidden="true"
+      ></i>
+      <p class="text-base font-bold">{{ aviso.texto }}</p>
+      <button
+        type="button"
+        class="ml-2 rounded-full p-1 text-white/90 transition hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-white"
+        aria-label="Cerrar aviso"
+        (click)="toast.cerrar()"
+      >
+        <i class="bi bi-x-lg" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+}

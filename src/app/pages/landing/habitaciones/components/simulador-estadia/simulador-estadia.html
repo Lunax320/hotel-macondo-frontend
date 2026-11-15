@@ -1,0 +1,80 @@
+<section
+  class="mx-auto mb-12 max-w-4xl rounded-2xl bg-white p-6 shadow-md md:p-8"
+  aria-labelledby="titulo-simulador"
+>
+  <h2 id="titulo-simulador" class="font-serif text-2xl font-bold text-[var(--azul-oscuro)]">
+    Simula tu estadía
+  </h2>
+  <p class="mt-1 text-sm text-[var(--texto)]">
+    Mueve los controles y mira cuánto cuesta cada tipo de habitación.
+  </p>
+
+  <form class="mt-6 grid gap-6 md:grid-cols-2" [formGroup]="formulario" novalidate>
+    <label class="flex flex-col gap-2">
+      <span class="font-bold text-[var(--azul-oscuro)]">
+        Noches: <strong>{{ formulario.controls.noches.value }}</strong>
+      </span>
+      <input
+        type="range"
+        min="1"
+        max="14"
+        step="1"
+        formControlName="noches"
+        class="accent-[var(--azul)]"
+        aria-describedby="ayuda-noches"
+      />
+      <span id="ayuda-noches" class="text-xs text-gray-500">Entre 1 y 14 noches.</span>
+    </label>
+
+    <label class="flex flex-col gap-2">
+      <span class="font-bold text-[var(--azul-oscuro)]">
+        Personas: <strong>{{ formulario.controls.personas.value }}</strong>
+      </span>
+      <input
+        type="range"
+        min="1"
+        max="6"
+        step="1"
+        formControlName="personas"
+        class="accent-[var(--azul)]"
+        aria-describedby="ayuda-personas"
+      />
+      <span id="ayuda-personas" class="text-xs text-gray-500">Entre 1 y 6 personas.</span>
+    </label>
+  </form>
+
+  <ul class="mt-8 grid gap-4 md:grid-cols-2" aria-live="polite">
+    @for (opcion of opciones; track opcion.tipo.id) {
+      <li class="flex flex-col justify-between rounded-xl border border-[#d8e8ee] p-5 transition">
+        <div>
+          <p class="font-serif text-xl font-bold text-[var(--azul-oscuro)]">
+            {{ opcion.tipo.nombre }}
+          </p>
+          <p class="mt-1 text-sm text-gray-500">
+            {{ opcion.tipo.precioNoche | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
+            por noche · hasta {{ opcion.tipo.capacidadPersonas }} personas
+          </p>
+          <p class="mt-3 text-2xl font-bold text-[var(--azul)]">
+            {{ opcion.total | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
+          </p>
+          <p class="text-xs text-gray-500">
+            Total por {{ formulario.controls.noches.value }}
+            {{ formulario.controls.noches.value === 1 ? 'noche' : 'noches' }}
+          </p>
+        </div>
+
+        <a
+          class="mt-4 inline-flex justify-center rounded-md bg-[#1d82a8] px-5 py-3 font-bold text-white transition hover:bg-[#156b8d]"
+          [routerLink]="rutaReserva(opcion.tipo.id).ruta"
+          [queryParams]="rutaReserva(opcion.tipo.id).query"
+        >
+          Reservar este tipo
+        </a>
+      </li>
+    } @empty {
+      <li class="rounded-xl border border-dashed border-gray-300 p-6 text-center text-gray-500 md:col-span-2">
+        No hay habitaciones para {{ formulario.controls.personas.value }} personas. Prueba con menos.
+      </li>
+    }
+  </ul>
+</section>

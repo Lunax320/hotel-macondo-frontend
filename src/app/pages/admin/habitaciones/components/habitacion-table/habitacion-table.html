@@ -1,0 +1,70 @@
+<div class="overflow-x-auto rounded-2xl bg-white shadow-sm">
+  <table class="w-full min-w-[960px] text-left">
+    <thead class="bg-[var(--crema)] text-sm uppercase tracking-wider text-[var(--azul-oscuro)]">
+      <tr>
+        <th scope="col" class="px-6 py-4">Habitación</th>
+        <th scope="col" class="px-6 py-4">Tipo</th>
+        <th scope="col" class="px-6 py-4">Número</th>
+        <th scope="col" class="px-6 py-4">Piso</th>
+        <th scope="col" class="px-6 py-4">Capacidad</th>
+        <th scope="col" class="px-6 py-4">Precio / noche</th>
+        <th scope="col" class="px-6 py-4">Estado</th>
+        <th scope="col" class="sticky right-0 shadow-[-6px_0_6px_-4px_rgba(0,0,0,0.12)] z-10 bg-[var(--crema)] px-6 py-4 text-right">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (habitacion of habitaciones(); track habitacion.id) {
+        <tr class="border-t border-gray-100">
+          <td class="px-6 py-4">
+            <div class="flex items-center gap-3">
+              <img
+                class="h-14 w-14 rounded-lg bg-[var(--crema)] object-cover"
+                [src]="habitacion.tipoHabitacion.imagen ?? '/images/HabitacionNormal.avif'"
+                [alt]="habitacion.nombre"
+              />
+              <div>
+                <p class="font-medium text-[var(--azul-oscuro)]">{{ habitacion.nombre }}</p>
+                <p class="text-sm text-[var(--texto)]">{{ habitacion.etiqueta }}</p>
+              </div>
+            </div>
+          </td>
+          <td class="px-6 py-4">
+            <span
+              class="rounded-full bg-[var(--crema)] px-3 py-1 text-xs font-bold text-[var(--azul)]"
+            >
+              {{ habitacion.tipoHabitacion.nombre }}
+            </span>
+          </td>
+          <td class="px-6 py-4">{{ habitacion.numero }}</td>
+          <td class="px-6 py-4">{{ habitacion.piso }}</td>
+          <td class="px-6 py-4">{{ habitacion.capacidad }} pers.</td>
+          <td class="px-6 py-4 font-medium">{{ habitacion.precio | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}</td>
+          <td class="px-6 py-4">
+            <span
+              class="rounded-full px-3 py-1 text-xs font-bold"
+              [class.bg-green-100]="habitacion.estado === 'DISPONIBLE'"
+              [class.text-green-700]="habitacion.estado === 'DISPONIBLE'"
+              [class.bg-gray-200]="habitacion.estado !== 'DISPONIBLE'"
+              [class.text-gray-600]="habitacion.estado !== 'DISPONIBLE'"
+            >
+              {{ habitacion.estado === 'DISPONIBLE' ? 'Disponible' : 'No disponible' }}
+            </span>
+          </td>
+          <td class="sticky right-0 shadow-[-6px_0_6px_-4px_rgba(0,0,0,0.12)] z-[1] min-w-[15rem] bg-white px-6 py-4 text-right">
+            <app-habitacion-acciones
+              [habitacion]="habitacion"
+              (cambioEstadoSolicitado)="cambiarEstado($event)"
+              (eliminacionSolicitada)="eliminar($event)"
+            ></app-habitacion-acciones>
+          </td>
+        </tr>
+      } @empty {
+        @if (!cargaFallida()) {
+          <tr>
+            <td class="px-6 py-10 text-center" colspan="8">Aún no hay habitaciones registradas.</td>
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+</div>

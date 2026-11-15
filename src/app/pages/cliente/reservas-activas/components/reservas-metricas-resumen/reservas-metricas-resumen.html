@@ -1,0 +1,20 @@
+<div
+  class="mt-8 bg-gradient-to-br from-[var(--azul)]/5 to-[#87ceeb]/10 border border-[var(--azul)]/10 rounded-xl p-4 md:px-6 md:py-4 flex gap-8 flex-wrap"
+>
+  <div>
+    <p class="font-sans text-[0.7rem] text-gray-500 mb-1 tracking-wider">Total reservas</p>
+    <p class="font-serif text-2xl font-bold text-[var(--azul)] m-0">{{ totalReservas() }}</p>
+  </div>
+  <div>
+    <p class="font-sans text-[0.7rem] text-gray-500 mb-1 tracking-wider">Activas</p>
+    <p class="font-serif text-2xl font-bold text-[var(--azul)] m-0">{{ totalActivas() }}</p>
+  </div>
+  <div>
+    <p class="font-sans text-[0.7rem] text-gray-500 mb-1 tracking-wider">Confirmadas</p>
+    <p class="font-serif text-2xl font-bold text-[var(--azul)] m-0">{{ totalConfirmadas() }}</p>
+  </div>
+  <div>
+    <p class="font-sans text-[0.7rem] text-gray-500 mb-1 tracking-wider">Pendientes</p>
+    <p class="font-serif text-2xl font-bold text-[var(--azul)] m-0">{{ totalPendientes() }}</p>
+  </div>
+</div>

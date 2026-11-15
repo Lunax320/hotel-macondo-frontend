@@ -1,0 +1,70 @@
+import { CurrencyPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { switchMap } from 'rxjs';
+import { Servicio } from '../../../models/servicio.model';
+import { ServicioService } from '../../../services/servicio.service';
+import { ToastService } from '../../../services/toast.service';
+import { ResumenServicio } from './components/resumen-servicio/resumen-servicio';
+import { ServicioRelacionadoCard } from './components/servicio-relacionado-card/servicio-relacionado-card';
+
+@Component({
+  imports: [CurrencyPipe, RouterLink, ResumenServicio, ServicioRelacionadoCard],
+  selector: 'app-detalle-servicio',
+  styleUrl: './detalle-servicio.scss',
+  templateUrl: './detalle-servicio.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+export class DetalleServicio implements OnInit {
+  private route = inject(ActivatedRoute);
+  private servicioService = inject(ServicioService);
+  private toast = inject(ToastService);
+
+  servicio?: Servicio;
+  serviciosRelacionados: Servicio[] = [];
+
+  servicioAgregado = false;
+  serviciosAgregados: number[] = [];
+
+  // Carga los datos del servicio indicado en la ruta y sus elementos relacionados.
+  ngOnInit(): void {
+    this.route.paramMap
+      .pipe(
+        switchMap((params) => {
+          const id = Number(params.get('id'));
+          return this.servicioService.obtenerPorId(id);
+        })
+      )
+      .subscribe({
+        next: (servicio) => {
+          this.servicio = servicio;
+          if (servicio && servicio.id) {
+            this.servicioAgregado = this.serviciosAgregados.includes(servicio.id);
+            this.cargarRelacionados(servicio.id);
+          }
+        },
+        error: () => this.toast.mostrar('No fue posible cargar este servicio. Intenta más tarde.', 'error'),
+      });
+  }
+
+  // Cambia la selección del servicio y notifica el nuevo estado al resumen.
+  alternarServicio(id: number): void {
+    if (this.serviciosAgregados.includes(id)) {
+      this.serviciosAgregados = this.serviciosAgregados.filter((item) => item !== id);
+    } else {
+      this.serviciosAgregados = [...this.serviciosAgregados, id];
+    }
+
+    if (this.servicio && this.servicio.id === id) {
+      this.servicioAgregado = this.serviciosAgregados.includes(id);
+    }
+  }
+
+  // Obtiene los servicios relacionados con el servicio actual.
+  private cargarRelacionados(id: number): void {
+    this.servicioService.obtenerRelacionados(id).subscribe({
+      next: (relacionados) => (this.serviciosRelacionados = relacionados),
+      error: () => this.toast.mostrar('No fue posible cargar los servicios relacionados.', 'error'),
+    });
+  }
+}

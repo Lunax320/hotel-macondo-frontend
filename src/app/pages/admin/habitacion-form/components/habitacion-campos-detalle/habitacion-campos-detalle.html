@@ -1,0 +1,68 @@
+<div class="grid grid-cols-1 gap-6 md:grid-cols-2" [formGroup]="formulario()">
+  <div>
+    <label class="mb-2 block text-sm font-bold text-[var(--azul-oscuro)]" for="piso">Piso</label>
+    <input
+      class="w-full rounded-lg border border-gray-200 px-4 py-3 focus:border-[var(--azul)] focus:outline-none"
+      id="piso"
+      type="number"
+      min="1"
+      formControlName="piso"
+    />
+    @if (formulario().get('piso')?.touched && formulario().get('piso')?.invalid) {
+      <small class="mt-1 block text-red-600"
+        >El piso es obligatorio y debe ser mayor o igual a 1.</small
+      >
+    }
+  </div>
+
+  <div>
+    <label class="mb-2 block text-sm font-bold text-[var(--azul-oscuro)]" for="capacidad">
+      Capacidad (personas)
+    </label>
+    <input
+      class="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-3"
+      id="capacidad"
+      type="number"
+      formControlName="capacidad"
+      readonly
+    />
+    @if (formulario().get('capacidad')?.touched && formulario().get('capacidad')?.invalid) {
+      <small class="mt-1 block text-red-600">La capacidad es obligatoria.</small>
+    }
+  </div>
+
+  <div>
+    <label class="mb-2 block text-sm font-bold text-[var(--azul-oscuro)]" for="precio">
+      Precio / noche (COP)
+    </label>
+    <input
+      class="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-3"
+      id="precio"
+      type="number"
+      formControlName="precio"
+      readonly
+    />
+    @if (formulario().get('precio')?.touched && formulario().get('precio')?.invalid) {
+      <small class="mt-1 block text-red-600"
+        >El precio es obligatorio y debe ser mayor o igual a cero.</small
+      >
+    }
+  </div>
+
+  <div>
+    <label class="mb-2 block text-sm font-bold text-[var(--azul-oscuro)]" for="estado"
+      >Estado</label
+    >
+    <select
+      class="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 focus:border-[var(--azul)] focus:outline-none"
+      id="estado"
+      formControlName="estado"
+    >
+      <option value="DISPONIBLE">Disponible</option>
+      <option value="NO_DISPONIBLE">No disponible</option>
+    </select>
+    @if (formulario().get('estado')?.touched && formulario().get('estado')?.invalid) {
+      <small class="mt-1 block text-red-600">El estado es obligatorio.</small>
+    }
+  </div>
+</div>

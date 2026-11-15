@@ -1,0 +1,85 @@
+<div
+  class="tarjeta-reserva-item bg-white rounded-[16px] shadow-[0_4px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.13)] flex overflow-hidden transition-shadow duration-300"
+>
+  <div class="w-2 flex-shrink-0 bg-[var(--azul)]"></div>
+
+  <div class="flex-1 p-6 flex items-center flex-wrap gap-6">
+    <div class="flex-[1_1_200px]">
+      <div class="flex items-center gap-2 mb-1">
+        <i class="bi bi-door-closed text-gray-400 text-sm"></i>
+        <span class="numero-reserva font-sans text-[0.72rem] text-gray-400 tracking-wider">
+          {{ reserva().numeroReserva }}
+        </span>
+      </div>
+      <h3 class="font-serif text-2xl font-bold text-[var(--azul)] mb-1">
+        {{ reserva().habitacion?.tipoHabitacion?.nombre ?? 'Tipo no asignado' }}
+      </h3>
+      <p class="habitacion-asignada-texto font-sans text-sm text-gray-500 mb-2">
+        {{ reserva().habitacion ? 'Habitación ' + reserva().habitacion?.numero + ' · ' : '' }}
+        {{ reserva().cantidadPersonas }} {{ reserva().cantidadPersonas === 1 ? 'persona' : 'personas' }}
+      </p>
+      <div class="flex items-center gap-1.5">
+        <i class="bi bi-calendar3 text-gray-400 text-xs"></i>
+        <span class="font-sans text-[0.78rem] text-gray-600">
+          {{ reserva().fechaInicio }} → {{ reserva().fechaFin }}
+        </span>
+      </div>
+    </div>
+
+    <div class="flex flex-col items-center gap-2.5 flex-none">
+      <span
+        class="font-sans text-[0.72rem] font-bold rounded-lg px-3 py-1 tracking-wider border-[1.5px] text-[var(--azul)] bg-[var(--azul)]/10 border-[var(--azul)]"
+      >
+        {{ reserva().estado }}
+      </span>
+      <span class="font-serif text-lg font-bold text-[#0e2a3f]">
+        {{ reserva().total | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
+      </span>
+    </div>
+
+    @if (puedeGestionar) {
+      <div class="flex flex-col gap-2.5 flex-none items-stretch">
+        @if (!ocupado() && puedeGestionar) {
+          <a
+            [routerLink]="['/cliente', clienteId(), 'reservas', reserva().id, 'editar']"
+            class="btn-secundario font-sans text-sm font-semibold text-center rounded-lg px-5 h-8 inline-flex items-center py-0"
+          >
+            Modificar
+          </a>
+        }
+        @if (!pidiendoConfirmacion) {
+          <button
+            type="button"
+            [disabled]="ocupado()"
+            (click)="onCancelar()"
+            class="btn-destructivo font-sans text-sm font-semibold rounded-lg px-5 h-8 inline-flex items-center py-0"
+          >
+            {{ cancelando() ? 'Cancelando…' : 'Cancelar' }}
+          </button>
+        } @else {
+          <p class="font-sans text-sm font-semibold text-[#b42318]" role="alert">
+            ¿Seguro que deseas cancelar esta reserva?
+          </p>
+          <button
+            type="button"
+            (click)="confirmarCancelacion()"
+            class="btn-peligro-solido font-sans text-sm font-semibold rounded-lg px-5 h-8 inline-flex items-center py-0"
+          >
+            Sí, cancelar
+          </button>
+          <button
+            type="button"
+            (click)="pidiendoConfirmacion = false"
+            class="btn-secundario-borde font-sans text-sm font-semibold rounded-lg px-5 h-8 inline-flex items-center py-0"
+          >
+            No, volver
+          </button>
+        }
+      </div>
+    } @else {
+      <p class="font-sans text-sm text-gray-500 flex-none max-w-[14rem] text-right">
+        Reserva en curso: contacta a recepción para cambios.
+      </p>
+    }
+  </div>
+</div>

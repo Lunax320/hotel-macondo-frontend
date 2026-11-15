@@ -1,0 +1,62 @@
+<div class="flex flex-col bg-[var(--crema-claro)] md:flex-row">
+  <app-admin-sidebar seccionActiva="habitaciones"></app-admin-sidebar>
+
+  <section class="min-w-0 flex-1 p-6 md:p-10">
+    <header class="mb-8">
+      <p class="text-xs font-bold uppercase tracking-[2px] text-[var(--azul)]">Inventario</p>
+      <h1 class="mt-2 font-serif text-3xl font-bold text-[var(--azul-oscuro)] md:text-4xl">
+        @if (esEdicion) {
+          Editar habitación
+        } @else {
+          Nueva habitación
+        }
+      </h1>
+      <p class="mt-1 text-[var(--texto)]">
+        La capacidad y el precio se asignan automáticamente desde el tipo de habitación.
+      </p>
+    </header>
+
+    @if (errorHabitacion) {
+      <div
+        class="mb-5 rounded-lg border border-red-200 bg-red-50 px-5 py-4 text-red-700"
+        role="alert"
+      >
+        {{ errorHabitacion }}
+      </div>
+    }
+
+    @if (habitacionEncontrada) {
+      <form
+        class="max-w-4xl rounded-2xl bg-white p-6 shadow-sm md:p-8"
+        [formGroup]="habitacionForm"
+        (ngSubmit)="guardar()"
+      >
+        <app-habitacion-campos-basicos
+          [formulario]="habitacionForm"
+          [tiposHabitacion]="tiposHabitacion"
+          (tipoCambiado)="actualizarDatosTipo()"
+        ></app-habitacion-campos-basicos>
+        <app-habitacion-campos-detalle
+          [formulario]="habitacionForm"
+        ></app-habitacion-campos-detalle>
+        @if (faltantes().length > 0) {
+          <p class="mt-6 text-sm font-semibold text-[#b42318]" role="status">
+            Falta: {{ faltantes().join(', ') }}.
+          </p>
+        }
+        <app-botones-formulario-habitacion
+          [esEdicion]="esEdicion"
+          [deshabilitado]="habitacionForm.invalid"
+          rutaCancelar="/admin/habitaciones"
+        ></app-botones-formulario-habitacion>
+      </form>
+    } @else {
+      <a
+        class="btn-secundario inline-flex rounded-lg px-6 py-3 font-bold"
+        routerLink="/admin/habitaciones"
+      >
+        Volver al inventario
+      </a>
+    }
+  </section>
+</div>

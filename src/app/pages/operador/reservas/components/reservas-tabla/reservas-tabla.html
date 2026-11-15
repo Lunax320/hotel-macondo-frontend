@@ -1,0 +1,92 @@
+<section aria-label="Listado de reservas">
+  <div class="overflow-x-auto rounded-2xl bg-white shadow-sm">
+    <table class="w-full min-w-[960px] text-left">
+      <thead class="bg-[var(--crema)] text-sm uppercase tracking-wider text-[var(--azul-oscuro)]">
+        <tr>
+          <th class="px-6 py-4">Código</th>
+          <th class="px-6 py-4">Cliente</th>
+          <th class="px-6 py-4">Habitación / Tipo</th>
+          <th class="px-6 py-4">Entrada</th>
+          <th class="px-6 py-4">Salida</th>
+          <th class="px-6 py-4">Estado</th>
+          <th class="px-6 py-4 text-right">Acciones</th>
+        </tr>
+      </thead>
+      <tbody class="text-sm font-medium text-[var(--texto)]">
+        @for (reserva of reservas(); track reserva.id) {
+          <tr class="tabla-reservas border-t border-gray-100">
+            <td class="codigo-reserva px-6 py-4 font-bold text-[var(--azul)]">
+              {{ reserva.numeroReserva }}
+            </td>
+            <td class="px-6 py-4 font-bold text-[var(--azul-oscuro)]">
+              {{ reserva.cliente?.nombre }} {{ reserva.cliente?.apellido }}
+            </td>
+            <td class="px-6 py-4 text-gray-600">
+              {{ reserva.habitacion?.numero }} — {{ reserva.habitacion?.tipoHabitacion?.nombre }}
+            </td>
+            <td class="px-6 py-4 text-gray-600">{{ formatearFecha(reserva.fechaInicio) }}</td>
+            <td class="px-6 py-4 text-gray-600">{{ formatearFecha(reserva.fechaFin) }}</td>
+            <td class="px-6 py-4">
+              <span
+                class="estado-reserva inline-block rounded-full border px-4 py-1 text-xs font-semibold"
+                [class.border-sky-200]="reserva.estado === 'ACTIVA'"
+                [class.bg-sky-50]="reserva.estado === 'ACTIVA'"
+                [class.text-sky-600]="reserva.estado === 'ACTIVA'"
+                [class.border-yellow-200]="reserva.estado === 'CONFIRMADA'"
+                [class.bg-yellow-50]="reserva.estado === 'CONFIRMADA'"
+                [class.text-yellow-700]="reserva.estado === 'CONFIRMADA'"
+                [class.border-emerald-200]="reserva.estado === 'FINALIZADA'"
+                [class.bg-emerald-50]="reserva.estado === 'FINALIZADA'"
+                [class.text-emerald-700]="reserva.estado === 'FINALIZADA'"
+                [class.border-red-200]="reserva.estado === 'CANCELADA'"
+                [class.bg-red-50]="reserva.estado === 'CANCELADA'"
+                [class.text-red-600]="reserva.estado === 'CANCELADA'"
+              >
+                {{ reserva.estado }}
+              </span>
+            </td>
+            <td class="whitespace-nowrap px-6 py-4 text-right">
+              @if (reserva.estado.toUpperCase() === 'CONFIRMADA') {
+                <a
+                  class="btn-secundario mr-2 inline-block rounded-lg h-8 inline-flex items-center px-3 text-sm font-medium"
+                  [routerLink]="['/operador/reservas', reserva.numeroReserva]"
+                >
+                  Ver detalle
+                </a>
+                <button
+                  class="activar-reserva btn-primario rounded-lg h-8 inline-flex items-center px-3 text-sm font-medium"
+                  type="button"
+                  [disabled]="cambiandoNumero() !== null"
+                  (click)="activar(reserva)"
+                >
+                  {{ cambiandoNumero() === reserva.numeroReserva ? 'Actualizando...' : 'Activar' }}
+                </button>
+                <button
+                  class="btn-destructivo ml-2 rounded-lg h-8 inline-flex items-center px-3 text-sm font-medium"
+                  type="button"
+                  [disabled]="cambiandoNumero() !== null"
+                  (click)="cancelar(reserva)"
+                >
+                  Cancelar
+                </button>
+              } @else {
+                <a
+                  class="btn-secundario inline-block rounded-lg h-8 inline-flex items-center px-3 text-sm font-medium"
+                  [routerLink]="['/operador/reservas', reserva.numeroReserva]"
+                >
+                  Ver detalle
+                </a>
+              }
+            </td>
+          </tr>
+        } @empty {
+          <tr class="border-t border-gray-100">
+            <td class="px-6 py-10 text-center text-gray-500" colspan="7">
+              No hay reservas que coincidan con la búsqueda y el filtro seleccionados.
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

@@ -1,0 +1,50 @@
+<div class="flex flex-col bg-white text-[var(--texto)] md:flex-row">
+  <app-admin-sidebar seccionActiva="operadores"></app-admin-sidebar>
+
+  <main class="flex-1 p-6 md:p-10">
+    <header class="mb-8">
+      <h1 class="font-serif text-3xl font-bold text-[var(--azul-oscuro)] md:text-4xl">
+        Operadores
+      </h1>
+      <p class="mt-1 text-[var(--texto)]">
+        Personal habilitado para gestionar reservas, cuentas y checkout.
+      </p>
+    </header>
+
+    <app-operador-formulario
+      [formulario]="operadorForm"
+      (agregar)="agregar()"
+    ></app-operador-formulario>
+
+    @if (errorOperador) {
+      <div
+        class="mb-4 rounded-lg border border-red-200 bg-red-50 px-5 py-4 text-red-700"
+        role="alert"
+      >
+        {{ errorOperador }}
+      </div>
+    }
+
+    @if (operadorPendiente; as operador) {
+      <app-confirmacion-accion
+        [titulo]="(operador.activo ? '¿Desactivar a ' : '¿Activar a ') + operador.nombre + '?'"
+        [mensaje]="
+          operador.activo
+            ? 'Dejará de poder operar reservas, cuentas y checkout.'
+            : 'Volverá a poder operar reservas, cuentas y checkout.'
+        "
+        [textoConfirmar]="operador.activo ? 'Confirmar desactivación' : 'Confirmar activación'"
+        textoCancelar="Cancelar"
+        (confirmado)="confirmarEstado()"
+        (cancelado)="cancelarEstado()"
+      ></app-confirmacion-accion>
+    }
+
+    <app-operador-tabla
+      [operadores]="operadores"
+      [cargaFallida]="!!errorOperador"
+      (cambiarEstado)="cambiarEstado($event)"
+      (eliminar)="eliminar($event)"
+    ></app-operador-tabla>
+  </main>
+</div>

@@ -1,0 +1,69 @@
+@if (pendienteEliminar !== null) {
+  <!-- Confirmación fuera de la tabla: visible sin desplazar la página -->
+  <div class="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-amber-50 px-6 py-4">
+    <p class="text-sm font-semibold text-red-700" role="alert">
+      ¿Eliminar a {{ nombrePendiente() }}? Esta acción no se puede deshacer.
+    </p>
+    <div class="flex gap-2">
+      <button
+        class="btn-peligro-solido rounded-lg h-8 inline-flex items-center px-3 text-sm font-medium"
+        type="button"
+        (click)="onEliminar(pendienteEliminar)"
+      >
+        Sí, eliminar
+      </button>
+      <button
+        class="btn-secundario-borde rounded-lg h-8 inline-flex items-center px-3 text-sm font-medium"
+        type="button"
+        (click)="pendienteEliminar = null"
+      >
+        Cancelar
+      </button>
+    </div>
+  </div>
+}
+<div class="overflow-x-auto rounded-2xl bg-white shadow-sm">
+  <table class="w-full min-w-[520px] text-left">
+    <thead class="bg-[var(--crema)] text-sm uppercase tracking-wider text-[var(--azul-oscuro)]">
+      <tr>
+        <th scope="col" class="px-6 py-4">#</th>
+        <th scope="col" class="px-6 py-4">Nombre</th>
+        <th scope="col" class="px-6 py-4">Estado</th>
+        <th scope="col" class="sticky right-0 shadow-[-6px_0_6px_-4px_rgba(0,0,0,0.12)] z-10 bg-[var(--crema)] px-6 py-4 text-right">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (operador of operadores(); track operador.id) {
+        <tr class="border-t border-gray-100">
+          <td class="px-6 py-4">{{ operador.id }}</td>
+          <td class="px-6 py-4 font-medium text-[var(--azul-oscuro)]">{{ operador.nombre }}</td>
+          <td class="px-6 py-4">
+            <app-estado-badge [activo]="operador.activo"></app-estado-badge>
+          </td>
+          <td class="sticky right-0 shadow-[-6px_0_6px_-4px_rgba(0,0,0,0.12)] z-[1] whitespace-nowrap bg-white px-6 py-4 text-right">
+            <button
+              class="btn-secundario rounded-lg h-8 inline-flex items-center px-3 text-sm font-medium"
+              type="button"
+              (click)="onCambiarEstado(operador.id)"
+            >
+              {{ operador.activo ? 'Desactivar' : 'Activar' }}
+            </button>
+            <button
+              class="btn-destructivo ml-2 rounded-lg h-8 inline-flex items-center px-3 text-sm font-medium"
+              type="button"
+              (click)="pendienteEliminar = operador.id ?? null"
+              [attr.aria-label]="'Eliminar operador ' + operador.nombre"
+            >
+              Eliminar
+            </button>
+          </td>
+        </tr>
+      }
+      @if (operadores().length === 0 && !cargaFallida()) {
+        <tr>
+          <td class="px-6 py-10 text-center" colspan="4">Aún no hay operadores registrados.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

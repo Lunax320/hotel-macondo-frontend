@@ -1,0 +1,18 @@
+<div
+  class="bg-white rounded-[20px] p-8 shadow-[0_8px_32px_rgba(0,0,0,0.05)] mb-6 flex flex-wrap items-center gap-6"
+>
+  <div
+    class="w-20 h-20 rounded-full bg-gradient-to-br from-[var(--azul)] to-[#87ceeb] border-[3px] border-[var(--dorado)] shadow-lg flex items-center justify-center flex-shrink-0"
+  >
+    <span class="font-serif text-2xl font-bold text-white">{{ iniciales() }}</span>
+  </div>
+
+  <div class="flex-1 min-w-[200px]">
+    <h2 class="font-serif text-2xl font-bold text-[#0e2a3f] mb-1">
+      {{ nombreCompleto() }}
+    </h2>
+    <p class="font-sans text-sm text-gray-500 mb-2">
+      {{ correo() }}
+    </p>
+  </div>
+</div>
