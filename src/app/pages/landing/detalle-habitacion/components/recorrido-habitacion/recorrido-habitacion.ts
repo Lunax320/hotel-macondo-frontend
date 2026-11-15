@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TipoHabitacion } from '../../../../../models/tipo-habitacion.model';
 
 // Imagen panorámica de cada tipo de habitación (carpeta public/images).
@@ -10,9 +9,8 @@ const PANORAMICAS: Record<string, string> = {
   Suite: '/images/habitacion-luxury-panoramica.jpg',
 };
 
-// Recorrido de la habitación: el visitante mueve un deslizador y la panorámica se desplaza.
+// Recorrido de la habitación: el visitante arrastra sobre la imagen (o usa las flechas del teclado).
 @Component({
-  imports: [ReactiveFormsModule],
   selector: 'app-recorrido-habitacion',
   templateUrl: './recorrido-habitacion.html',
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -21,15 +19,47 @@ export class RecorridoHabitacion {
   tipo = input.required<TipoHabitacion>();
 
   // Posición del recorrido, de 0 (inicio) a 100 (final).
-  posicion = new FormControl(0, { nonNullable: true });
+  posicion = 0;
+  private arrastrando = false;
+  private xInicial = 0;
+  private posicionInicial = 0;
 
   // Imagen del tipo; null si ese tipo no tiene panorámica (entonces no se muestra la sección).
   get panoramica(): string | null {
     return PANORAMICAS[this.tipo().nombre] ?? null;
   }
 
-  // La imagen mide el doble del contenedor; moverla hasta la mitad de su ancho recorre todo.
+  // La imagen mide el doble del contenedor; desplazarla hasta la mitad de su ancho recorre todo.
   get desplazamiento(): string {
-    return `translateX(-${this.posicion.value / 2}%)`;
+    return `translateX(-${this.posicion / 2}%)`;
+  }
+
+  // Empieza a arrastrar: guarda dónde está el dedo o el mouse.
+  iniciarArrastre(evento: PointerEvent): void {
+    this.arrastrando = true;
+    this.xInicial = evento.clientX;
+    this.posicionInicial = this.posicion;
+  }
+
+  // Mientras se arrastra, la posición sigue el movimiento (un ancho completo = recorrido completo).
+  arrastrar(evento: PointerEvent): void {
+    if (!this.arrastrando) return;
+    const ancho = (evento.currentTarget as HTMLElement).clientWidth;
+    const desplazado = ((this.xInicial - evento.clientX) / ancho) * 100;
+    this.fijarPosicion(this.posicionInicial + desplazado);
+  }
+
+  terminarArrastre(): void {
+    this.arrastrando = false;
+  }
+
+  // Con teclado: las flechas izquierda y derecha mueven el recorrido.
+  mover(paso: number): void {
+    this.fijarPosicion(this.posicion + paso);
+  }
+
+  // Mantiene la posición entre 0 y 100.
+  private fijarPosicion(valor: number): void {
+    this.posicion = Math.min(100, Math.max(0, valor));
   }
 }
