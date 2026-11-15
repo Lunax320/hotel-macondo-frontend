@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal 
 import { RouterLink } from '@angular/router';
 import { Servicio } from '../../../../../models/servicio.model';
 import { ServicioService } from '../../../../../services/servicio.service';
+import { ToastService } from '../../../../../services/toast.service';
 
 // Tiempo que cada servicio permanece visible antes de pasar al siguiente.
 const INTERVALO_MS = 6000;
@@ -15,6 +16,7 @@ const INTERVALO_MS = 6000;
 })
 export class CarruselServicios implements OnInit {
   private servicioService = inject(ServicioService);
+  private toast = inject(ToastService);
 
   servicios: Servicio[] = [];
   slideActual: number = 0;
@@ -35,7 +37,7 @@ export class CarruselServicios implements OnInit {
   ngOnInit(): void {
     this.servicioService.obtenerCatalogoActivo().subscribe({
       next: (servicios) => (this.servicios = servicios),
-      error: (err) => console.error('Error al cargar carrusel de servicios:', err),
+      error: () => this.toast.mostrar('No fue posible cargar los servicios destacados.', 'error'),
     });
   }
 

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/cor
 import { TipoHabitacionService } from '../../../services/tipo-habitacion.service';
 import { TestimonioService } from '../../../services/testimonio.service';
 import { ComentarioService } from '../../../services/comentario.service';
+import { ToastService } from '../../../services/toast.service';
 import { TipoHabitacion } from '../../../models/tipo-habitacion.model';
 import { Testimonio } from '../../../models/testimonio.model';
 import { CarruselServicios } from './components/carrusel-servicios/carrusel-servicios';
@@ -29,6 +30,7 @@ export class Landing implements OnInit {
   private tipoService = inject(TipoHabitacionService);
   private testimonioService = inject(TestimonioService);
   private comentarioService = inject(ComentarioService);
+  private toast = inject(ToastService);
 
   tiposHabitacion: TipoHabitacion[] = [];
   testimonios: Testimonio[] = [];
@@ -37,7 +39,7 @@ export class Landing implements OnInit {
   ngOnInit(): void {
     this.tipoService.obtenerTodos().subscribe({
       next: (tipos) => (this.tiposHabitacion = tipos),
-      error: (err) => console.error('Error al cargar tipos de habitacion:', err),
+      error: () => this.toast.mostrar('No fue posible cargar los tipos de habitación.', 'error'),
     });
 
     // Comentarios publicados por el administrador; si no hay o falla, se usan los testimonios del backend.
@@ -62,7 +64,7 @@ export class Landing implements OnInit {
   private cargarTestimoniosBackend(): void {
     this.testimonioService.obtenerTodos().subscribe({
       next: (testimonios) => (this.testimonios = testimonios),
-      error: (err) => console.error('Error al cargar testimonios:', err),
+      error: () => this.toast.mostrar('No fue posible cargar los testimonios.', 'error'),
     });
   }
 }

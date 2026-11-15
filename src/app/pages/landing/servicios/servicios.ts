@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/cor
 import { RouterLink } from '@angular/router';
 import { Servicio } from '../../../models/servicio.model';
 import { ServicioService } from '../../../services/servicio.service';
+import { ToastService } from '../../../services/toast.service';
 import { ServicioCard } from './components/servicio-card/servicio-card';
 
 @Component({
@@ -13,6 +14,7 @@ import { ServicioCard } from './components/servicio-card/servicio-card';
 })
 export class Servicios implements OnInit {
   private servicioService = inject(ServicioService);
+  private toast = inject(ToastService);
 
   servicios: Servicio[] = [];
   categorias: string[] = [];
@@ -26,7 +28,7 @@ export class Servicios implements OnInit {
         this.servicios = datos;
         this.categorias = [...new Set(datos.map((s) => s.categoria))];
       },
-      error: (err) => console.error('Error al cargar servicios:', err),
+      error: () => this.toast.mostrar('No fue posible cargar los servicios. Intenta más tarde.', 'error'),
     });
   }
 
