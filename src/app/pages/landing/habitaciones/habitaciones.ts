@@ -4,9 +4,10 @@ import { TipoHabitacion } from '../../../models/tipo-habitacion.model';
 import { TipoHabitacionService } from '../../../services/tipo-habitacion.service';
 import { ToastService } from '../../../services/toast.service';
 import { HabitacionCard } from './components/habitacion-card/habitacion-card';
+import { SimuladorEstadia } from './components/simulador-estadia/simulador-estadia';
 
 @Component({
-  imports: [RouterLink, HabitacionCard],
+  imports: [RouterLink, HabitacionCard, SimuladorEstadia],
   selector: 'app-habitaciones',
   styleUrl: './habitaciones.scss',
   templateUrl: './habitaciones.html',
