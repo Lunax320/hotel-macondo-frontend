@@ -6,7 +6,7 @@
         <th scope="col" class="px-4 py-3">Servicio</th>
         <th scope="col" class="px-4 py-3">Categoría</th>
         <th scope="col" class="px-4 py-3">Precio</th>
-        <th scope="col" class="px-4 py-3">Estado</th>
+        <th scope="col" class="whitespace-nowrap px-4 py-3">Estado</th>
         <th scope="col" class="sticky right-0 shadow-[-6px_0_6px_-4px_rgba(0,0,0,0.12)] z-10 bg-[var(--crema)] px-4 py-3 text-right">Acciones</th>
       </tr>
     </thead>
@@ -47,6 +47,7 @@
               class="btn-secundario ml-2 rounded-lg h-8 inline-flex items-center px-3 text-sm font-medium"
               type="button"
               (click)="cambiarEstado(servicio)"
+              [attr.aria-label]="(servicio.activo ? 'Desactivar' : 'Activar') + ' servicio ' + servicio.nombre"
             >
               {{ servicio.activo ? 'Desactivar' : 'Activar' }}
             </button>

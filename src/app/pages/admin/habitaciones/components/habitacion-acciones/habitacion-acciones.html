@@ -19,6 +19,7 @@
   class="btn-secundario-borde ml-2 inline-block rounded-lg h-8 inline-flex items-center px-3 text-sm font-medium"
   type="button"
   (click)="cambioEstadoSolicitado.emit(habitacion())"
+  [attr.aria-label]="(habitacion().estado === 'DISPONIBLE' ? 'Deshabilitar' : 'Habilitar') + ' habitación ' + habitacion().numero"
 >
   {{ habitacion().estado === 'DISPONIBLE' ? 'Deshabilitar' : 'Habilitar' }}
 </button>
