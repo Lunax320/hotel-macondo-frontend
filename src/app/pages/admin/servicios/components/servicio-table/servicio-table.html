@@ -41,6 +41,7 @@
             <a
               class="btn-secundario inline-block rounded-lg h-8 inline-flex items-center px-3 text-sm font-medium"
               [routerLink]="['/admin/servicios/editar', servicio.id]"
+              [attr.aria-label]="'Editar servicio ' + servicio.nombre"
               >Editar</a
             ><button
               class="btn-secundario ml-2 rounded-lg h-8 inline-flex items-center px-3 text-sm font-medium"

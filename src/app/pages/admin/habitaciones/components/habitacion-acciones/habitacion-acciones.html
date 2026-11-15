@@ -3,6 +3,7 @@
     class="btn-secundario inline-block rounded-lg h-8 inline-flex items-center px-3 text-sm font-medium"
     [routerLink]="['/habitaciones', habitacion().tipoHabitacion.id]"
     target="_blank"
+    [attr.aria-label]="'Ver tipo de la habitación ' + habitacion().numero + ' (abre en pestaña nueva)'"
   >
     Ver
   </a>
@@ -10,6 +11,7 @@
 <a
   class="btn-secundario ml-2 inline-block rounded-lg h-8 inline-flex items-center px-3 text-sm font-medium"
   [routerLink]="['/admin/habitaciones/editar', habitacion().id]"
+  [attr.aria-label]="'Editar habitación ' + habitacion().numero"
 >
   Editar
 </a>
@@ -24,6 +26,7 @@
   class="btn-destructivo ml-2 rounded-lg h-8 inline-flex items-center px-3 text-sm font-medium"
   type="button"
   (click)="eliminacionSolicitada.emit(habitacion())"
+  [attr.aria-label]="'Eliminar habitación ' + habitacion().numero"
 >
   Eliminar
 </button>

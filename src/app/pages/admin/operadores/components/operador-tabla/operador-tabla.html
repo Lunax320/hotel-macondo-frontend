@@ -52,6 +52,7 @@
               class="btn-destructivo ml-2 rounded-lg h-8 inline-flex items-center px-3 text-sm font-medium"
               type="button"
               (click)="pendienteEliminar = operador.id ?? null"
+              [attr.aria-label]="'Eliminar operador ' + operador.nombre"
             >
               Eliminar
             </button>
