@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { NavbarCliente } from '../../../components/navbar-cliente/navbar-cliente';
 import { Cliente } from '../../../models/cliente.model';
 import { ClienteService } from '../../../services/cliente.service';
+import { UsuarioService } from '../../../services/usuario.service';
 import { PerfilResumen } from './components/perfil-resumen/perfil-resumen';
 
 @Component({
@@ -17,6 +18,7 @@ export class PerfilCliente implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private clienteService = inject(ClienteService);
+  private usuarioService = inject(UsuarioService);
 
   clienteId = 0;
   cliente?: Cliente;
@@ -71,6 +73,11 @@ export class PerfilCliente implements OnInit {
       })
       .subscribe({
         next: (cliente) => {
+          // El JWT identifica el correo anterior: si cambia, se requiere otro login.
+          if (cliente.correo.trim().toLowerCase() !== this.cliente?.correo.trim().toLowerCase()) {
+            this.usuarioService.cerrarSesion();
+            return;
+          }
           this.cliente = cliente;
           this.nombre = cliente.nombre;
           this.apellido = cliente.apellido;
@@ -118,7 +125,10 @@ export class PerfilCliente implements OnInit {
     if (confirm('¿Estás seguro de que deseas eliminar tu cuenta? Esta acción es irreversible.')) {
       this.errorCuenta = '';
       this.clienteService.eliminarCuenta(this.clienteId).subscribe({
-        next: () => this.router.navigateByUrl('/'),
+        next: () => {
+          this.usuarioService.limpiarSesion();
+          this.router.navigateByUrl('/');
+        },
         error: (err) => {
           this.errorCuenta = err.error?.mensaje ?? 'No fue posible eliminar la cuenta.';
         },

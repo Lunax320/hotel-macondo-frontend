@@ -41,11 +41,8 @@ export class Login {
           return;
         }
 
-        if (usuario.rol === 'ADMINISTRADOR') {
-          this.router.navigate(['/admin']);
-        } else if (usuario.rol === 'OPERADOR') {
-          this.router.navigate(['/operador']);
-        } else {
+        const inicio = this.usuarioService.rutaInicio();
+        if (inicio.startsWith('/cliente/')) {
           const clienteId = usuario.cliente?.id;
           if (clienteId === undefined || !Number.isInteger(clienteId) || clienteId < 1) {
             this.mensajeError = 'La cuenta no tiene un cliente asociado.';
@@ -59,6 +56,8 @@ export class Login {
           } else {
             this.router.navigate(['/cliente', clienteId]);
           }
+        } else {
+          this.router.navigateByUrl(inicio);
         }
       },
       error: () => {

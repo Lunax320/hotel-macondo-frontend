@@ -1,5 +1,6 @@
-import { Component, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { UsuarioService } from '../../services/usuario.service';
 
 // Menu lateral del panel admin; resalta la seccion activa.
 @Component({
@@ -9,6 +10,7 @@ import { RouterLink } from '@angular/router';
   templateUrl: './admin-sidebar.html',
 })
 export class AdminSidebar {
+  protected usuarioService = inject(UsuarioService);
   seccionActiva = input<string>('habitaciones');
 
   // Secciones del menu, en el mismo orden que el admin de Thymeleaf.

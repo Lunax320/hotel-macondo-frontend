@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { DatosRegistro } from '../../../models/datos-registro.model';
 import { ClienteService } from '../../../services/cliente.service';
+import { UsuarioService } from '../../../services/usuario.service';
 import { RegistroPresentacion } from './components/registro-presentacion/registro-presentacion';
 import { RegistroFormulario } from './components/registro-formulario/registro-formulario';
 
@@ -16,6 +17,7 @@ import { RegistroFormulario } from './components/registro-formulario/registro-fo
 })
 export class Registro {
   private clienteService = inject(ClienteService);
+  private usuarioService = inject(UsuarioService);
   private router = inject(Router);
 
   mensajeError = '';
@@ -27,7 +29,12 @@ export class Registro {
     this.clienteService.registrar(cliente, datos.contrasena).subscribe({
       next: (clienteGuardado) => {
         if (clienteGuardado.id) {
-          this.router.navigate(['/cliente', clienteGuardado.id]);
+          this.usuarioService.autenticar(cliente.correo, datos.contrasena).subscribe({
+            next: () => this.router.navigateByUrl(this.usuarioService.rutaInicio()),
+            error: () => {
+              this.mensajeError = 'La cuenta fue creada. Inicia sesión para acceder a tu portal.';
+            },
+          });
         }
       },
       error: (error) => {

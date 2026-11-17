@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { UsuarioService } from '../../services/usuario.service';
 
 @Component({
   imports: [RouterLink, RouterLinkActive],
@@ -7,4 +8,6 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   styleUrl: './operador-sidebar.scss',
   templateUrl: './operador-sidebar.html',
 })
-export class OperadorSidebar {}
+export class OperadorSidebar {
+  protected usuarioService = inject(UsuarioService);
+}
