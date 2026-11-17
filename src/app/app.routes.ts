@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { inicioGuard, sesionGuard } from './helpers/sesion.guard';
 import { DetalleServicio } from './pages/landing/detalle-servicio/detalle-servicio';
 import { DetalleHabitacion } from './pages/landing/detalle-habitacion/detalle-habitacion';
 import { Habitaciones } from './pages/landing/habitaciones/habitaciones';
@@ -29,10 +30,13 @@ import { ReservasActivas } from './pages/cliente/reservas-activas/reservas-activ
 export const routes: Routes = [
   {
     path: '',
+    pathMatch: 'full',
+    canActivate: [inicioGuard],
     component: Landing,
   },
   {
     path: 'login',
+    canActivate: [inicioGuard],
     component: Login,
   },
   {
@@ -57,90 +61,134 @@ export const routes: Routes = [
   },
   {
     path: 'operador/reservas/:numeroReserva',
+    canActivate: [sesionGuard],
+    data: { roles: ['ADMINISTRADOR', 'OPERADOR'] },
     component: OperadorDetalleReserva,
   },
   {
     path: 'operador/reservas',
+    canActivate: [sesionGuard],
+    data: { roles: ['ADMINISTRADOR', 'OPERADOR'] },
     component: OperadorReservas,
   },
   {
     path: 'operador/cuenta',
+    canActivate: [sesionGuard],
+    data: { roles: ['ADMINISTRADOR', 'OPERADOR'] },
     component: OperadorBuscarCuenta,
   },
   {
     path: 'operador/cuenta/:reservaId',
+    canActivate: [sesionGuard],
+    data: { roles: ['ADMINISTRADOR', 'OPERADOR'] },
     component: OperadorCuentaHabitacion,
   },
   {
     path: 'operador/checkout',
+    canActivate: [sesionGuard],
+    data: { roles: ['ADMINISTRADOR', 'OPERADOR'] },
     component: OperadorCheckout,
   },
   {
     path: 'operador',
+    canActivate: [sesionGuard],
+    data: { roles: ['ADMINISTRADOR', 'OPERADOR'] },
     component: Operador,
   },
   {
     path: 'cliente/:id',
+    canActivate: [sesionGuard],
+    data: { roles: ['CLIENTE'] },
     component: PortalCliente,
   },
   {
     path: 'cliente/:id/reservas',
+    canActivate: [sesionGuard],
+    data: { roles: ['CLIENTE'] },
     component: ReservasActivas,
   },
   {
     path: 'cliente/:id/historial',
+    canActivate: [sesionGuard],
+    data: { roles: ['CLIENTE'] },
     component: HistorialReservas,
   },
   {
     path: 'cliente/:id/pagos',
+    canActivate: [sesionGuard],
+    data: { roles: ['CLIENTE'] },
     component: HistorialPagos,
   },
   {
     path: 'cliente/:id/reservas/nueva',
+    canActivate: [sesionGuard],
+    data: { roles: ['CLIENTE'] },
     component: CrearReserva,
   },
   {
     path: 'cliente/:id/reservas/:reservaId/editar',
+    canActivate: [sesionGuard],
+    data: { roles: ['CLIENTE'] },
     component: CrearReserva,
   },
   {
     path: 'cliente/:id/perfil',
+    canActivate: [sesionGuard],
+    data: { roles: ['CLIENTE'] },
     component: PerfilCliente,
   },
   {
     path: 'admin',
+    canActivate: [sesionGuard],
+    data: { roles: ['ADMINISTRADOR'] },
     component: AdminInicio,
   },
   {
     path: 'admin/operadores',
+    canActivate: [sesionGuard],
+    data: { roles: ['ADMINISTRADOR'] },
     component: AdminOperadores,
   },
   {
     path: 'admin/habitaciones/nueva',
+    canActivate: [sesionGuard],
+    data: { roles: ['ADMINISTRADOR'] },
     component: AdminHabitacionForm,
   },
   {
     path: 'admin/habitaciones/editar/:id',
+    canActivate: [sesionGuard],
+    data: { roles: ['ADMINISTRADOR'] },
     component: AdminHabitacionForm,
   },
   {
     path: 'admin/habitaciones',
+    canActivate: [sesionGuard],
+    data: { roles: ['ADMINISTRADOR'] },
     component: AdminHabitaciones,
   },
   {
     path: 'admin/tipos_habitacion',
+    canActivate: [sesionGuard],
+    data: { roles: ['ADMINISTRADOR'] },
     component: AdminTiposHabitacion,
   },
   {
     path: 'admin/servicios/nuevo',
+    canActivate: [sesionGuard],
+    data: { roles: ['ADMINISTRADOR'] },
     component: AdminServicioForm,
   },
   {
     path: 'admin/servicios/editar/:id',
+    canActivate: [sesionGuard],
+    data: { roles: ['ADMINISTRADOR'] },
     component: AdminServicioForm,
   },
   {
     path: 'admin/servicios',
+    canActivate: [sesionGuard],
+    data: { roles: ['ADMINISTRADOR'] },
     component: AdminServicios,
   },
 ];

@@ -1,9 +1,10 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { registerLocaleData } from '@angular/common';
 import localeEsCo from '@angular/common/locales/es-CO';
 import { routes } from './app.routes';
+import { autorizacionInterceptor } from './helpers/autorizacion.interceptor';
 
 registerLocaleData(localeEsCo);
 
@@ -13,7 +14,7 @@ export const appConfig: ApplicationConfig = {
     // cuando llegan las respuestas HTTP dentro de un subscribe (como en el proyecto del profe).
     provideZoneChangeDetection({ eventCoalescing: true }),
     // HttpClient para consumir la API REST de Spring Boot.
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([autorizacionInterceptor])),
     provideRouter(routes),
   ],
 };
