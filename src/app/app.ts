@@ -23,6 +23,8 @@ export class App {
     const url = this.router.url;
     this.mostrarNavbar =
       !url.startsWith('/cliente') && !url.startsWith('/admin') && !url.startsWith('/operador');
-    this.mostrarFooter = !url.startsWith('/admin') && !url.startsWith('/operador');
+    // El recorrido 360 va a pantalla completa: sin footer.
+    this.mostrarFooter =
+      !url.startsWith('/admin') && !url.startsWith('/operador') && !url.startsWith('/explorar');
   }
 }

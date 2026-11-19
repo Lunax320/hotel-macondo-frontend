@@ -1,0 +1,133 @@
+<!-- Pantalla completa debajo del header: vista 360 por nodos, flechas en el suelo y minimapa. -->
+<section class="relative h-[calc(100dvh-5rem)] min-h-[420px] w-full overflow-hidden bg-black [container-type:size]">
+  <div
+    #visor
+    class="absolute inset-0 cursor-grab touch-pan-y select-none transition-opacity duration-300 active:cursor-grabbing focus-visible:outline-2 focus-visible:outline-[var(--azul)]"
+    role="slider"
+    tabindex="0"
+    aria-valuemin="0"
+    aria-valuemax="100"
+    [attr.aria-valuenow]="((posicion % 100) + 100) % 100"
+    [attr.aria-label]="'Mirada del recorrido en ' + nodo.titulo"
+    [class.opacity-0]="fundiendo"
+    [style.transform]="'scale(' + zoom + ')'"
+    [style.transition]="'opacity 300ms ease, transform 500ms ease'"
+    [style.background-image]="sinImagen ? 'none' : 'url(' + nodo.imagen + ')'"
+    [style.background-size]="'max(150cqw, 200cqh) auto'"
+    [style.background-repeat]="'repeat-x'"
+    [style.background-position]="posicionFondo"
+    (pointerdown)="iniciarArrastre($event)"
+    (pointermove)="arrastrar($event)"
+    (pointerup)="terminarArrastre()"
+    (pointerleave)="terminarArrastre()"
+    (pointercancel)="terminarArrastre()"
+    (keydown.arrowleft)="mover(-4)"
+    (keydown.arrowright)="mover(4)"
+  ></div>
+
+  <!-- Sonda invisible: avisa si la imagen del nodo no existe -->
+  @if (!sinImagen) {
+    <img class="hidden" [src]="nodo.imagen" alt="" (error)="imagenFallo()" />
+  }
+
+  @if (sinImagen) {
+    <div class="pointer-events-none absolute inset-0 flex items-center justify-center bg-[var(--azul-oscuro)]">
+      <p class="rounded-full bg-black/40 px-5 py-3 text-lg font-semibold text-white">Escena en preparación</p>
+    </div>
+  }
+
+  <div class="pointer-events-none absolute inset-x-0 top-0 flex justify-center p-4">
+    <p class="rounded-full bg-[rgba(14,42,63,0.6)] px-4 py-2 text-sm font-semibold uppercase tracking-[1px] text-white">
+      {{ nodo.titulo }}
+    </p>
+  </div>
+
+  <!-- Flechas en el suelo: aparecen donde está cada vecino; tocar una avanza hacia él -->
+  @for (f of flechas; track f.nodo.id) {
+    <button
+      type="button"
+      class="absolute bottom-[14%] flex -translate-x-1/2 flex-col items-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+      [style.left]="f.izq"
+      [attr.aria-label]="'Caminar hacia ' + f.nodo.titulo"
+      (click)="irA(f.nodo.id)"
+    >
+      <svg viewBox="0 0 40 26" class="h-10 w-16 drop-shadow-lg transition-transform duration-300" [style.transform]="'scale(' + f.escala + ') rotate(' + f.giro + 'deg)'">
+        <path d="M20 2 L38 24 L20 17 L2 24 Z" fill="#f5cd63" stroke="#0e2a3f" stroke-width="2" stroke-linejoin="round" />
+      </svg>
+      <span class="mt-1 rounded-full bg-[rgba(14,42,63,0.7)] px-3 py-1 text-xs font-semibold text-white">{{ f.nodo.titulo }}</span>
+    </button>
+  }
+
+  <!-- Puntos de interés de la habitación: la mirada gira hacia el objeto -->
+  @if (puntos.length > 0) {
+    <div class="absolute left-4 top-16 flex max-w-[60%] flex-wrap gap-2" role="group" aria-label="Mirar hacia un punto de la habitación">
+      @for (p of puntos; track p.etiqueta) {
+        <button
+          type="button"
+          class="rounded-full border border-[var(--dorado)] bg-[rgba(14,42,63,0.6)] px-4 py-2 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-[var(--dorado)] hover:text-[var(--azul-oscuro)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          [attr.aria-label]="'Mirar hacia ' + p.etiqueta"
+          (click)="irAPunto(p.posicion)"
+        >
+          {{ p.etiqueta }}
+        </button>
+      }
+    </div>
+  }
+
+  <!-- Atajos con ruta automática -->
+  <div class="absolute bottom-4 left-4 flex max-w-[55%] flex-wrap gap-2" role="group" aria-label="Rutas rápidas">
+    @for (d of destinos; track d.id) {
+      <button
+        type="button"
+        class="rounded-full bg-[var(--dorado)] px-4 py-2 text-sm font-semibold text-[var(--azul-oscuro)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:opacity-50"
+        [disabled]="nodo.id === d.id"
+        (click)="rutaA(d.id)"
+      >
+        {{ d.etiqueta }}
+      </button>
+    }
+  </div>
+
+  <!-- Minimapa: clic en un punto = ruta más corta -->
+  <div class="absolute bottom-4 right-4 w-40 rounded-lg bg-[rgba(14,42,63,0.7)] p-2 backdrop-blur-sm sm:w-52">
+    <svg [attr.viewBox]="vista" class="h-auto w-full" role="group" aria-label="Minimapa del hotel">
+      @for (e of enlaces; track $index) {
+        <line [attr.x1]="e.x1" [attr.y1]="e.y1" [attr.x2]="e.x2" [attr.y2]="e.y2" stroke="rgba(255,255,255,0.4)" stroke-width="0.6" />
+      }
+      @for (n of nodos; track n.id) {
+        <g
+          class="cursor-pointer"
+          tabindex="0"
+          role="button"
+          [attr.aria-label]="'Ir a ' + n.titulo"
+          (click)="rutaA(n.id)"
+          (keydown.enter)="rutaA(n.id)"
+        >
+          <rect
+            [attr.x]="n.x - n.ancho / 2"
+            [attr.y]="n.y - n.alto / 2"
+            [attr.width]="n.ancho"
+            [attr.height]="n.alto"
+            rx="0.3"
+            [attr.fill]="n.id === nodo.id ? '#f5cd63' : n.id === 'pasillo' ? 'rgba(247,231,211,0.35)' : 'rgba(247,231,211,0.85)'"
+            [attr.stroke]="n.id === nodo.id ? '#0e2a3f' : '#1a6d92'"
+            stroke-width="0.4"
+          >
+            <title>{{ n.titulo }}</title>
+          </rect>
+          @if (n.corto) {
+            <text
+              [attr.x]="n.x"
+              [attr.y]="n.y + 0.5"
+              text-anchor="middle"
+              font-size="1.3"
+              font-weight="600"
+              fill="#0e2a3f"
+              pointer-events="none"
+            >{{ n.corto }}</text>
+          }
+        </g>
+      }
+    </svg>
+  </div>
+</section>

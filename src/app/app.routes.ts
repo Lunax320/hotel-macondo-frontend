@@ -25,6 +25,7 @@ import { CrearReserva } from './pages/cliente/crear-reserva/crear-reserva';
 import { HistorialReservas } from './pages/cliente/historial-reservas/historial-reservas';
 import { HistorialPagos } from './pages/cliente/historial-pagos/historial-pagos';
 import { ReservasActivas } from './pages/cliente/reservas-activas/reservas-activas';
+import { Explorar } from './pages/landing/explorar/explorar';
 
 export const routes: Routes = [
   {
@@ -47,6 +48,7 @@ export const routes: Routes = [
     path: 'habitaciones/:id',
     component: DetalleHabitacion,
   },
+  { path: 'explorar', component: Explorar },
   {
     path: 'servicios',
     component: Servicios,
