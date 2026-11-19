@@ -11,6 +11,7 @@ import { BuscadorDisponibilidad } from './components/buscador-disponibilidad/bus
 import { LandingHabitaciones } from './components/landing-habitaciones/landing-habitaciones';
 import { LandingTestimonios } from './components/landing-testimonios/landing-testimonios';
 import { LandingCta } from './components/landing-cta/landing-cta';
+import { LandingRecorrido } from './components/landing-recorrido/landing-recorrido';
 
 @Component({
   imports: [
@@ -20,6 +21,7 @@ import { LandingCta } from './components/landing-cta/landing-cta';
     CarruselServicios,
     LandingTestimonios,
     LandingCta,
+    LandingRecorrido,
   ],
   selector: 'app-landing',
   templateUrl: './landing.html',
