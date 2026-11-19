@@ -1,4 +1,4 @@
-@if (panoramica; as imagen) {
+@if (imagenActual; as imagen) {
   <section class="mt-10" aria-labelledby="titulo-recorrido">
     <h2 id="titulo-recorrido" class="font-serif text-2xl font-bold text-[var(--azul-oscuro)]">
       Recorre la habitación
@@ -23,13 +23,44 @@
       (keydown.arrowleft)="mover(-5)"
       (keydown.arrowright)="mover(5)"
     >
-      <img
-        class="pointer-events-none block h-auto w-[200%] max-w-none"
-        [src]="imagen"
+      <div
+        class="flex w-[200%] transition-opacity duration-300"
+        [class.opacity-0]="fundiendo"
         [style.transform]="desplazamiento"
-        [alt]="'Vista panorámica de la habitación ' + tipo().nombre"
-        draggable="false"
-      />
+      >
+        <img
+          class="pointer-events-none block h-auto w-1/2 max-w-none shrink-0 select-none"
+          [src]="imagen"
+          [alt]="textoAlternativo"
+          draggable="false"
+        />
+        <img
+          class="pointer-events-none block h-auto w-1/2 max-w-none shrink-0 select-none"
+          [src]="imagen"
+          alt=""
+          aria-hidden="true"
+          draggable="false"
+        />
+      </div>
     </div>
+
+    @if (escenas().length > 0) {
+      <div class="mt-4 flex flex-wrap gap-2" role="group" aria-label="Escenas del recorrido">
+        @for (escena of escenas(); track escena.id; let i = $index) {
+          <button
+            type="button"
+            [class]="claseBoton(i)"
+            [attr.aria-pressed]="i === indiceEscena"
+            [attr.aria-label]="'Ver escena: ' + escena.titulo"
+            (click)="seleccionarEscena(i)"
+          >
+            {{ escena.titulo }}
+          </button>
+        }
+      </div>
+      @if (escenaActual; as escena) {
+        <p class="mt-2 text-sm font-medium text-[var(--azul-oscuro)]">Vista actual: {{ escena.titulo }}</p>
+      }
+    }
   </section>
 }
