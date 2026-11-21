@@ -2,12 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Operador } from '../models/operador.model';
+import { environment } from '../../environments/environment';
 
 // Gestiona los operadores administrativos mediante la API REST.
 @Injectable({ providedIn: 'root' })
 export class OperadorService {
   private http = inject(HttpClient);
-  private url = 'https://macondoapi.kusare.fyi/api/operador';
+  private url = environment.apiUrl + '/operador';
 
   // Lista todos los operadores.
   listar(): Observable<Operador[]> {

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Cliente } from '../models/cliente.model';
+import { environment } from '../../environments/environment';
 
 // Servicio para operaciones de cliente contra el backend.
 @Injectable({
@@ -9,7 +10,7 @@ import { Cliente } from '../models/cliente.model';
 })
 export class ClienteService {
   private http = inject(HttpClient);
-  private url = 'https://macondoapi.kusare.fyi/api/cliente';
+  private url = environment.apiUrl + '/cliente';
 
   // Busca un cliente por su id.
   buscarPorId(id: number): Observable<Cliente> {

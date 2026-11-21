@@ -3,13 +3,14 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Habitacion } from '../models/habitacion.model';
 import { TipoHabitacion } from '../models/tipo-habitacion.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HabitacionService {
   private http = inject(HttpClient);
-  private url = 'https://macondoapi.kusare.fyi/api/habitacion';
+  private url = environment.apiUrl + '/habitacion';
 
   hayDisponibilidadPorTipo(tipoHabitacion: TipoHabitacion): boolean {
     // Si el tipo existe y tiene capacidad configurada se asume disponible

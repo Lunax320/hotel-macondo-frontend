@@ -2,13 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Servicio } from '../models/servicio.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ServicioService {
   private http = inject(HttpClient);
-  private url = 'https://macondoapi.kusare.fyi/api/servicio';
+  private url = environment.apiUrl + '/servicio';
 
   // Catálogo activo (Landing, Servicios)
   obtenerCatalogoActivo(): Observable<Servicio[]> {

@@ -10,11 +10,12 @@ import { ReservaOperador } from '../models/reserva-operador.model';
 import { ReservaSolicitud } from '../models/reserva-solicitud.model';
 import { Pago } from '../models/pago.model';
 import { PagoCliente } from '../models/pago-cliente.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ReservaService {
-  private url = 'https://macondoapi.kusare.fyi/api/reserva';
-  private operadorUrl = 'https://macondoapi.kusare.fyi/api/operador';
+  private url = environment.apiUrl + '/reserva';
+  private operadorUrl = environment.apiUrl + '/operador';
 
   constructor(private http: HttpClient) {}
 

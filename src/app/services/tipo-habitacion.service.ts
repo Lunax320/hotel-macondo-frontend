@@ -2,13 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { TipoHabitacion } from '../models/tipo-habitacion.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TipoHabitacionService {
   private http = inject(HttpClient);
-  private url = 'https://macondoapi.kusare.fyi/api/tipo-habitacion';
+  private url = environment.apiUrl + '/tipo-habitacion';
 
   // Obtiene todos los tipos de habitación
   obtenerTodos(): Observable<TipoHabitacion[]> {
