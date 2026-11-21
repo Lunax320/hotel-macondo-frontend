@@ -3,13 +3,13 @@
   <p class="mt-1 text-sm">{{ mensaje() }}</p>
   <div class="mt-4 flex flex-wrap gap-3">
     <button
-      class="rounded-lg bg-red-600 px-5 py-2 font-bold text-white hover:bg-red-700"
+      class="btn-peligro-solido rounded-lg px-5 py-2 font-bold"
       type="button"
       (click)="confirmado.emit()"
     >
       {{ textoConfirmar() }}</button
     ><button
-      class="rounded-lg border border-[var(--azul)] px-5 py-2 font-bold text-[var(--azul)]"
+      class="btn-secundario-borde rounded-lg px-5 py-2 font-bold"
       type="button"
       (click)="cancelado.emit()"
     >

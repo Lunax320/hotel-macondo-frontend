@@ -3,6 +3,7 @@ import { switchMap } from 'rxjs';
 import { AdminSidebar } from '../../../components/admin-sidebar/admin-sidebar';
 import { TipoHabitacion } from '../../../models/tipo-habitacion.model';
 import { TipoHabitacionService } from '../../../services/tipo-habitacion.service';
+import { ToastService } from '../../../services/toast.service';
 import { TipoHabitacionForm } from './components/tipo-habitacion-form/tipo-habitacion-form';
 import { ConfirmacionAccion } from '../../../components/confirmacion-accion/confirmacion-accion';
 import { TipoHabitacionTable } from './components/tipo-habitacion-table/tipo-habitacion-table';
@@ -18,6 +19,7 @@ import { TipoHabitacionTable } from './components/tipo-habitacion-table/tipo-hab
 })
 export class AdminTiposHabitacion implements OnInit {
   private tipoHabitacionService = inject(TipoHabitacionService);
+  private toast = inject(ToastService);
 
   tiposHabitacion: TipoHabitacion[] = [];
   tipoHabitacionSeleccionado?: TipoHabitacion;
@@ -52,7 +54,6 @@ export class AdminTiposHabitacion implements OnInit {
 
   // Guarda el tipo (crea o actualiza) y actualiza el listado.
   guardarTipoHabitacion(tipoHabitacion: TipoHabitacion): void {
-    this.errorTipo = '';
     const guardado =
       tipoHabitacion.id === undefined
         ? this.tipoHabitacionService.agregarTipo(tipoHabitacion)
@@ -62,9 +63,15 @@ export class AdminTiposHabitacion implements OnInit {
       next: (tipos) => {
         this.tiposHabitacion = tipos;
         this.cerrarFormulario();
+        this.toast.mostrar(
+          `Tipo ${tipoHabitacion.nombre} ${tipoHabitacion.id === undefined ? 'creado' : 'actualizado'}.`,
+        );
       },
       error: (error) =>
-        (this.errorTipo = error.error?.mensaje ?? 'No fue posible guardar el tipo de habitación.'),
+        this.toast.mostrar(
+          error.error?.mensaje ?? 'No fue posible guardar el tipo de habitación.',
+          'error',
+        ),
     });
   }
 
@@ -83,6 +90,7 @@ export class AdminTiposHabitacion implements OnInit {
   // Elimina el tipo confirmado y recarga el listado.
   confirmarEliminacion(): void {
     const tipoHabitacionId = this.tipoHabitacionPendienteEliminar?.id;
+    const nombre = this.tipoHabitacionPendienteEliminar?.nombre;
 
     if (tipoHabitacionId === undefined) {
       return;
@@ -95,10 +103,14 @@ export class AdminTiposHabitacion implements OnInit {
         next: (tipos) => {
           this.tiposHabitacion = tipos;
           this.tipoHabitacionPendienteEliminar = undefined;
+          this.toast.mostrar(`Tipo ${nombre} eliminado.`);
         },
         error: (error) => {
           this.tipoHabitacionPendienteEliminar = undefined;
-          this.errorTipo = error.error?.mensaje ?? 'No fue posible eliminar el tipo de habitación.';
+          this.toast.mostrar(
+            error.error?.mensaje ?? 'No fue posible eliminar el tipo de habitación.',
+            'error',
+          );
         },
       });
   }

@@ -21,7 +21,7 @@ export const autorizacionInterceptor: HttpInterceptorFn = (request, next) => {
       if (error instanceof HttpErrorResponse && error.status === 401) {
         // Una respuesta atrasada no debe borrar un login más reciente.
         const tokenActual = usuarioService.obtenerToken();
-        if (!tokenActual || tokenActual === token) usuarioService.cerrarSesion();
+        if (token && (!tokenActual || tokenActual === token)) usuarioService.cerrarSesion();
       }
       return throwError(() => error);
     }),

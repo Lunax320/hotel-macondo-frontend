@@ -16,7 +16,7 @@
       </p>
     </div>
     <p class="font-bold text-[var(--azul-oscuro)]">
-      $ {{ reserva().total.toLocaleString('es-CO') }}
+      {{ reserva().total | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
     </p>
   </article>
 } @else {
@@ -40,11 +40,11 @@
     </div>
     <div class="text-left sm:text-right">
       <p class="text-lg font-bold text-[var(--azul-oscuro)]">
-        $ {{ reserva().total.toLocaleString('es-CO') }}
+        {{ reserva().total | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
       </p>
       @if (mostrarCancelar()) {
         <button
-          class="mt-2 rounded-lg border border-red-200 px-4 py-1.5 text-sm font-medium text-red-600 transition hover:bg-red-50"
+          class="btn-destructivo mt-2 rounded-lg px-5 py-2.5 text-sm font-medium"
           type="button"
           (click)="cancelacionSolicitada.emit(reserva())"
         >

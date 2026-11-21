@@ -23,11 +23,11 @@
     aria-label="Filtrar reservas"
   >
     <button
-      class="rounded-full border border-[var(--azul)] px-5 py-2 shadow-sm transition cursor-pointer"
+      class="h-8 rounded-full px-5 shadow-sm"
       [class]="
         filtro() === 'todas'
-          ? 'bg-[var(--azul)] text-white'
-          : 'bg-white text-[var(--azul)] hover:bg-blue-50'
+          ? 'btn-secundario'
+          : 'btn-secundario-borde'
       "
       type="button"
       [attr.aria-pressed]="filtro() === 'todas'"
@@ -36,11 +36,11 @@
       Todas
     </button>
     <button
-      class="rounded-full border border-[var(--azul)] px-5 py-2 shadow-sm transition cursor-pointer"
+      class="h-8 rounded-full px-5 shadow-sm"
       [class]="
         filtro() === 'activas'
-          ? 'bg-[var(--azul)] text-white'
-          : 'bg-white text-[var(--azul)] hover:bg-blue-50'
+          ? 'btn-secundario'
+          : 'btn-secundario-borde'
       "
       type="button"
       [attr.aria-pressed]="filtro() === 'activas'"
@@ -48,5 +48,20 @@
     >
       Activas
     </button>
+    @for (opcion of opcionesEstado; track opcion.valor) {
+      <button
+        class="h-8 rounded-full px-5 shadow-sm"
+        [class]="
+          filtro() === opcion.valor
+            ? 'btn-secundario'
+            : 'btn-secundario-borde'
+        "
+        type="button"
+        [attr.aria-pressed]="filtro() === opcion.valor"
+        (click)="filtroCambiado.emit(opcion.valor)"
+      >
+        {{ opcion.etiqueta }}
+      </button>
+    }
   </div>
 </section>

@@ -12,7 +12,8 @@ import { ClienteService } from '../../../services/cliente.service';
 import { ReservaService } from '../../../services/reserva.service';
 import { TipoHabitacionService } from '../../../services/tipo-habitacion.service';
 import { ReservaDisponibilidad } from './components/reserva-disponibilidad/reserva-disponibilidad';
-import { ReservaFormulario } from './components/reserva-formulario/reserva-formulario';
+import { ToastService } from '../../../services/toast.service';
+import { erroresReserva, ReservaFormulario } from './components/reserva-formulario/reserva-formulario';
 import { ReservaInstrucciones } from './components/reserva-instrucciones/reserva-instrucciones';
 
 @Component({
@@ -34,6 +35,7 @@ export class CrearReserva implements OnInit, OnDestroy {
   private clienteService = inject(ClienteService);
   private tipoHabitacionService = inject(TipoHabitacionService);
   private reservaService = inject(ReservaService);
+  private toast = inject(ToastService);
   private cambiosRuta?: Subscription;
   private carga?: Subscription;
   private consulta?: Subscription;
@@ -210,12 +212,10 @@ export class CrearReserva implements OnInit, OnDestroy {
         : this.reservaService.crear(this.clienteId, tipoId, datos);
     this.guardado = operacion.subscribe({
       next: (reserva) => {
-        this.router.navigate(['/cliente', this.clienteId, 'reservas'], {
-          queryParams: {
-            resultado: this.esEdicion ? 'modificada' : 'creada',
-            numero: reserva.numeroReserva,
-          },
-        });
+        this.toast.mostrar(
+          `Reserva ${reserva.numeroReserva} ${this.esEdicion ? 'modificada' : 'creada'}.`,
+        );
+        this.router.navigate(['/cliente', this.clienteId, 'reservas']);
       },
       error: (error: HttpErrorResponse) => {
         this.guardando = false;
@@ -225,29 +225,17 @@ export class CrearReserva implements OnInit, OnDestroy {
     });
   }
 
-  // Comprueba campos requeridos, fechas, cantidad de huéspedes y capacidad del tipo antes de crear la solicitud.
+  // Comprueba campos, fechas, cantidad de huéspedes y capacidad del tipo; los errores quedan en cada campo.
   private validarFormulario(): ReservaSolicitud | undefined {
     this.formulario.markAllAsTouched();
     const valores = this.formulario.value;
-    const tipoId = Number(valores.tipoId);
-    const tipo = this.tiposHabitacion.find((item) => item.id === tipoId);
-    const cantidad = Number(valores.cantidadPersonas);
-    if (this.formulario.invalid || !tipo || !Number.isInteger(cantidad) || cantidad < 1) {
-      this.mensajeError =
-        'Completa el tipo, las fechas y una cantidad entera de huéspedes mayor que cero.';
+    // Los errores de cada campo se muestran en el campo.
+    if (this.formulario.invalid || Object.keys(erroresReserva(valores, this.tiposHabitacion, this.fechaMinima)).length) {
       return;
     }
+    const cantidad = Number(valores.cantidadPersonas);
     const entrada = valores.fechaEntrada ?? '';
     const salida = valores.fechaSalida ?? '';
-    if (entrada < this.fechaMinima || salida <= entrada) {
-      this.mensajeError =
-        'La entrada no puede estar en el pasado y la salida debe ser posterior a la entrada.';
-      return;
-    }
-    if (cantidad > tipo.capacidadPersonas) {
-      this.mensajeError = `Este tipo de habitación admite hasta ${tipo.capacidadPersonas} personas.`;
-      return;
-    }
     return { fechaInicio: entrada, fechaFin: salida, cantidadPersonas: cantidad };
   }
 

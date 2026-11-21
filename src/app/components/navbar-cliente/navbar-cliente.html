@@ -12,20 +12,24 @@
     <!-- Enlaces -->
     <ul class="hidden md:flex gap-6 font-sans text-gray-600 font-medium">
       <li>
-        <a class="hover:text-[var(--azul)] transition" [routerLink]="['/cliente', clienteId()]"
+        <a routerLinkActive="text-[var(--azul)] font-bold border-b-2 border-[var(--dorado)]" class="hover:text-[var(--azul)] transition" [routerLink]="['/cliente', clienteId()]"
+          [routerLinkActiveOptions]="{ exact: true }"
           >Inicio</a
         >
       </li>
       <li>
         <a
+          routerLinkActive="text-[var(--azul)] font-bold border-b-2 border-[var(--dorado)]"
           id="navMisReservas"
           class="hover:text-[var(--azul)] transition"
+          [routerLinkActiveOptions]="{ exact: true }"
           [routerLink]="['/cliente', clienteId(), 'reservas']"
           >Mis Reservas</a
         >
       </li>
       <li>
         <a
+          routerLinkActive="text-[var(--azul)] font-bold border-b-2 border-[var(--dorado)]"
           class="hover:text-[var(--azul)] transition"
           [routerLink]="['/cliente', clienteId(), 'historial']"
           >Historial</a
@@ -33,6 +37,7 @@
       </li>
       <li>
         <a
+          routerLinkActive="text-[var(--azul)] font-bold border-b-2 border-[var(--dorado)]"
           class="hover:text-[var(--azul)] transition"
           [routerLink]="['/cliente', clienteId(), 'pagos']"
           >Pagos</a
@@ -40,6 +45,7 @@
       </li>
       <li>
         <a
+          routerLinkActive="text-[var(--azul)] font-bold border-b-2 border-[var(--dorado)]"
           class="hover:text-[var(--azul)] transition"
           [routerLink]="['/habitaciones']"
           [queryParams]="{ clienteId: clienteId() }"
@@ -48,6 +54,7 @@
       </li>
       <li>
         <a
+          routerLinkActive="text-[var(--azul)] font-bold border-b-2 border-[var(--dorado)]"
           id="navNuevaReserva"
           class="hover:text-[var(--azul)] transition"
           [routerLink]="['/cliente', clienteId(), 'reservas', 'nueva']"
@@ -55,7 +62,7 @@
         >
       </li>
       <li>
-        <a class="hover:text-[var(--azul)] transition" routerLink="/servicios">Servicios</a>
+        <a routerLinkActive="text-[var(--azul)] font-bold border-b-2 border-[var(--dorado)]" class="hover:text-[var(--azul)] transition" [routerLink]="['/servicios']" [queryParams]="{ clienteId: clienteId() }">Servicios</a>
       </li>
     </ul>
 
@@ -86,5 +93,13 @@
     <button class="md:hidden text-2xl text-[var(--azul)] focus:outline-none">
       <i class="bi bi-list"></i>
     </button>
+
+    @if (mostrarVolver()) {
+      <a
+        class="mt-3 w-full font-sans text-sm font-semibold text-[var(--azul)] hover:underline"
+        [routerLink]="['/cliente', clienteId()]"
+        >← Volver a mi portal</a
+      >
+    }
   </div>
 </header>

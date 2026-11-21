@@ -18,7 +18,7 @@ export class UsuarioService {
   private url = 'http://localhost:8080/api/auth';
   private router = inject(Router);
 
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   // Envía el correo y la contraseña al endpoint de autenticación.
   autenticar(correo: string, contrasena: string): Observable<Usuario> {

@@ -1,57 +1,191 @@
 <div class="flex flex-col bg-white text-[var(--texto)] md:flex-row">
   <app-admin-sidebar seccionActiva="inicio"></app-admin-sidebar>
-  <main class="flex-1 p-6 md:p-10">
+  <main class="min-w-0 flex-1 p-4 sm:p-6 md:p-10">
     <header class="mb-8">
       <h1 class="font-serif text-3xl font-bold text-[var(--azul-oscuro)] md:text-4xl">
         Panel de administración
       </h1>
       <p class="mt-1 text-[var(--texto)]">Resumen del hotel y acceso a las secciones de gestión.</p>
     </header>
-    @if (errorResumen) {
-      <div
-        class="mb-4 rounded-lg border border-red-200 bg-red-50 px-5 py-4 text-red-700"
-        role="alert"
-      >
-        {{ errorResumen }}
+
+    @if (hayError) {
+      <div class="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-700" role="alert">
+        <span>No se pudo cargar parte de la información del tablero.</span>
+        <button type="button" class="rounded-lg bg-[var(--azul)] px-4 py-2 text-sm font-semibold text-white" (click)="reintentar()">Reintentar</button>
       </div>
     }
-    <div class="mb-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-      <app-tarjeta-resumen
-        etiqueta="Personal"
-        icono="bi-person-badge"
-        [valor]="totalOperadores"
-        detallePrefijo="Operadores,"
-        [detalleValor]="operadoresActivos"
-        detalleSufijo="activos"
-        enlace="/admin/operadores"
-      ></app-tarjeta-resumen>
-      <app-tarjeta-resumen
-        etiqueta="Experiencias"
-        icono="bi-stars"
-        [valor]="totalServicios"
-        detallePrefijo="Servicios,"
-        [detalleValor]="serviciosActivos"
-        detalleSufijo="activos"
-        enlace="/admin/servicios"
-      ></app-tarjeta-resumen>
-      <app-tarjeta-resumen
-        etiqueta="Categorías"
-        icono="bi-tag"
-        valor="Tipos"
-        claseValor="text-3xl mb-1"
-        detalleSufijo="Gestión de tarifas y capacidades"
-        enlace="/admin/tipos_habitacion"
-      ></app-tarjeta-resumen>
-      <app-tarjeta-resumen
-        etiqueta="Hospedaje"
-        icono="bi-door-closed"
-        [valor]="totalHabitaciones"
-        detallePrefijo="Habitaciones,"
-        [detalleValor]="habitacionesDisponibles"
-        detalleSufijo="disponibles"
-        enlace="/admin/habitaciones"
-      ></app-tarjeta-resumen>
+
+    <section class="mb-10" aria-labelledby="t-kpi">
+      <h2 id="t-kpi" class="mb-3 font-serif text-xl font-bold text-[var(--azul-oscuro)]">Indicadores de hoy</h2>
+      <div class="grid grid-cols-1 gap-4 min-[480px]:grid-cols-2 xl:grid-cols-5">
+        @for (k of kpis; track k.nombre) {
+          <div class="min-w-0 rounded-2xl bg-[var(--crema-claro)] p-5 shadow-sm">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-[0.7rem] font-bold uppercase tracking-[2px] text-[var(--azul)]">{{ k.nombre }}</span>
+              <i class="bi {{ k.icono }} text-xl text-[var(--dorado-oscuro)]"></i>
+            </div>
+            @if (k.error) {
+              <p class="mt-3 text-sm text-red-700">{{ k.error }}</p>
+            } @else if (k.valor === null) {
+              <div class="mt-3 h-9 w-16 animate-pulse rounded bg-gray-200" aria-label="Cargando"></div>
+            } @else {
+              <p class="mt-2 font-serif text-4xl font-bold text-[var(--azul-oscuro)]">{{ k.valor }}{{ k.sufijo ?? '' }}</p>
+            }
+          </div>
+        }
+      </div>
+      <p class="mt-2 text-xs text-gray-500">
+        Ocupadas = habitaciones con una reserva activa. Reservas del mes = reservas no canceladas que inician este mes. No se muestran ingresos: el backend no los entrega.
+      </p>
+    </section>
+
+    <section class="mb-10 min-w-0 rounded-2xl border border-gray-200 p-5" aria-labelledby="t-ocu">
+      <h2 id="t-ocu" class="mb-4 font-serif text-xl font-bold text-[var(--azul-oscuro)]">Ocupación de los próximos 7 días</h2>
+      @if (errores.reservas || errores.habitaciones) {
+        <p class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-700" role="alert">No se pudo cargar esta información.</p>
+      } @else if (!reservasCargadas || totalHabitaciones === null) {
+        <div class="h-40 animate-pulse rounded bg-gray-200" aria-label="Cargando"></div>
+      } @else if (totalHabitaciones === 0) {
+        <p class="text-sm text-gray-500">No hay habitaciones registradas.</p>
+      } @else {
+        <ul class="grid grid-cols-7 gap-1 sm:gap-3">
+          @for (d of dias; track d.etiqueta) {
+            <li class="flex min-w-0 flex-col items-center">
+              <span class="text-xs font-bold text-[var(--azul-oscuro)]">{{ d.ocupadas }}</span>
+              <div class="flex h-32 w-full items-end rounded bg-gray-100" role="img"
+                [attr.aria-label]="d.etiqueta + ': ' + d.ocupadas + ' de ' + totalHabitaciones + ' habitaciones ocupadas'">
+                <div class="w-full rounded bg-[var(--azul)]" [style.height.%]="alto(d)"></div>
+              </div>
+              <span class="mt-1 text-[0.65rem] text-gray-600 sm:text-xs">{{ d.etiqueta }}</span>
+            </li>
+          }
+        </ul>
+        <p class="mt-2 text-xs text-gray-500">Habitaciones con reserva activa o confirmada por noche, de {{ totalHabitaciones }} en total.</p>
+      }
+    </section>
+
+    <section class="mb-10" aria-labelledby="t-resumen">
+      <h2 id="t-resumen" class="mb-3 font-serif text-xl font-bold text-[var(--azul-oscuro)]">Resumen</h2>
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        @for (t of tarjetas; track t.nombre) {
+          <div class="rounded-2xl bg-[var(--crema-claro)] p-5 shadow-sm">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-[0.7rem] font-bold uppercase tracking-[2px] text-[var(--azul)]">{{ t.nombre }}</span>
+              <i class="bi {{ t.icono }} text-xl text-[var(--dorado-oscuro)]"></i>
+            </div>
+            @if (t.error) {
+              <p class="mt-3 text-sm text-red-700" role="alert">{{ t.error }}</p>
+            } @else if (t.valor === null) {
+              <div class="mt-3 h-9 w-16 animate-pulse rounded bg-gray-200" aria-label="Cargando"></div>
+            } @else {
+              <p class="mt-2 font-serif text-4xl font-bold text-[var(--azul-oscuro)]">{{ t.valor }}</p>
+            }
+          </div>
+        }
+      </div>
+      <p class="mt-2 text-xs text-gray-500">
+        Los clientes registrados no se muestran: el backend no tiene un listado de clientes.
+      </p>
+    </section>
+
+    <div class="mb-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <section class="min-w-0 rounded-2xl border border-gray-200 p-5" aria-labelledby="t-mov">
+        <h2 id="t-mov" class="mb-4 font-serif text-xl font-bold text-[var(--azul-oscuro)]">Llegadas y salidas</h2>
+        @if (errores.reservas) {
+          <p class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-700" role="alert">{{ errores.reservas }}</p>
+        } @else if (!reservasCargadas) {
+          <div class="space-y-2" aria-label="Cargando">
+            <div class="h-10 animate-pulse rounded bg-gray-200"></div>
+            <div class="h-10 animate-pulse rounded bg-gray-200"></div>
+          </div>
+        } @else {
+          <h3 class="mb-2 text-sm font-bold uppercase tracking-widest text-[var(--azul)]">Próximas llegadas (7 días)</h3>
+          @if (llegadas.length === 0) {
+            <p class="mb-5 text-sm text-gray-500">No hay llegadas confirmadas en los próximos 7 días.</p>
+          } @else {
+            <ul class="mb-5 divide-y divide-gray-100">
+              @for (r of llegadas.slice(0, 5); track r.id) {
+                <li>
+                  <a class="flex items-center justify-between gap-3 py-2 hover:text-[var(--azul)]" [routerLink]="['/operador/reservas', r.numeroReserva]">
+                    <span class="min-w-0 truncate"><strong>{{ nombreHuesped(r) }}</strong>
+                      <span class="text-sm text-gray-500"> · hab. {{ r.habitacion?.numero ?? '—' }}</span></span>
+                    <span class="shrink-0 text-sm text-gray-600">{{ r.fechaInicio }}</span>
+                  </a>
+                </li>
+              }
+            </ul>
+          }
+          <h3 class="mb-2 text-sm font-bold uppercase tracking-widest text-[var(--azul)]">Salidas de hoy</h3>
+          @if (salidas.length === 0) {
+            <p class="text-sm text-gray-500">No hay salidas previstas para hoy.</p>
+          } @else {
+            <ul class="divide-y divide-gray-100">
+              @for (r of salidas.slice(0, 5); track r.id) {
+                <li>
+                  <a class="flex items-center justify-between gap-3 py-2 hover:text-[var(--azul)]" [routerLink]="['/operador/reservas', r.numeroReserva]">
+                    <span class="min-w-0 truncate"><strong>{{ nombreHuesped(r) }}</strong>
+                      <span class="text-sm text-gray-500"> · hab. {{ r.habitacion?.numero ?? '—' }}</span></span>
+                    <span class="shrink-0 text-sm text-gray-600">{{ r.numeroReserva }}</span>
+                  </a>
+                </li>
+              }
+            </ul>
+          }
+          <a class="mt-4 inline-block text-sm font-semibold text-[var(--azul)] underline" routerLink="/operador/reservas">Ver todas las reservas</a>
+        }
+      </section>
+
+      <section class="min-w-0 rounded-2xl border border-gray-200 p-5" aria-labelledby="t-est">
+        <h2 id="t-est" class="mb-4 font-serif text-xl font-bold text-[var(--azul-oscuro)]">Reservas por estado</h2>
+        @if (errores.reservas) {
+          <p class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-700" role="alert">{{ errores.reservas }}</p>
+        } @else if (!reservasCargadas) {
+          <div class="space-y-3" aria-label="Cargando">
+            <div class="h-6 animate-pulse rounded bg-gray-200"></div>
+            <div class="h-6 animate-pulse rounded bg-gray-200"></div>
+            <div class="h-6 animate-pulse rounded bg-gray-200"></div>
+          </div>
+        } @else {
+          <ul class="space-y-4">
+            @for (b of barras; track b.etiqueta) {
+              <li>
+                <div class="mb-1 flex justify-between text-sm">
+                  <span>{{ b.etiqueta }}</span>
+                  <strong class="text-[var(--azul-oscuro)]">{{ b.cantidad }}</strong>
+                </div>
+                <div class="h-3 overflow-hidden rounded-full bg-gray-100" role="img" [attr.aria-label]="b.etiqueta + ': ' + b.cantidad">
+                  <div class="h-full rounded-full {{ b.color }}" [style.width.%]="b.porcentaje"></div>
+                </div>
+              </li>
+            }
+          </ul>
+        }
+      </section>
     </div>
+
+    <section class="mb-10" aria-labelledby="t-acc">
+      <h2 id="t-acc" class="mb-3 font-serif text-xl font-bold text-[var(--azul-oscuro)]">Accesos rápidos</h2>
+      <div class="mb-4 flex flex-wrap gap-3">
+        <a class="rounded-lg bg-[var(--azul)] px-4 py-2 text-sm font-semibold text-white" routerLink="/operador/reservas"><i class="bi bi-calendar-check"></i> Reservas</a>
+        <a class="rounded-lg bg-[var(--azul)] px-4 py-2 text-sm font-semibold text-white" routerLink="/admin/habitaciones"><i class="bi bi-door-closed"></i> Habitaciones</a>
+        <a class="rounded-lg bg-[var(--azul)] px-4 py-2 text-sm font-semibold text-white" routerLink="/admin/servicios"><i class="bi bi-stars"></i> Servicios</a>
+        <button type="button" class="rounded-lg bg-[var(--azul)] px-4 py-2 text-sm font-semibold text-white" (click)="irAComentarios()"><i class="bi bi-chat-square-text"></i> Comentarios</button>
+      </div>
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <app-tarjeta-resumen etiqueta="Personal" icono="bi-person-badge"
+          [valor]="errores.operadores ? 'Error' : (totalOperadores ?? '…')" claseValor="text-3xl"
+          detallePrefijo="Operadores registrados" enlace="/admin/operadores"></app-tarjeta-resumen>
+        <app-tarjeta-resumen etiqueta="Experiencias" icono="bi-stars"
+          [valor]="errores.servicios ? 'Error' : (totalServicios ?? '…')" claseValor="text-3xl"
+          detallePrefijo="Servicios del catálogo" enlace="/admin/servicios"></app-tarjeta-resumen>
+        <app-tarjeta-resumen etiqueta="Categorías" icono="bi-tag"
+          [valor]="errores.tipos ? 'Error' : (totalTipos ?? '…')" claseValor="text-3xl"
+          detallePrefijo="Tipos de habitación" enlace="/admin/tipos_habitacion"></app-tarjeta-resumen>
+        <app-tarjeta-resumen etiqueta="Hospedaje" icono="bi-door-closed"
+          [valor]="errores.habitaciones ? 'Error' : (totalHabitaciones ?? '…')" claseValor="text-3xl"
+          detallePrefijo="Habitaciones en inventario" enlace="/admin/habitaciones"></app-tarjeta-resumen>
+      </div>
+    </section>
     <app-bienvenida-admin></app-bienvenida-admin>
   </main>
 </div>

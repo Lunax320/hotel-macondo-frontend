@@ -1,0 +1,27 @@
+<section class="mt-12" aria-labelledby="titulo-estadisticas">
+  <h2 id="titulo-estadisticas" class="font-serif text-2xl font-bold text-[var(--azul-oscuro)]">
+    Tu estancia en números
+  </h2>
+  <dl class="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
+    <div class="rounded-2xl border border-[var(--crema)] bg-[var(--crema-claro)] p-5">
+      <i class="bi bi-moon-stars text-xl text-[var(--azul)]" aria-hidden="true"></i>
+      <dd class="mt-2 font-serif text-4xl font-bold text-[var(--azul-oscuro)]">{{ valor(noches()) }}</dd>
+      <dt class="mt-1 text-sm">Noches reservadas</dt>
+    </div>
+    <div class="rounded-2xl border border-[var(--crema)] bg-[var(--crema-claro)] p-5">
+      <i class="bi bi-calendar-check text-xl text-[var(--azul)]" aria-hidden="true"></i>
+      <dd class="mt-2 font-serif text-4xl font-bold text-[var(--azul-oscuro)]">{{ valor(activas()) }}</dd>
+      <dt class="mt-1 text-sm">Reservas activas</dt>
+    </div>
+    <div class="rounded-2xl border border-[var(--crema)] bg-[var(--crema-claro)] p-5">
+      <i class="bi bi-calendar-event text-xl text-[var(--azul)]" aria-hidden="true"></i>
+      <dd class="mt-2 font-serif text-4xl font-bold text-[var(--azul-oscuro)]">{{ valor(proximas()) }}</dd>
+      <dt class="mt-1 text-sm">Próximas llegadas</dt>
+    </div>
+    <div class="rounded-2xl border border-[var(--crema)] bg-[var(--crema-claro)] p-5">
+      <i class="bi bi-clock-history text-xl text-[var(--azul)]" aria-hidden="true"></i>
+      <dd class="mt-2 font-serif text-4xl font-bold text-[var(--azul-oscuro)]">{{ valor(estadias()) }}</dd>
+      <dt class="mt-1 text-sm">Estadías pasadas</dt>
+    </div>
+  </dl>
+</section>

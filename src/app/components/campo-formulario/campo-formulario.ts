@@ -32,6 +32,17 @@ export class CampoFormulario {
     return !!control && control.invalid && (control.dirty || control.touched);
   }
 
+  // Id del primer mensaje de error visible; el input lo referencia con aria-describedby.
+  idError(): string | null {
+    if (!this.mostrarErrores()) return null;
+    const error = this.errores().find((e) => this.tieneError(e.clave));
+    return error ? this.idMensaje(error.clave) : null;
+  }
+
+  idMensaje(clave: string): string {
+    return `${this.nombreCampo()}-error-${clave}`;
+  }
+
   // Indica si el control identificado tiene errores de validación visibles.
   tieneError(clave: string): boolean {
     return !!this.formulario().get(this.nombreCampo())?.errors?.[clave];

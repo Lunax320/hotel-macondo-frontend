@@ -11,6 +11,11 @@
         [apellido]="clienteActual.apellido"
         [fechaActual]="fechaActual"
         [clienteId]="clienteId"
+        [cargando]="cargandoReserva"
+        [cantidadActivas]="cantidadActivas"
+        [tipo]="habitacionActiva?.tipoHabitacion?.nombre"
+        [numeroHabitacion]="habitacionActiva?.numero"
+        [rango]="reservaActiva ? rangoFechas(reservaActiva) : ''"
       ></app-cliente-saludo>
 
       @if (cargandoReserva) {
@@ -30,7 +35,17 @@
         [clienteId]="clienteId"
         [cantidadActivas]="cantidadActivas"
         [cantidadHistorial]="cantidadHistorial"
+        [proximas]="proximas"
+        [noches]="nochesActivas"
       ></app-acceso-rapido>
+
+      <app-cliente-estadisticas
+        [cargando]="cargandoReserva"
+        [noches]="nochesActivas"
+        [activas]="cantidadActivas"
+        [estadias]="cantidadHistorial"
+        [proximas]="proximas"
+      ></app-cliente-estadisticas>
 
       <app-servicios-recomendados [recomendaciones]="recomendaciones"></app-servicios-recomendados>
     }

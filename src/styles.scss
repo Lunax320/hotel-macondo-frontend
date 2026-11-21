@@ -24,3 +24,84 @@ h1, h2, h3, h4, h5, .titulo {
   font-family: "Playfair Display", serif !important;
   font-weight: 700;
 }
+
+/* Foco visible en todo el sitio para teclado. !important gana a clases
+   Tailwind como focus:outline-none que quitan el contorno en los campos. */
+:is(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--azul) !important;
+  outline-offset: 2px;
+}
+
+/* Campos sin borde propio (dentro de un contenedor que ya muestra el foco):
+   evita un segundo recuadro dentro del contenedor. */
+input.bg-transparent:focus-visible {
+  outline: none !important;
+}
+
+/* Botones unificados (admin, operador, cliente). Solo color, borde,
+   transición, cursor y estado deshabilitado; tamaño y forma van en la plantilla. */
+.btn-primario,
+.btn-secundario,
+.btn-secundario-borde,
+.btn-destructivo {
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.15s, color 0.15s, opacity 0.15s;
+}
+
+.btn-primario {
+  background-color: var(--azul);
+  color: #ffffff;
+}
+.btn-primario:hover:not(:disabled) {
+  background-color: var(--azul-oscuro);
+}
+
+.btn-secundario {
+  background-color: var(--dorado);
+  color: var(--azul-oscuro);
+}
+.btn-secundario:hover:not(:disabled) {
+  background-color: var(--dorado-oscuro);
+}
+
+/* Cancelar que cierra un formulario o diálogo (no destructivo) */
+.btn-secundario-borde {
+  background-color: transparent;
+  color: var(--azul-oscuro);
+  border: 1.5px solid var(--azul-oscuro);
+}
+.btn-secundario-borde:hover:not(:disabled) {
+  background-color: rgba(14, 42, 63, 0.08);
+}
+
+.btn-destructivo {
+  background-color: transparent;
+  color: #b42318;
+  border: 1.5px solid #b42318;
+}
+.btn-destructivo:hover:not(:disabled) {
+  background-color: rgba(180, 35, 24, 0.08);
+}
+
+.btn-peligro-solido {
+  background-color: #b42318;
+  color: #ffffff;
+  border: 1.5px solid #b42318;
+}
+.btn-peligro-solido:hover:not(:disabled) {
+  background-color: #8f1b13;
+  border-color: #8f1b13;
+}
+
+/* Deshabilitado: fondo gris y texto oscuro para que se lea (contraste >= 4,5:1). */
+.btn-primario:disabled,
+.btn-secundario:disabled,
+.btn-secundario-borde:disabled,
+.btn-destructivo:disabled,
+.btn-peligro-solido:disabled {
+  background-color: #e5e7eb !important;
+  color: #4b5563 !important;
+  border-color: #d1d5db !important;
+  cursor: not-allowed;
+}

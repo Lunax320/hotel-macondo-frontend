@@ -2,7 +2,9 @@ import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/cor
 import { ActivatedRoute } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NavbarCliente } from '../../../components/navbar-cliente/navbar-cliente';
+import { ComentarioCliente } from '../../../models/comentario.model';
 import { Reserva } from '../../../models/reserva.model';
+import { ComentarioService } from '../../../services/comentario.service';
 import { ReservaService } from '../../../services/reserva.service';
 import { HistorialItem } from './components/historial-item/historial-item';
 import { HistorialVacioBanner } from './components/historial-vacio-banner/historial-vacio-banner';
@@ -17,12 +19,14 @@ import { HistorialVacioBanner } from './components/historial-vacio-banner/histor
 export class HistorialReservas implements OnInit {
   private route = inject(ActivatedRoute);
   private reservaService = inject(ReservaService);
+  private comentarioService = inject(ComentarioService);
 
   clienteId = 0;
   historial: Reserva[] = [];
   filtroActual = 'TODOS';
   cargando = false;
   errorCarga = '';
+  comentarios: Record<number, ComentarioCliente> = {};
 
   // Obtiene el identificador de cliente de la ruta y solicita su historial.
   ngOnInit(): void {
@@ -41,7 +45,18 @@ export class HistorialReservas implements OnInit {
     this.reservaService.buscarHistorialPorCliente(this.clienteId).subscribe({
       next: (datos) => {
         this.historial = datos;
-        this.cargando = false;
+        // Mantiene la carga hasta tener los comentarios: así no se ofrece "Dejar un comentario"
+        // antes de saber si ya existe uno (evita duplicados). Si falla, se muestra sin comentarios.
+        this.comentarioService.delCliente(this.clienteId).subscribe({
+          next: (cs) => {
+            this.comentarios = Object.fromEntries(cs.map((c) => [c.reservaId, c]));
+            this.cargando = false;
+          },
+          error: () => {
+            this.comentarios = {};
+            this.cargando = false;
+          },
+        });
       },
       error: (error: HttpErrorResponse) => {
         const respuesta: unknown = error.error;

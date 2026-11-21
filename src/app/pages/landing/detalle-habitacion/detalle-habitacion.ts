@@ -1,13 +1,16 @@
+import { CurrencyPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, RouterLink } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { TipoHabitacion } from '../../../models/tipo-habitacion.model';
 import { HabitacionService } from '../../../services/habitacion.service';
 import { TipoHabitacionService } from '../../../services/tipo-habitacion.service';
+import { ToastService } from '../../../services/toast.service';
 import { ResumenReservaHabitacion } from './components/resumen-reserva-habitacion/resumen-reserva-habitacion';
+import { RecorridoHabitacion } from './components/recorrido-habitacion/recorrido-habitacion';
 
 @Component({
-  imports: [RouterLink, ResumenReservaHabitacion],
+  imports: [CurrencyPipe, RouterLink, ResumenReservaHabitacion, RecorridoHabitacion],
   selector: 'app-detalle-habitacion',
   styleUrl: './detalle-habitacion.scss',
   templateUrl: './detalle-habitacion.html',
@@ -17,6 +20,7 @@ export class DetalleHabitacion implements OnInit {
   private route = inject(ActivatedRoute);
   private habitacionService = inject(HabitacionService);
   private tipoHabitacionService = inject(TipoHabitacionService);
+  private toast = inject(ToastService);
 
   tipoHabitacion?: TipoHabitacion;
   hayDisponibilidad = false;
@@ -36,7 +40,7 @@ export class DetalleHabitacion implements OnInit {
           this.tipoHabitacion = tipo;
           this.hayDisponibilidad = tipo ? this.habitacionService.hayDisponibilidadPorTipo(tipo) : false;
         },
-        error: (err) => console.error('Error al cargar detalle de habitacion:', err),
+        error: () => this.toast.mostrar('No fue posible cargar esta habitación. Intenta más tarde.', 'error'),
       });
 
     this.route.queryParamMap.subscribe((parametros) => {

@@ -4,6 +4,7 @@ import { switchMap } from 'rxjs';
 import { AdminSidebar } from '../../../components/admin-sidebar/admin-sidebar';
 import { Habitacion } from '../../../models/habitacion.model';
 import { HabitacionService } from '../../../services/habitacion.service';
+import { ToastService } from '../../../services/toast.service';
 import { ConfirmacionAccion } from '../../../components/confirmacion-accion/confirmacion-accion';
 import { HabitacionTable } from './components/habitacion-table/habitacion-table';
 
@@ -18,9 +19,11 @@ import { HabitacionTable } from './components/habitacion-table/habitacion-table'
 })
 export class AdminHabitaciones implements OnInit {
   private habitacionService = inject(HabitacionService);
+  private toast = inject(ToastService);
 
   habitaciones: Habitacion[] = [];
   habitacionPendienteEliminar?: Habitacion;
+  habitacionPendienteEstado?: Habitacion;
   errorHabitacion = '';
 
   // Inicializa el componente cargando la lista de habitaciones.
@@ -28,21 +31,48 @@ export class AdminHabitaciones implements OnInit {
     this.cargarHabitaciones();
   }
 
-  // Alterna la disponibilidad de una habitación.
+  // Pide confirmación antes de alternar la disponibilidad.
   cambiarEstado(habitacion: Habitacion): void {
+    this.limpiarAvisos();
+
     if (habitacion.id === undefined) {
       return;
     }
 
-    this.limpiarAvisos();
+    this.habitacionPendienteEstado = habitacion;
+  }
+
+  // Alterna la disponibilidad de la habitación confirmada.
+  confirmarEstado(): void {
+    const habitacion = this.habitacionPendienteEstado;
+
+    if (habitacion?.id === undefined) {
+      return;
+    }
+
+    const habilitar = habitacion.estado !== 'DISPONIBLE';
+    this.habitacionPendienteEstado = undefined;
     this.habitacionService
       .cambiarEstadoHabitacion(habitacion.id)
       .pipe(switchMap(() => this.habitacionService.listarHabitaciones()))
       .subscribe({
-        next: (habitaciones) => (this.habitaciones = habitaciones),
+        next: (habitaciones) => {
+          this.habitaciones = habitaciones;
+          this.toast.mostrar(
+            `Habitación ${habitacion.nombre} ${habilitar ? 'habilitada' : 'deshabilitada'}.`,
+          );
+        },
         error: (error) =>
-          (this.errorHabitacion = error.error?.mensaje ?? 'No fue posible cambiar el estado.'),
+          this.toast.mostrar(
+            error.error?.mensaje ?? 'No fue posible cambiar el estado.',
+            'error',
+          ),
       });
+  }
+
+  // Cancela el cambio de estado pendiente.
+  cancelarEstado(): void {
+    this.habitacionPendienteEstado = undefined;
   }
 
   // Solicita la confirmación para eliminar una habitación.
@@ -59,6 +89,7 @@ export class AdminHabitaciones implements OnInit {
   // Elimina la habitación confirmada y recarga la lista.
   confirmarEliminacion(): void {
     const habitacionId = this.habitacionPendienteEliminar?.id;
+    const nombre = this.habitacionPendienteEliminar?.nombre;
 
     if (habitacionId === undefined) {
       return;
@@ -71,10 +102,14 @@ export class AdminHabitaciones implements OnInit {
         next: (habitaciones) => {
           this.habitaciones = habitaciones;
           this.habitacionPendienteEliminar = undefined;
+          this.toast.mostrar(`Habitación ${nombre} eliminada.`);
         },
         error: (error) => {
           this.habitacionPendienteEliminar = undefined;
-          this.errorHabitacion = error.error?.mensaje ?? 'No fue posible eliminar la habitación.';
+          this.toast.mostrar(
+            error.error?.mensaje ?? 'No fue posible eliminar la habitación.',
+            'error',
+          );
         },
       });
   }
@@ -97,5 +132,6 @@ export class AdminHabitaciones implements OnInit {
   private limpiarAvisos(): void {
     this.errorHabitacion = '';
     this.habitacionPendienteEliminar = undefined;
+    this.habitacionPendienteEstado = undefined;
   }
 }

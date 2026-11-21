@@ -1,0 +1,67 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.nav,
+.dia {
+  min-width: 0;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  background: transparent;
+  font-weight: 600;
+  color: var(--azul-oscuro);
+  cursor: pointer;
+}
+
+.nav {
+  width: 2.5rem;
+  font-size: 1.25rem;
+}
+
+.nav:hover:not(:disabled),
+.dia:hover:not(:disabled):not(.entrada):not(.salida) {
+  background: var(--crema-claro);
+}
+
+.dia:disabled,
+.nav:disabled {
+  color: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.dia.sin-disp {
+  background: #e5e7eb;
+  color: #6b7280;
+  text-decoration: line-through;
+}
+
+.dia.rango {
+  background: color-mix(in srgb, var(--azul) 18%, white);
+  color: var(--azul-oscuro);
+  border-radius: 0;
+}
+
+/* Entrada y salida: fondo oscuro + texto blanco (contraste > 10:1), también en hover/foco. */
+.dia.entrada,
+.dia.salida,
+.dia.entrada:hover,
+.dia.salida:hover {
+  background: var(--azul-oscuro);
+  color: #fff;
+}
+
+.dia:focus-visible,
+.nav:focus-visible {
+  outline: 3px solid var(--azul);
+  outline-offset: 2px;
+  position: relative;
+  z-index: 1;
+}
+
+.dia.entrada:focus-visible,
+.dia.salida:focus-visible {
+  outline-color: var(--azul-oscuro);
+  box-shadow: 0 0 0 2px #fff;
+}

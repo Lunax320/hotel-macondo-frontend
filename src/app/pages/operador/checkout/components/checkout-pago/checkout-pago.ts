@@ -14,6 +14,8 @@ export class CheckoutPago {
   @Output() pagar = new EventEmitter<string>();
 
   metodoPago = 'EFECTIVO';
+  // Paso previo de confirmación: el pago cobra de verdad, así que pide un segundo clic
+  confirmando = false;
 
   // Suma de los pagos ya registrados (anticipos)
   get abonado(): number {
@@ -30,6 +32,7 @@ export class CheckoutPago {
     if (!this.cuenta || this.cuenta.estado !== 'ABIERTA' || this.procesando) {
       return;
     }
+    this.confirmando = false;
     this.pagar.emit(this.metodoPago);
   }
 }

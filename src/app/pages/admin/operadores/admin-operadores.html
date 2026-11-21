@@ -25,8 +25,24 @@
       </div>
     }
 
+    @if (operadorPendiente; as operador) {
+      <app-confirmacion-accion
+        [titulo]="(operador.activo ? '¿Desactivar a ' : '¿Activar a ') + operador.nombre + '?'"
+        [mensaje]="
+          operador.activo
+            ? 'Dejará de poder operar reservas, cuentas y checkout.'
+            : 'Volverá a poder operar reservas, cuentas y checkout.'
+        "
+        [textoConfirmar]="operador.activo ? 'Confirmar desactivación' : 'Confirmar activación'"
+        textoCancelar="Cancelar"
+        (confirmado)="confirmarEstado()"
+        (cancelado)="cancelarEstado()"
+      ></app-confirmacion-accion>
+    }
+
     <app-operador-tabla
       [operadores]="operadores"
+      [cargaFallida]="!!errorOperador"
       (cambiarEstado)="cambiarEstado($event)"
       (eliminar)="eliminar($event)"
     ></app-operador-tabla>

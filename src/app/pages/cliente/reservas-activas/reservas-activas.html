@@ -14,14 +14,6 @@
       </p>
     </div>
 
-    @if (mensajeOperacion) {
-      <p
-        class="mb-6 rounded-lg border border-[#9ad7b6] bg-[#effaf4] p-4 text-[#166534]"
-        role="status"
-      >
-        {{ mensajeOperacion }}
-      </p>
-    }
     @if (errorCancelacion) {
       <p
         class="mb-6 rounded-lg border border-[#f1b8b1] bg-[#fff4f2] p-4 text-[#b42318]"
@@ -31,7 +23,7 @@
       </p>
       <button
         type="button"
-        class="mb-5 font-bold text-[var(--azul)] underline cursor-pointer"
+        class="btn-secundario mb-5 rounded-lg px-5 py-2.5 text-sm font-bold"
         (click)="cargarReservas()"
       >
         Volver a consultar
@@ -52,7 +44,7 @@
           <p>{{ errorCarga }}</p>
           <button
             type="button"
-            class="mt-3 font-bold underline cursor-pointer"
+            class="btn-secundario mt-3 rounded-lg px-5 py-2.5 text-sm font-bold"
             (click)="cargarReservas()"
           >
             Volver a consultar
@@ -81,7 +73,7 @@
     @if (!cargando && !errorCarga && reservas.length > 0) {
       <app-reservas-metricas-resumen
         [totalReservas]="reservas.length"
-        [totalActivas]="contarPorEstado('ACTIVA')"
+        [totalActivas]="reservas.length"
         [totalConfirmadas]="contarPorEstado('CONFIRMADA')"
         [totalPendientes]="contarPorEstado('PENDIENTE')"
       ></app-reservas-metricas-resumen>

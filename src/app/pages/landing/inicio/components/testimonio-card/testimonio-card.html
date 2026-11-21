@@ -8,11 +8,19 @@
     </p>
 
     <div class="flex items-center gap-4 pt-4">
-      <img
-        class="w-[46px] h-[46px] rounded-full object-cover"
-        [src]="testimonioActual.imagen"
-        [alt]="testimonioActual.nombre"
-      />
+      @if (testimonioActual.imagen) {
+        <img
+          class="w-[46px] h-[46px] rounded-full object-cover"
+          [src]="testimonioActual.imagen"
+          [alt]="testimonioActual.nombre"
+        />
+      } @else {
+        <span
+          class="w-[46px] h-[46px] rounded-full bg-[var(--azul)] text-white font-bold flex items-center justify-center"
+          aria-hidden="true"
+          >{{ testimonioActual.nombre.charAt(0) }}</span
+        >
+      }
       <div>
         <strong class="text-[var(--azul-oscuro)] block font-bold">{{
           testimonioActual.nombre

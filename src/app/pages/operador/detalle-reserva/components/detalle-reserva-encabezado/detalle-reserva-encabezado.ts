@@ -9,4 +9,12 @@ import { ReservaDetalleOperador } from '../../../../../models/reserva-detalle-op
 })
 export class DetalleReservaEncabezado {
   reserva = input.required<ReservaDetalleOperador>();
+
+  // Si hay una página anterior, vuelve a ella para conservar el filtro y la búsqueda de la lista.
+  volver(evento: Event): void {
+    if (window.history.length > 1) {
+      evento.preventDefault();
+      window.history.back();
+    }
+  }
 }

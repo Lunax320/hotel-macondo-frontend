@@ -12,6 +12,11 @@
     [imagenesDisponibles]="imagenesDisponibles"
   ></app-servicio-campos-detalle>
   <app-servicio-campos-extra [formulario]="servicioForm"></app-servicio-campos-extra>
+  @if (faltantes().length > 0) {
+    <p class="text-sm font-semibold text-[#b42318]" role="status">
+      Falta: {{ faltantes().join(', ') }}.
+    </p>
+  }
   <app-botones-formulario
     [esEdicion]="servicio() !== undefined"
     [deshabilitado]="servicioForm.invalid"

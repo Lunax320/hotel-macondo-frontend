@@ -28,7 +28,7 @@
         <strong
           class="rounded-full border border-[var(--dorado)] bg-[rgba(245,205,99,0.18)] px-5 py-2.5 text-[#ffe18b]"
         >
-          Desde ${{ tipo.precioNoche.toLocaleString('es-CO') }} COP / noche
+          Desde {{ tipo.precioNoche | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }} / noche
         </strong>
       </div>
     </div>
@@ -59,6 +59,8 @@
       >
         {{ tipo.descripcion }}
       </blockquote>
+
+      <app-recorrido-habitacion [tipo]="tipo"></app-recorrido-habitacion>
 
       <section class="mt-12" aria-labelledby="detalle-habitacion">
         <h2 class="font-serif text-3xl font-bold text-[var(--azul-oscuro)]" id="detalle-habitacion">

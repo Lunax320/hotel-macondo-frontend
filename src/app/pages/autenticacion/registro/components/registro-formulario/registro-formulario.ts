@@ -1,4 +1,4 @@
-import { Component, input, output, signal } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -36,7 +36,6 @@ function contrasenasIguales(control: AbstractControl): ValidationErrors | null {
 })
 export class RegistroFormulario {
   mensajeError = input('');
-  errorLocal = signal('');
   registrado = output<DatosRegistro>();
 
   formulario = new FormGroup(
@@ -73,16 +72,9 @@ export class RegistroFormulario {
   );
 
   enviar(): void {
-    this.errorLocal.set('');
-
-    const controlCorreo = this.formulario.get('correo');
-    if (controlCorreo?.hasError('pattern') || controlCorreo?.hasError('required')) {
-      this.errorLocal.set('El formato del correo electrónico no es válido.');
-      return;
-    }
-
+    // Los errores se muestran en cada campo.
     if (this.formulario.invalid) {
-      this.errorLocal.set('Por favor completa todos los campos correctamente.');
+      this.formulario.markAllAsTouched();
       return;
     }
 

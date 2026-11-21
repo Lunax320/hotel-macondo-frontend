@@ -2,10 +2,12 @@ import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/cor
 import { RouterLink } from '@angular/router';
 import { Servicio } from '../../../models/servicio.model';
 import { ServicioService } from '../../../services/servicio.service';
+import { ToastService } from '../../../services/toast.service';
 import { ServicioCard } from './components/servicio-card/servicio-card';
+import { MapaHotel } from './components/mapa-hotel/mapa-hotel';
 
 @Component({
-  imports: [RouterLink, ServicioCard],
+  imports: [RouterLink, ServicioCard, MapaHotel],
   selector: 'app-servicios',
   styleUrl: './servicios.scss',
   templateUrl: './servicios.html',
@@ -13,10 +15,13 @@ import { ServicioCard } from './components/servicio-card/servicio-card';
 })
 export class Servicios implements OnInit {
   private servicioService = inject(ServicioService);
+  private toast = inject(ToastService);
 
   servicios: Servicio[] = [];
   categorias: string[] = [];
   categoriaSeleccionada = 'Todos';
+  // Vista del catálogo: lista de tarjetas o mapa interactivo del hotel.
+  vista: 'lista' | 'mapa' = 'lista';
   serviciosAgregados: number[] = [];
 
   // Carga el catálogo activo y deriva las categorías disponibles.
@@ -26,7 +31,7 @@ export class Servicios implements OnInit {
         this.servicios = datos;
         this.categorias = [...new Set(datos.map((s) => s.categoria))];
       },
-      error: (err) => console.error('Error al cargar servicios:', err),
+      error: () => this.toast.mostrar('No fue posible cargar los servicios. Intenta más tarde.', 'error'),
     });
   }
 

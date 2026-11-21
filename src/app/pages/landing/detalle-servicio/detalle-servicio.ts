@@ -1,13 +1,15 @@
+import { CurrencyPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { Servicio } from '../../../models/servicio.model';
 import { ServicioService } from '../../../services/servicio.service';
+import { ToastService } from '../../../services/toast.service';
 import { ResumenServicio } from './components/resumen-servicio/resumen-servicio';
 import { ServicioRelacionadoCard } from './components/servicio-relacionado-card/servicio-relacionado-card';
 
 @Component({
-  imports: [RouterLink, ResumenServicio, ServicioRelacionadoCard],
+  imports: [CurrencyPipe, RouterLink, ResumenServicio, ServicioRelacionadoCard],
   selector: 'app-detalle-servicio',
   styleUrl: './detalle-servicio.scss',
   templateUrl: './detalle-servicio.html',
@@ -16,6 +18,7 @@ import { ServicioRelacionadoCard } from './components/servicio-relacionado-card/
 export class DetalleServicio implements OnInit {
   private route = inject(ActivatedRoute);
   private servicioService = inject(ServicioService);
+  private toast = inject(ToastService);
 
   servicio?: Servicio;
   serviciosRelacionados: Servicio[] = [];
@@ -40,7 +43,7 @@ export class DetalleServicio implements OnInit {
             this.cargarRelacionados(servicio.id);
           }
         },
-        error: (err) => console.error('Error al cargar detalle de servicio:', err),
+        error: () => this.toast.mostrar('No fue posible cargar este servicio. Intenta más tarde.', 'error'),
       });
   }
 
@@ -61,7 +64,7 @@ export class DetalleServicio implements OnInit {
   private cargarRelacionados(id: number): void {
     this.servicioService.obtenerRelacionados(id).subscribe({
       next: (relacionados) => (this.serviciosRelacionados = relacionados),
-      error: (err) => console.error('Error al cargar servicios relacionados:', err),
+      error: () => this.toast.mostrar('No fue posible cargar los servicios relacionados.', 'error'),
     });
   }
 }

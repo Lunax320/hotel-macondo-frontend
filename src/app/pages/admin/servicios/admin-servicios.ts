@@ -2,14 +2,16 @@ import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/cor
 import { switchMap } from 'rxjs';
 import { AdminSidebar } from '../../../components/admin-sidebar/admin-sidebar';
 import { EncabezadoAdmin } from '../../../components/encabezado-admin/encabezado-admin';
+import { ConfirmacionAccion } from '../../../components/confirmacion-accion/confirmacion-accion';
 import { Servicio } from '../../../models/servicio.model';
 import { ServicioService } from '../../../services/servicio.service';
+import { ToastService } from '../../../services/toast.service';
 import { ServicioTable } from './components/servicio-table/servicio-table';
 
 // Lista de servicios del administrador. Como en el backend, un servicio no se borra:
 // se desactiva para que deje de verse en el sitio sin romper las cuentas que ya lo usaron.
 @Component({
-  imports: [AdminSidebar, EncabezadoAdmin, ServicioTable],
+  imports: [ConfirmacionAccion, AdminSidebar, EncabezadoAdmin, ServicioTable],
   selector: 'app-admin-servicios',
   styleUrl: './admin-servicios.scss',
   templateUrl: './admin-servicios.html',
@@ -18,8 +20,10 @@ import { ServicioTable } from './components/servicio-table/servicio-table';
 })
 export class AdminServicios implements OnInit {
   private servicioService = inject(ServicioService);
+  private toast = inject(ToastService);
 
   servicios: Servicio[] = [];
+  servicioPendiente?: Servicio;
   errorServicio = '';
 
   // Carga el catálogo de servicios al iniciar la pantalla de administración.
@@ -27,21 +31,39 @@ export class AdminServicios implements OnInit {
     this.cargarServicios();
   }
 
-  // Cambia el estado y vuelve a traer la lista en un solo flujo (sin subscribe anidado).
+  // Pide confirmación antes de cambiar el estado.
   cambiarEstado(servicio: Servicio): void {
-    if (servicio.id === undefined) {
+    if (servicio.id !== undefined) {
+      this.servicioPendiente = servicio;
+    }
+  }
+
+  // Cancela el cambio de estado pendiente.
+  cancelarEstado(): void {
+    this.servicioPendiente = undefined;
+  }
+
+  // Cambia el estado y vuelve a traer la lista en un solo flujo (sin subscribe anidado).
+  confirmarEstado(): void {
+    const servicio = this.servicioPendiente;
+
+    if (servicio?.id === undefined) {
       return;
     }
 
+    this.servicioPendiente = undefined;
     this.servicioService
       .cambiarEstado(servicio.id)
       .pipe(switchMap(() => this.servicioService.buscarTodos()))
       .subscribe({
         next: (servicios) => {
           this.servicios = servicios;
+          this.toast.mostrar(
+            `Servicio ${servicio.nombre} ${servicio.activo ? 'desactivado' : 'activado'}.`,
+          );
         },
         error: (error) =>
-          (this.errorServicio = error.error?.mensaje ?? 'No fue posible cambiar el estado.'),
+          this.toast.mostrar(error.error?.mensaje ?? 'No fue posible cambiar el estado.', 'error'),
       });
   }
 

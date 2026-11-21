@@ -3,11 +3,27 @@
     class="flex h-full flex-col overflow-hidden rounded-lg bg-white shadow-[0_12px_30px_rgba(30,58,70,0.10)]"
   >
     <div class="relative h-[240px] overflow-hidden md:h-[270px]">
-      <img
-        class="h-full w-full object-cover transition duration-500 hover:scale-105"
-        [src]="servicioActual.imagen"
-        [alt]="servicioActual.nombre"
-      />
+      @if (videoDe(servicioActual.nombre); as video) {
+        <video
+          #clip
+          class="h-full w-full object-cover transition duration-500 hover:scale-105"
+          [src]="video"
+          [attr.poster]="servicioActual.imagen"
+          [attr.aria-label]="servicioActual.nombre"
+          [muted]="true"
+          loop
+          playsinline
+          preload="none"
+          (mouseenter)="clip.play()"
+          (mouseleave)="clip.pause(); clip.currentTime = 0"
+        ></video>
+      } @else {
+        <img
+          class="h-full w-full object-cover transition duration-500 hover:scale-105"
+          [src]="servicioActual.imagen"
+          [alt]="servicioActual.nombre"
+        />
+      }
       <span
         class="absolute left-4 top-4 rounded-full bg-white px-3 py-1 text-[11px] font-bold uppercase text-[#147ba5] shadow-sm"
       >
@@ -23,8 +39,8 @@
       <span
         class="absolute bottom-3 right-0 rounded-l-md bg-[#ffc94d] px-5 py-2 text-sm font-bold text-[#5a4200]"
       >
-        {{ servicioActual.categoria === 'Gastronomía' ? 'Menú desde $' : 'Desde $'
-        }}{{ servicioActual.precio.toLocaleString('es-CO') }}
+        {{ servicioActual.categoria === 'Gastronomía' ? 'Menú desde' : 'Desde' }}
+        {{ servicioActual.precio | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
       </span>
     </div>
 

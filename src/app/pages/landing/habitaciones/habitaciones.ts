@@ -2,10 +2,12 @@ import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/cor
 import { ActivatedRoute, ParamMap, RouterLink } from '@angular/router';
 import { TipoHabitacion } from '../../../models/tipo-habitacion.model';
 import { TipoHabitacionService } from '../../../services/tipo-habitacion.service';
+import { ToastService } from '../../../services/toast.service';
 import { HabitacionCard } from './components/habitacion-card/habitacion-card';
+import { SimuladorEstadia } from './components/simulador-estadia/simulador-estadia';
 
 @Component({
-  imports: [RouterLink, HabitacionCard],
+  imports: [RouterLink, HabitacionCard, SimuladorEstadia],
   selector: 'app-habitaciones',
   styleUrl: './habitaciones.scss',
   templateUrl: './habitaciones.html',
@@ -14,6 +16,7 @@ import { HabitacionCard } from './components/habitacion-card/habitacion-card';
 export class Habitaciones implements OnInit {
   private route = inject(ActivatedRoute);
   private tipoHabitacionService = inject(TipoHabitacionService);
+  private toast = inject(ToastService);
 
   tiposHabitacion: TipoHabitacion[] = [];
   personas: number | null = null;
@@ -49,7 +52,7 @@ export class Habitaciones implements OnInit {
             ? todosLosTipos
             : todosLosTipos.filter((t) => t.capacidadPersonas >= (this.personas ?? 0));
       },
-      error: (err) => console.error('Error al cargar habitaciones:', err),
+      error: () => this.toast.mostrar('No fue posible cargar las habitaciones. Intenta más tarde.', 'error'),
     });
   }
 

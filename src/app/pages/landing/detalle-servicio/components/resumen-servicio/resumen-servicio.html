@@ -13,7 +13,7 @@
     <div class="mt-5 rounded-lg border border-[#c9e0e9] bg-[#eef6f9] p-5">
       <span class="text-[11px] font-bold uppercase text-[#147ba5]">Precio</span>
       <strong class="mt-2 block font-['Playfair_Display'] text-2xl leading-8 text-[#147ba5]">
-        Desde ${{ servicioActual.precio.toLocaleString('es-CO') }} COP
+        Desde {{ servicioActual.precio | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
       </strong>
     </div>
 

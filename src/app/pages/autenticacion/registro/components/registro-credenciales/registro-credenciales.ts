@@ -16,7 +16,7 @@ export class RegistroCredenciales {
   // Mensajes que se muestran según el error de cada campo.
   erroresCorreo: ErrorCampo[] = [
     { clave: 'required', mensaje: 'El correo es obligatorio.' },
-    { clave: 'email', mensaje: 'Ingresa un correo válido.' },
+    { clave: 'pattern', mensaje: 'Ingresa un correo válido.' },
   ];
   erroresContrasena: ErrorCampo[] = [
     { clave: 'required', mensaje: 'La contraseña es obligatoria.' },

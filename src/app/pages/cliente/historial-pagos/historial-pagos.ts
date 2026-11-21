@@ -21,6 +21,19 @@ export class HistorialPagos implements OnInit {
   cargando = false;
   errorCarga = '';
 
+  // Suma de los montos de todos los pagos cargados.
+  get totalPagado(): number {
+    return this.pagos.reduce((acc, p) => acc + (p.monto || 0), 0);
+  }
+
+  // Pago con la fecha más reciente (undefined si la lista está vacía).
+  get pagoReciente(): PagoCliente | undefined {
+    return this.pagos.reduce<PagoCliente | undefined>(
+      (a, p) => (!a || new Date(p.fechaPago).getTime() > new Date(a.fechaPago).getTime() ? p : a),
+      undefined,
+    );
+  }
+
   // Lee el cliente de la ruta y carga su historial de pagos
   ngOnInit(): void {
     this.clienteId = Number(this.route.snapshot.params['id']);

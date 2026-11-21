@@ -29,7 +29,7 @@
         <strong
           class="rounded-full border border-[#ffc94d] bg-[#ffc94d]/20 px-5 py-2.5 text-[#ffd76f]"
         >
-          Desde ${{ servicioActual.precio.toLocaleString('es-CO') }} COP
+          Desde {{ servicioActual.precio | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
         </strong>
       </div>
     </div>
