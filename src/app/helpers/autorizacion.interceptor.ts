@@ -2,10 +2,11 @@ import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, throwError } from 'rxjs';
 import { UsuarioService } from '../services/usuario.service';
+import { environment } from '../../environments/environment';
 
 export const autorizacionInterceptor: HttpInterceptorFn = (request, next) => {
   // El token solo se envía al backend de Macondo, nunca a otros servidores.
-  if (!request.url.startsWith('http://localhost:8080/')) return next(request);
+  if (!request.url.startsWith(environment.baseUrl)) return next(request);
 
   const path = new URL(request.url).pathname;
   if (path === '/api/auth/login' || path === '/api/cliente/registro') return next(request);

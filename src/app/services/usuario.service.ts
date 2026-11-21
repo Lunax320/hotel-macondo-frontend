@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { Usuario } from '../models/usuario.model';
 import { Rol } from '../models/rol.model';
+import { environment } from '../../environments/environment';
 
 interface SesionUsuario {
   rol: Rol;
@@ -15,7 +16,7 @@ interface SesionUsuario {
   providedIn: 'root',
 })
 export class UsuarioService {
-  private url = 'http://localhost:8080/api/auth';
+  private url = environment.apiUrl + '/auth';
   private router = inject(Router);
 
   private http = inject(HttpClient);

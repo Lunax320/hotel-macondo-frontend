@@ -45,19 +45,76 @@ cd hotel-macondo-frontend
 npm install
 ```
 
-3. Levantar el servidor de desarrollo:
+3. Levantar el servidor en desarrollo:
 
-```bash
-ng serve
+```powershell
+npm run start:dev
 ```
 
-4. Abrir en el navegador:
+4. Levantar el servidor en producción:
+
+```powershell
+npm run start:prod
+```
+
+El modo de desarrollo usa `http://localhost:8080/api` y el modo de producción
+usa `https://macondo-api.kusare.fyi/api`.
+
+Abrir desarrollo en el navegador:
 
 ```
 http://localhost:4200
 ```
 
-El servidor recargará automáticamente al detectar cambios en los archivos fuente.
+El servidor de desarrollo recargará automáticamente al detectar cambios en los
+archivos fuente.
+
+---
+
+## Configuración de entornos
+
+Los endpoints se administran desde `src/environments`:
+
+| Archivo | Uso |
+|---|---|
+| `environment.development.ts` | Angular en desarrollo |
+| `environment.ts` | Angular en producción |
+
+Configuración de desarrollo:
+
+```typescript
+apiUrl: 'http://localhost:8080/api'
+baseUrl: 'http://localhost:8080/'
+```
+
+Configuración de producción:
+
+```typescript
+apiUrl: 'https://macondo-api.kusare.fyi/api'
+baseUrl: 'https://macondo-api.kusare.fyi/'
+```
+
+`angular.json` reemplaza automáticamente `environment.ts` por
+`environment.development.ts` al compilar o servir con la configuración
+`development`.
+
+---
+
+## Publicación
+
+El frontend publicado debe servir los archivos compilados desde
+`dist/HotelMacondo/browser`. Para compilar producción:
+
+```powershell
+npm run build -- --configuration production
+```
+
+La configuración publicada puede exponerse con Cloudflare Tunnel:
+
+| Servicio | URL pública | Origen local |
+|---|---|---|
+| Frontend | `https://macondo.kusare.fyi` | `http://localhost:4200` |
+| Backend | `https://macondo-api.kusare.fyi` | `http://localhost:8080` |
 
 ---
 
