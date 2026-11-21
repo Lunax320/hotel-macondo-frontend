@@ -8,7 +8,7 @@ import { Testimonio } from '../models/testimonio.model';
 })
 export class TestimonioService {
   private http = inject(HttpClient);
-  private url = 'http://localhost:8080/api/testimonio';
+  private url = 'https://macondoapi.kusare.fyi/api/testimonio';
 
   obtenerTodos(): Observable<Testimonio[]> {
     return this.http.get<Testimonio[]>(this.url);

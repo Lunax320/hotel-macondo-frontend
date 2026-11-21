@@ -9,7 +9,7 @@ import { Cliente } from '../models/cliente.model';
 })
 export class ClienteService {
   private http = inject(HttpClient);
-  private url = 'http://localhost:8080/api/cliente';
+  private url = 'https://macondoapi.kusare.fyi/api/cliente';
 
   // Busca un cliente por su id.
   buscarPorId(id: number): Observable<Cliente> {

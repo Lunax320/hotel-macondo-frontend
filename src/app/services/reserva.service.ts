@@ -13,8 +13,8 @@ import { PagoCliente } from '../models/pago-cliente.model';
 
 @Injectable({ providedIn: 'root' })
 export class ReservaService {
-  private url = 'http://localhost:8080/api/reserva';
-  private operadorUrl = 'http://localhost:8080/api/operador';
+  private url = 'https://macondoapi.kusare.fyi/api/reserva';
+  private operadorUrl = 'https://macondoapi.kusare.fyi/api/operador';
 
   constructor(private http: HttpClient) {}
 

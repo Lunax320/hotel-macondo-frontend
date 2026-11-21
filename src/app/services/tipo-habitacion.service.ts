@@ -8,9 +8,9 @@ import { TipoHabitacion } from '../models/tipo-habitacion.model';
 })
 export class TipoHabitacionService {
   private http = inject(HttpClient);
-  private url = 'http://localhost:8080/api/tipo-habitacion';
+  private url = 'https://macondoapi.kusare.fyi/api/tipo-habitacion';
 
-  // Obtiene todos los tipos de habitación 
+  // Obtiene todos los tipos de habitación
   obtenerTodos(): Observable<TipoHabitacion[]> {
     return this.http.get<TipoHabitacion[]>(this.url);
   }

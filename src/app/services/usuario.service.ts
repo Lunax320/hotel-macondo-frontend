@@ -15,7 +15,7 @@ interface SesionUsuario {
   providedIn: 'root',
 })
 export class UsuarioService {
-  private url = 'http://localhost:8080/api/auth';
+  private url = 'https://macondoapi.kusare.fyi/api/auth';
   private router = inject(Router);
 
   constructor(private http: HttpClient) {}

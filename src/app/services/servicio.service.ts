@@ -8,7 +8,7 @@ import { Servicio } from '../models/servicio.model';
 })
 export class ServicioService {
   private http = inject(HttpClient);
-  private url = 'http://localhost:8080/api/servicio';
+  private url = 'https://macondoapi.kusare.fyi/api/servicio';
 
   // Catálogo activo (Landing, Servicios)
   obtenerCatalogoActivo(): Observable<Servicio[]> {

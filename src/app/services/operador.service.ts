@@ -7,7 +7,7 @@ import { Operador } from '../models/operador.model';
 @Injectable({ providedIn: 'root' })
 export class OperadorService {
   private http = inject(HttpClient);
-  private url = 'http://localhost:8080/api/operador';
+  private url = 'https://macondoapi.kusare.fyi/api/operador';
 
   // Lista todos los operadores.
   listar(): Observable<Operador[]> {

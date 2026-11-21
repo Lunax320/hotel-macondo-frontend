@@ -9,7 +9,7 @@ import { TipoHabitacion } from '../models/tipo-habitacion.model';
 })
 export class HabitacionService {
   private http = inject(HttpClient);
-  private url = 'http://localhost:8080/api/habitacion';
+  private url = 'https://macondoapi.kusare.fyi/api/habitacion';
 
   hayDisponibilidadPorTipo(tipoHabitacion: TipoHabitacion): boolean {
     // Si el tipo existe y tiene capacidad configurada se asume disponible
