@@ -4,7 +4,8 @@ import { Rol } from './rol.model';
 export interface Usuario {
   id?: number;
   correo: string;
-  contrasena?: string;
   rol: Rol;
+  roles?: Rol[];
   cliente?: Cliente;
+  token?: string;
 }

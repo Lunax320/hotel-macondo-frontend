@@ -73,14 +73,23 @@
         [routerLink]="['/cliente', clienteId(), 'perfil']"
         >Mi Perfil</a
       >
-      <a
+      <button
+        type="button"
         class="bg-[var(--dorado)] text-[var(--azul-oscuro)] font-bold px-5 py-2 rounded-lg hover:bg-[var(--dorado-oscuro)] transition cursor-pointer"
-        routerLink="/login"
-        >Cerrar sesión</a
+        (click)="usuarioService.cerrarSesion()"
       >
+        Cerrar sesión
+      </button>
     </div>
 
     <!-- Menú móvil -->
+    <button
+      type="button"
+      class="md:hidden text-sm font-semibold text-[var(--azul)]"
+      (click)="usuarioService.cerrarSesion()"
+    >
+      Cerrar sesión
+    </button>
     <button class="md:hidden text-2xl text-[var(--azul)] focus:outline-none">
       <i class="bi bi-list"></i>
     </button>

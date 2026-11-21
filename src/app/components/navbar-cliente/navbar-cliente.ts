@@ -1,5 +1,6 @@
-import { Component, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { UsuarioService } from '../../services/usuario.service';
 
 // Navegación privada compartida para las páginas del cliente.
 @Component({
@@ -9,6 +10,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   styleUrl: './navbar-cliente.scss',
 })
 export class NavbarCliente {
+  protected usuarioService = inject(UsuarioService);
   clienteId = input.required<number>();
   mostrarVolver = input(false);
 }

@@ -5,6 +5,7 @@ import { NavbarCliente } from '../../../components/navbar-cliente/navbar-cliente
 import { Cliente } from '../../../models/cliente.model';
 import { ClienteService } from '../../../services/cliente.service';
 import { ToastService } from '../../../services/toast.service';
+import { UsuarioService } from '../../../services/usuario.service';
 import { PerfilResumen } from './components/perfil-resumen/perfil-resumen';
 
 @Component({
@@ -19,6 +20,7 @@ export class PerfilCliente implements OnInit {
   private router = inject(Router);
   private clienteService = inject(ClienteService);
   private toast = inject(ToastService);
+  private usuarioService = inject(UsuarioService);
 
   clienteId = 0;
   cliente?: Cliente;
@@ -79,6 +81,11 @@ export class PerfilCliente implements OnInit {
       })
       .subscribe({
         next: (cliente) => {
+          // El JWT identifica el correo anterior: si cambia, se requiere otro login.
+          if (cliente.correo.trim().toLowerCase() !== this.cliente?.correo.trim().toLowerCase()) {
+            this.usuarioService.cerrarSesion();
+            return;
+          }
           this.cliente = cliente;
           this.nombre = cliente.nombre;
           this.apellido = cliente.apellido;
@@ -135,6 +142,7 @@ export class PerfilCliente implements OnInit {
     this.clienteService.eliminarCuenta(this.clienteId).subscribe({
       next: () => {
         this.toast.mostrar('Tu cuenta fue eliminada.');
+        this.usuarioService.limpiarSesion();
         this.router.navigateByUrl('/');
       },
       error: (err) => {
