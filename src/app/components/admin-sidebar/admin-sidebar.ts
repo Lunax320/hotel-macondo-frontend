@@ -23,6 +23,7 @@ export class AdminSidebar {
       texto: 'Operadores',
     },
     { clave: 'servicios', ruta: '/admin/servicios', icono: 'bi-stars', texto: 'Servicios' },
+    { clave: 'promociones', ruta: '/admin/promociones', icono: 'bi-ticket-perforated', texto: 'Cupones y promociones' },
     {
       clave: 'tipos_habitacion',
       ruta: '/admin/tipos_habitacion',
