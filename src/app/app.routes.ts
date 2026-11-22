@@ -26,6 +26,7 @@ import { CrearReserva } from './pages/cliente/crear-reserva/crear-reserva';
 import { HistorialReservas } from './pages/cliente/historial-reservas/historial-reservas';
 import { HistorialPagos } from './pages/cliente/historial-pagos/historial-pagos';
 import { ReservasActivas } from './pages/cliente/reservas-activas/reservas-activas';
+import { ReservaDetalleClientePage } from './pages/cliente/reserva-detalle/reserva-detalle';
 import { Explorar } from './pages/landing/explorar/explorar';
 
 export const routes: Routes = [
@@ -132,6 +133,12 @@ export const routes: Routes = [
     canActivate: [sesionGuard],
     data: { roles: ['CLIENTE'] },
     component: CrearReserva,
+  },
+  {
+    path: 'cliente/:id/reservas/:reservaId',
+    canActivate: [sesionGuard],
+    data: { roles: ['CLIENTE'] },
+    component: ReservaDetalleClientePage,
   },
   {
     path: 'cliente/:id/perfil',

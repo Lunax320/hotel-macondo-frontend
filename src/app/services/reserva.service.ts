@@ -10,6 +10,7 @@ import { ReservaOperador } from '../models/reserva-operador.model';
 import { ReservaSolicitud } from '../models/reserva-solicitud.model';
 import { Pago } from '../models/pago.model';
 import { PagoCliente } from '../models/pago-cliente.model';
+import { ReservaDetalleCliente } from '../models/reserva-detalle-cliente.model';
 import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -66,6 +67,24 @@ export class ReservaService {
   // Obtiene las reservas activas asociadas al cliente.
   buscarActivasPorCliente(clienteId: number): Observable<Reserva[]> {
     return this.http.get<Reserva[]>(`${this.url}/cliente/${clienteId}/activas`);
+  }
+
+  obtenerDetalleCliente(clienteId: number, reservaId: number): Observable<ReservaDetalleCliente> {
+    return this.http.get<ReservaDetalleCliente>(
+      `${this.url}/cliente/${clienteId}/${reservaId}/detalle`,
+    );
+  }
+
+  pagarCuentaCliente(
+    clienteId: number,
+    reservaId: number,
+    monto: number,
+    metodoPago: string,
+  ): Observable<PagoCliente> {
+    return this.http.post<PagoCliente>(
+      `${this.url}/cliente/${clienteId}/${reservaId}/pago`,
+      { monto, metodoPago },
+    );
   }
 
   // Obtiene el historial de reservas del cliente.
