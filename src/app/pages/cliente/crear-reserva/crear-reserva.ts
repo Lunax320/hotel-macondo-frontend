@@ -1,6 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { mergeMap, Observable, Subscription } from 'rxjs';
 import { NavbarCliente } from '../../../components/navbar-cliente/navbar-cliente';
@@ -15,11 +17,15 @@ import { ReservaDisponibilidad } from './components/reserva-disponibilidad/reser
 import { ToastService } from '../../../services/toast.service';
 import { erroresReserva, ReservaFormulario } from './components/reserva-formulario/reserva-formulario';
 import { ReservaInstrucciones } from './components/reserva-instrucciones/reserva-instrucciones';
+import { PromocionService } from '../../../services/promocion.service';
+import { PromocionAplicada } from '../../../models/promocion.model';
 
 @Component({
   selector: 'app-crear-reserva',
   imports: [
     ReactiveFormsModule,
+    FormsModule,
+    CommonModule,
     NavbarCliente,
     ReservaFormulario,
     ReservaDisponibilidad,
@@ -36,6 +42,7 @@ export class CrearReserva implements OnInit, OnDestroy {
   private tipoHabitacionService = inject(TipoHabitacionService);
   private reservaService = inject(ReservaService);
   private toast = inject(ToastService);
+  private promocionService = inject(PromocionService);
   private cambiosRuta?: Subscription;
   private carga?: Subscription;
   private consulta?: Subscription;
@@ -54,6 +61,10 @@ export class CrearReserva implements OnInit, OnDestroy {
   cantidadDisponibles = 0;
   errorCarga = '';
   mensajeError = '';
+  codigoPromocional = '';
+  promocionAplicada?: PromocionAplicada;
+  errorPromocion = '';
+  validandoPromocion = false;
 
   formulario = new FormGroup({
     tipoId: new FormControl('', [Validators.required]),
@@ -136,6 +147,12 @@ export class CrearReserva implements OnInit, OnDestroy {
               fechaSalida: datos.fechaFin,
               cantidadPersonas: datos.cantidadPersonas,
             });
+            this.codigoPromocional = datos.codigoPromocional ?? '';
+            if (datos.descuentoPromocional) this.promocionAplicada = {
+              codigo: datos.codigoPromocional ?? null, nombre: 'Promoción aplicada',
+              subtotalEstadia: datos.total + datos.descuentoPromocional,
+              descuento: datos.descuentoPromocional, total: datos.total,
+            };
           } else {
             const parametroTipo = this.route.snapshot.queryParams['tipoId'];
             if (parametroTipo !== undefined) {
@@ -162,12 +179,35 @@ export class CrearReserva implements OnInit, OnDestroy {
     this.cantidadDisponibles = 0;
     this.criteriosConsultados = '';
     this.mensajeError = '';
+    this.promocionAplicada = undefined;
+    this.errorPromocion = '';
   }
+
+  aplicarPromocion(): void {
+    const datos = this.validarFormulario();
+    const tipo = this.tiposHabitacion.find(t => String(t.id) === String(this.formulario.value.tipoId));
+    if (!datos || !tipo || !this.codigoPromocional.trim()) {
+      this.errorPromocion = 'Elige habitación y fechas válidas e ingresa un código.';
+      return;
+    }
+    this.validandoPromocion = true;
+    this.errorPromocion = '';
+    this.promocionService.calcular(this.codigoPromocional.trim(), datos.fechaInicio, datos.fechaFin, tipo.precioNoche)
+      .subscribe({
+        next: promo => { this.promocionAplicada = promo; this.codigoPromocional = promo.codigo ?? ''; this.validandoPromocion = false; },
+        error: error => { this.promocionAplicada = undefined; this.errorPromocion = this.obtenerMensajeError(error); this.validandoPromocion = false; },
+      });
+  }
+
+  quitarPromocion(): void { this.codigoPromocional = ''; this.promocionAplicada = undefined; this.errorPromocion = ''; }
 
   // Valida los criterios y consulta habitaciones disponibles para el tipo y fechas seleccionados.
   consultarDisponibilidad(): void {
     if (this.cargando || this.consultando || this.guardando || this.errorCarga) return;
-    this.invalidarDisponibilidad();
+    this.disponibilidadConsultada = false;
+    this.cantidadDisponibles = 0;
+    this.criteriosConsultados = '';
+    this.mensajeError = '';
     const datos = this.validarFormulario();
     if (!datos) return;
     const tipoId = Number(this.formulario.value.tipoId);
@@ -209,7 +249,7 @@ export class CrearReserva implements OnInit, OnDestroy {
     const operacion =
       this.reservaId !== undefined
         ? this.reservaService.modificar(this.clienteId, this.reservaId, tipoId, datos)
-        : this.reservaService.crear(this.clienteId, tipoId, datos);
+        : this.reservaService.crear(this.clienteId, tipoId, { ...datos, codigoPromocional: this.promocionAplicada?.codigo ?? undefined });
     this.guardado = operacion.subscribe({
       next: (reserva) => {
         this.toast.mostrar(

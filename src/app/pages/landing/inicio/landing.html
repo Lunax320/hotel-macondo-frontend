@@ -1,6 +1,21 @@
 <app-landing-hero></app-landing-hero>
 <app-buscador-disponibilidad [tiposHabitacion]="tiposHabitacion"></app-buscador-disponibilidad>
 <app-landing-habitaciones [tiposHabitacion]="tiposHabitacion"></app-landing-habitaciones>
+@if (promociones.length) {
+  <section class="bg-[#f7f5ef] px-5 py-16 md:py-20">
+    <div class="mx-auto max-w-6xl">
+      <div class="flex flex-wrap items-end justify-between gap-5">
+        <div><p class="text-xs font-bold uppercase tracking-[2px] text-[var(--dorado-oscuro)]">Beneficios exclusivos</p><h2 class="mt-2 font-serif text-3xl font-bold text-[var(--azul-oscuro)] md:text-4xl">Ofertas para tu próxima estadía</h2></div>
+        <a routerLink="/promociones" class="font-bold text-[var(--azul)] hover:underline">Ver todas las promociones →</a>
+      </div>
+      <div class="mt-8 grid gap-5 md:grid-cols-3">
+        @for (promo of promociones; track promo.id) {
+          <article class="rounded-2xl border border-[#e8dfc9] bg-white p-6 shadow-sm"><span class="rounded-full bg-[#fbf2d8] px-3 py-1 text-xs font-extrabold tracking-widest text-[var(--azul-oscuro)]">{{ promo.codigo }}</span><p class="mt-4 text-2xl font-bold text-[var(--azul)]">{{ promo.tipoDescuento === 'PORCENTAJE' ? (promo.valorDescuento + '% de descuento') : ('$' + (promo.valorDescuento | number:'1.0-0') + ' de descuento') }}</p><h3 class="mt-1 font-serif text-xl font-bold text-[var(--azul-oscuro)]">{{ promo.nombre }}</h3><p class="mt-2 text-sm text-gray-600">{{ promo.descripcion }}</p><p class="mt-3 text-xs text-gray-500">Mínimo {{ promo.nochesMinimas }} {{ promo.nochesMinimas === 1 ? 'noche' : 'noches' }}</p></article>
+        }
+      </div>
+    </div>
+  </section>
+}
 <app-landing-recorrido></app-landing-recorrido>
 <app-carrusel-servicios></app-carrusel-servicios>
 <app-landing-testimonios [testimonios]="testimonios"></app-landing-testimonios>

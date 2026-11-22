@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { TipoHabitacionService } from '../../../services/tipo-habitacion.service';
 import { TestimonioService } from '../../../services/testimonio.service';
 import { ComentarioService } from '../../../services/comentario.service';
@@ -12,6 +13,9 @@ import { LandingHabitaciones } from './components/landing-habitaciones/landing-h
 import { LandingTestimonios } from './components/landing-testimonios/landing-testimonios';
 import { LandingCta } from './components/landing-cta/landing-cta';
 import { LandingRecorrido } from './components/landing-recorrido/landing-recorrido';
+import { Promocion } from '../../../models/promocion.model';
+import { PromocionService } from '../../../services/promocion.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   imports: [
@@ -22,6 +26,8 @@ import { LandingRecorrido } from './components/landing-recorrido/landing-recorri
     LandingTestimonios,
     LandingCta,
     LandingRecorrido,
+    RouterLink,
+    CommonModule,
   ],
   selector: 'app-landing',
   templateUrl: './landing.html',
@@ -33,12 +39,15 @@ export class Landing implements OnInit {
   private testimonioService = inject(TestimonioService);
   private comentarioService = inject(ComentarioService);
   private toast = inject(ToastService);
+  private promocionesService = inject(PromocionService);
 
   tiposHabitacion: TipoHabitacion[] = [];
   testimonios: Testimonio[] = [];
+  promociones: Promocion[] = [];
 
   // Carga los datos iniciales que necesita la página de inicio.
   ngOnInit(): void {
+    this.promocionesService.publicas().subscribe({ next: (items) => this.promociones = items.slice(0, 3) });
     this.tipoService.obtenerTodos().subscribe({
       next: (tipos) => (this.tiposHabitacion = tipos),
       error: () => this.toast.mostrar('No fue posible cargar los tipos de habitación.', 'error'),

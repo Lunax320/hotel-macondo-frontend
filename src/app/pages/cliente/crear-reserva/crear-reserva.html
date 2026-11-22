@@ -49,6 +49,24 @@
               [reservaId]="reservaId"
               (criteriosCambiados)="invalidarDisponibilidad()"
             ></app-reserva-formulario>
+            @if (!esEdicion) {
+              <section class="mt-7 rounded-xl border border-[#e8dfc9] bg-[#fcfbf8] p-5" aria-labelledby="promoTitulo">
+                <h2 id="promoTitulo" class="font-serif text-xl font-bold text-[var(--azul-oscuro)]">¿Tienes un código promocional?</h2>
+                <p class="mt-1 text-sm text-gray-600">El descuento se calcula sobre el alojamiento, sin incluir servicios.</p>
+                @if (!promocionAplicada) {
+                  <div class="mt-4 flex flex-col gap-3 sm:flex-row">
+                    <input class="min-h-12 flex-1 rounded-lg border border-gray-300 bg-white px-4 uppercase" name="codigoPromocional" [(ngModel)]="codigoPromocional" [ngModelOptions]="{standalone: true}" placeholder="Ej. MACONDO10" aria-label="Código promocional" />
+                    <button class="btn-secundario min-h-12 rounded-lg px-5 font-bold" type="button" [disabled]="validandoPromocion || guardando" (click)="aplicarPromocion()">{{ validandoPromocion ? 'Validando…' : 'Aplicar código' }}</button>
+                  </div>
+                } @else {
+                  <div class="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-lg bg-emerald-50 p-4 text-emerald-800">
+                    <div><p class="font-bold">{{ promocionAplicada.codigo }} aplicado</p><p class="text-sm">Ahorro de {{ promocionAplicada.descuento | number:'1.0-0' }}</p><p class="text-xs">Total alojamiento: {{ promocionAplicada.total | number:'1.0-0' }}</p></div>
+                    <button class="text-sm font-bold underline" type="button" (click)="quitarPromocion()">Quitar</button>
+                  </div>
+                }
+                @if (errorPromocion) { <p class="mt-3 text-sm font-semibold text-red-700" role="alert">{{ errorPromocion }}</p> }
+              </section>
+            }
             @if (mensajeError) {
               <p
                 id="mensajeErrorReserva"

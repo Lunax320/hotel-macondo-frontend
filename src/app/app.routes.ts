@@ -30,6 +30,8 @@ import { HistorialPagos } from './pages/cliente/historial-pagos/historial-pagos'
 import { ReservasActivas } from './pages/cliente/reservas-activas/reservas-activas';
 import { ReservaDetalleClientePage } from './pages/cliente/reserva-detalle/reserva-detalle';
 import { Explorar } from './pages/landing/explorar/explorar';
+import { Promociones } from './pages/landing/promociones/promociones';
+import { AdminPromociones } from './pages/admin/promociones/admin-promociones';
 
 export const routes: Routes = [
   {
@@ -64,6 +66,7 @@ export const routes: Routes = [
     component: DetalleHabitacion,
   },
   { path: 'explorar', component: Explorar },
+  { path: 'promociones', component: Promociones },
   {
     path: 'servicios',
     component: Servicios,
@@ -167,6 +170,12 @@ export const routes: Routes = [
     canActivate: [sesionGuard],
     data: { roles: ['ADMINISTRADOR'] },
     component: AdminOperadores,
+  },
+  {
+    path: 'admin/promociones',
+    canActivate: [sesionGuard],
+    data: { roles: ['ADMINISTRADOR'] },
+    component: AdminPromociones,
   },
   {
     path: 'admin/habitaciones/nueva',

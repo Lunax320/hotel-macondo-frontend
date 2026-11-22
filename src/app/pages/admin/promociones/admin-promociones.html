@@ -1,0 +1,22 @@
+<div class="flex min-h-screen flex-col bg-white md:flex-row">
+  <app-admin-sidebar seccionActiva="promociones"></app-admin-sidebar>
+  <main class="min-w-0 flex-1 p-6 md:p-10">
+    <p class="text-xs font-bold uppercase tracking-[2px] text-[var(--azul)]">Marketing</p>
+    <h1 class="mt-2 font-serif text-4xl font-bold text-[var(--azul-oscuro)]">Cupones y promociones</h1>
+    <p class="mt-3 text-gray-600">Crea descuentos aplicables al subtotal de alojamiento.</p>
+    @if (error) { <p class="mt-5 rounded-lg bg-red-50 p-4 text-red-700" role="alert">{{ error }}</p> }
+    <form class="mt-8 grid gap-4 rounded-2xl border border-gray-200 bg-[#fcfbf8] p-6 md:grid-cols-2" (ngSubmit)="guardar()">
+      <label class="text-sm font-semibold">Código<input class="mt-1 w-full rounded-lg border p-3 uppercase" name="codigo" required maxlength="40" [(ngModel)]="formulario.codigo" placeholder="MACONDO10" /></label>
+      <label class="text-sm font-semibold">Nombre de la oferta<input class="mt-1 w-full rounded-lg border p-3" name="nombre" required [(ngModel)]="formulario.nombre" /></label>
+      <label class="text-sm font-semibold md:col-span-2">Descripción<input class="mt-1 w-full rounded-lg border p-3" name="descripcion" [(ngModel)]="formulario.descripcion" /></label>
+      <label class="text-sm font-semibold">Tipo de descuento<select class="mt-1 w-full rounded-lg border p-3" name="tipo" [(ngModel)]="formulario.tipoDescuento"><option value="PORCENTAJE">Porcentaje</option><option value="VALOR_FIJO">Monto fijo</option></select></label>
+      <label class="text-sm font-semibold">Valor<input class="mt-1 w-full rounded-lg border p-3" name="valor" type="number" min="0.01" [max]="formulario.tipoDescuento === 'PORCENTAJE' ? 100 : null" step="0.01" required [(ngModel)]="formulario.valorDescuento" /></label>
+      <label class="text-sm font-semibold">Vigente desde<input class="mt-1 w-full rounded-lg border p-3" name="inicio" type="date" required [(ngModel)]="formulario.fechaInicio" /></label>
+      <label class="text-sm font-semibold">Vigente hasta<input class="mt-1 w-full rounded-lg border p-3" name="fin" type="date" required [(ngModel)]="formulario.fechaFin" /></label>
+      <label class="text-sm font-semibold">Mínimo de noches<input class="mt-1 w-full rounded-lg border p-3" name="noches" type="number" min="1" required [(ngModel)]="formulario.nochesMinimas" /></label>
+      <label class="flex items-center gap-3 pt-6 text-sm font-semibold"><input name="activa" type="checkbox" [(ngModel)]="formulario.activa" /> Publicar promoción</label>
+      <div class="flex gap-3 md:col-span-2"><button class="btn-primario rounded-lg px-5 py-3 font-bold" type="submit">{{ formulario.id ? 'Guardar cambios' : 'Crear promoción' }}</button><button class="rounded-lg border px-5 py-3" type="button" (click)="limpiar()">Limpiar</button></div>
+    </form>
+    <div class="mt-8 overflow-x-auto rounded-xl border"><table class="w-full text-left text-sm"><thead class="bg-[#f7f5ef]"><tr><th class="p-4">Código</th><th class="p-4">Oferta</th><th class="p-4">Descuento</th><th class="p-4">Vigencia</th><th class="p-4">Estado</th><th class="p-4">Acciones</th></tr></thead><tbody>@for (p of promociones; track p.id) { <tr class="border-t"><td class="p-4 font-bold">{{ p.codigo }}</td><td class="p-4">{{ p.nombre }}<div class="text-xs text-gray-500">Mín. {{ p.nochesMinimas }} noches</div></td><td class="p-4">{{ p.tipoDescuento === 'PORCENTAJE' ? (p.valorDescuento + '%') : ('$' + (p.valorDescuento | number:'1.0-0')) }}</td><td class="p-4">{{ p.fechaInicio }} – {{ p.fechaFin }}</td><td class="p-4">{{ p.activa ? 'Activa' : 'Pausada' }}</td><td class="p-4"><button type="button" class="mr-3 font-bold text-[var(--azul)]" (click)="editar(p)">Editar</button><button type="button" class="font-bold text-red-600" (click)="eliminar(p)">Eliminar</button></td></tr> }</tbody></table></div>
+  </main>
+</div>

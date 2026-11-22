@@ -3,4 +3,5 @@ export interface ReservaSolicitud {
   fechaInicio: string;
   fechaFin: string;
   cantidadPersonas: number;
+  codigoPromocional?: string;
 }
