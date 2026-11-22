@@ -1,0 +1,69 @@
+<div class="min-h-screen bg-[#fbfaf7] font-sans">
+  <app-navbar-cliente [clienteId]="clienteId" class="sticky top-0 z-50 block w-full"></app-navbar-cliente>
+  <main class="mx-auto w-full max-w-[1100px] px-6 py-12">
+    <a [routerLink]="['/cliente', clienteId, 'reservas']" class="text-sm font-semibold text-[var(--azul)]">← Volver a mis reservas</a>
+    @if (cargando) {
+      <p class="py-8 text-[var(--azul)]" role="status">Cargando detalle de estadía…</p>
+    } @else if (error && !reserva) {
+      <p class="mt-6 rounded-xl border border-red-200 bg-red-50 p-5 text-red-800" role="alert">{{ error }}</p>
+      <button class="btn-secundario mt-3 rounded-lg px-4 py-2" (click)="cargarDetalle()">Volver a consultar</button>
+    } @else if (reserva) {
+      <header class="mb-8 mt-5">
+        <p class="text-xs font-bold uppercase tracking-[.2em] text-[var(--dorado)]">Estadía · {{ reserva.numeroReserva }}</p>
+        <h1 class="mt-2 font-serif text-3xl font-bold text-[var(--azul-oscuro)] md:text-4xl">Detalle de tu reserva</h1>
+        <p class="mt-2 text-gray-600">{{ reserva.tipoHabitacion ?? 'Habitación' }}{{ reserva.habitacion ? ' · Habitación ' + reserva.habitacion : '' }} · {{ reserva.cantidadPersonas }} {{ reserva.cantidadPersonas === 1 ? 'huésped' : 'huéspedes' }}</p>
+      </header>
+
+      @if (mensaje) { <p class="mb-5 rounded-xl border border-green-200 bg-green-50 p-4 text-green-800" role="status">{{ mensaje }}</p> }
+      @if (error && reserva) { <p class="mb-5 rounded-xl border border-red-200 bg-red-50 p-4 text-red-800" role="alert">{{ error }}</p> }
+
+      <div class="grid gap-6 lg:grid-cols-[1.4fr_.8fr]">
+        <section class="space-y-6">
+          <article class="rounded-2xl border border-[var(--crema)] bg-white p-6 shadow-sm">
+            <h2 class="font-serif text-xl font-bold text-[var(--azul-oscuro)]">Tu estadía</h2>
+            <div class="mt-5 grid gap-4 sm:grid-cols-2">
+              <div><p class="text-xs uppercase tracking-wider text-gray-500">Entrada</p><p class="mt-1 font-semibold">{{ reserva.fechaInicio | date: 'd MMMM y' }}</p></div>
+              <div><p class="text-xs uppercase tracking-wider text-gray-500">Salida</p><p class="mt-1 font-semibold">{{ reserva.fechaFin | date: 'd MMMM y' }}</p></div>
+              <div><p class="text-xs uppercase tracking-wider text-gray-500">Estado de reserva</p><p class="mt-1 font-semibold">{{ reserva.estado }}</p></div>
+              <div><p class="text-xs uppercase tracking-wider text-gray-500">Precio por noche</p><p class="mt-1 font-semibold">{{ reserva.precioNoche | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}</p></div>
+            </div>
+          </article>
+
+          <article class="rounded-2xl border border-[var(--crema)] bg-white p-6 shadow-sm">
+            <h2 class="font-serif text-xl font-bold text-[var(--azul-oscuro)]">Cargos de la cuenta</h2>
+            <div class="mt-4 flex justify-between gap-4 border-b border-gray-100 py-3 text-sm"><span>Alojamiento</span><span>{{ reserva.total | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}</span></div>
+            @for (consumo of reserva.cuenta?.consumos ?? []; track consumo.id) {
+              <div class="flex justify-between gap-4 border-b border-gray-100 py-3 text-sm"><span>{{ consumo.cantidad }} × {{ consumo.servicio ?? 'Servicio' }}</span><span>{{ consumo.precio * consumo.cantidad | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}</span></div>
+            } @empty {
+              <p class="py-4 text-sm text-gray-500">Aún no se han agregado servicios a esta estadía.</p>
+            }
+            <div class="mt-3 flex justify-between border-t border-gray-200 pt-4 font-bold"><span>Total de cargos</span><span>{{ reserva.cuenta?.total ?? reserva.total | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}</span></div>
+          </article>
+
+          <article class="rounded-2xl border border-[var(--crema)] bg-white p-6 shadow-sm">
+            <h2 class="font-serif text-xl font-bold text-[var(--azul-oscuro)]">Pagos registrados</h2>
+            @for (pago of reserva.cuenta?.pagos ?? []; track pago.id) {
+              <div class="flex flex-wrap justify-between gap-2 border-b border-gray-100 py-3 text-sm"><span>{{ pago.metodoPago }} · {{ pago.fechaPago | date: 'd MMM y, h:mm a' }}</span><span class="font-semibold">{{ pago.monto | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }} · {{ pago.estado }}</span></div>
+            } @empty { <p class="mt-3 text-sm text-gray-500">Todavía no hay pagos en esta cuenta.</p> }
+          </article>
+        </section>
+
+        <aside class="h-fit rounded-2xl bg-[var(--azul-oscuro)] p-6 text-white shadow-lg">
+          <p class="text-xs uppercase tracking-[.18em] text-white/70">Cuenta de estadía</p>
+          <p class="mt-2 font-serif text-2xl font-bold">{{ (reserva.cuenta?.saldo ?? reserva.total) > 0 ? 'Saldo pendiente' : 'Al día' }}</p>
+          <p class="mt-1 text-3xl font-bold">{{ (reserva.cuenta?.saldo ?? reserva.total) | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}</p>
+          @if (reserva.estado.toUpperCase() === 'ACTIVA' && (reserva.cuenta?.saldo ?? reserva.total) > 0) {
+            <label for="monto-pago" class="mt-6 block text-sm text-white/80">Monto a pagar</label>
+            <input id="monto-pago" type="number" min="1" [max]="reserva.cuenta?.saldo ?? reserva.total" [(ngModel)]="montoPago" class="mt-2 w-full rounded-lg border-0 bg-white px-3 py-2 text-gray-900" />
+            <p class="mt-2 text-xs text-white/70">Serás dirigido a Wompi para completar el pago de forma segura.</p>
+            <button type="button" (click)="pagar()" [disabled]="pagando || montoPago <= 0 || montoPago > (reserva.cuenta?.saldo ?? reserva.total)" class="mt-5 w-full rounded-lg bg-[var(--dorado)] px-5 py-3 font-bold text-[var(--azul-oscuro)] disabled:opacity-50">{{ pagando ? 'Abriendo Wompi…' : 'Pagar con Wompi' }}</button>
+          } @else if (reserva.estado.toUpperCase() !== 'ACTIVA') {
+            <p class="mt-4 text-sm text-white/75">El pago estará disponible cuando la estadía esté en curso.</p>
+          } @else {
+            <p class="mt-4 text-sm text-white/75">No tienes saldo pendiente. Si se agregan servicios, el saldo se actualizará aquí.</p>
+          }
+        </aside>
+      </div>
+    }
+  </main>
+</div>

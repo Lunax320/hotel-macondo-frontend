@@ -1,13 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
 import { DatosRegistro } from '../../../models/datos-registro.model';
 import { ToastService } from '../../../services/toast.service';
 import { ClienteService } from '../../../services/cliente.service';
-import { UsuarioService } from '../../../services/usuario.service';
 import { RegistroPresentacion } from './components/registro-presentacion/registro-presentacion';
 import { RegistroFormulario } from './components/registro-formulario/registro-formulario';
 
-// Página de registro que crea la cuenta y abre el portal del cliente.
+// Página de registro que crea la cuenta e indica que debe verificar su correo.
 @Component({
   selector: 'app-registro',
   imports: [RegistroPresentacion, RegistroFormulario],
@@ -18,8 +16,6 @@ import { RegistroFormulario } from './components/registro-formulario/registro-fo
 })
 export class Registro {
   private clienteService = inject(ClienteService);
-  private usuarioService = inject(UsuarioService);
-  private router = inject(Router);
   private toast = inject(ToastService);
 
   mensajeError = '';
@@ -31,13 +27,10 @@ export class Registro {
     this.clienteService.registrar(cliente, datos.contrasena).subscribe({
       next: (clienteGuardado) => {
         if (clienteGuardado.id) {
-          this.toast.mostrar(`Cuenta creada. ¡Bienvenido, ${clienteGuardado.nombre}!`);
-          this.usuarioService.autenticar(cliente.correo, datos.contrasena).subscribe({
-            next: () => this.router.navigateByUrl(this.usuarioService.rutaInicio()),
-            error: () => {
-              this.mensajeError = 'La cuenta fue creada. Inicia sesión para acceder a tu portal.';
-            },
-          });
+          this.toast.mostrar(
+            clienteGuardado.mensaje ??
+              'La cuenta fue creada. Verifica tu correo para activar la cuenta antes de iniciar sesión.',
+          );
         }
       },
       error: (error) => {

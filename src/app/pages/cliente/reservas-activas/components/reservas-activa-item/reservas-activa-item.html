@@ -76,10 +76,12 @@
           </button>
         }
       </div>
-    } @else {
-      <p class="font-sans text-sm text-gray-500 flex-none max-w-[14rem] text-right">
-        Reserva en curso: contacta a recepción para cambios.
-      </p>
     }
+    <a
+      [routerLink]="['/cliente', clienteId(), 'reservas', reserva().id]"
+      class="btn-secundario font-sans text-sm font-semibold text-center rounded-lg px-5 h-9 inline-flex items-center"
+    >
+      Ver detalle y cuenta
+    </a>
   </div>
 </div>

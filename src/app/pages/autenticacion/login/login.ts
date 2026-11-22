@@ -69,9 +69,12 @@ export class Login {
           this.router.navigateByUrl(inicio);
         }
       },
-      error: () => {
+      error: (error) => {
         this.enviando = false;
-        this.mensajeError = 'Correo electrónico o contraseña incorrectos.';
+        this.mensajeError =
+          error.status === 403
+            ? 'Verifica tu correo desde el enlace que te enviamos antes de iniciar sesión.'
+            : 'Correo electrónico o contraseña incorrectos.';
       },
     });
   }

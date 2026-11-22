@@ -6,6 +6,8 @@ import { Habitaciones } from './pages/landing/habitaciones/habitaciones';
 import { Landing } from './pages/landing/inicio/landing';
 import { Login } from './pages/autenticacion/login/login';
 import { Registro } from './pages/autenticacion/registro/registro';
+import { RecuperarContrasena } from './pages/autenticacion/recuperar-contrasena/recuperar-contrasena';
+import { RestablecerContrasena } from './pages/autenticacion/restablecer-contrasena/restablecer-contrasena';
 import { Servicios } from './pages/landing/servicios/servicios';
 import { AdminHabitaciones } from './pages/admin/habitaciones/admin-habitaciones';
 import { AdminHabitacionForm } from './pages/admin/habitacion-form/admin-habitacion-form';
@@ -26,6 +28,7 @@ import { CrearReserva } from './pages/cliente/crear-reserva/crear-reserva';
 import { HistorialReservas } from './pages/cliente/historial-reservas/historial-reservas';
 import { HistorialPagos } from './pages/cliente/historial-pagos/historial-pagos';
 import { ReservasActivas } from './pages/cliente/reservas-activas/reservas-activas';
+import { ReservaDetalleClientePage } from './pages/cliente/reserva-detalle/reserva-detalle';
 import { Explorar } from './pages/landing/explorar/explorar';
 
 export const routes: Routes = [
@@ -43,6 +46,14 @@ export const routes: Routes = [
   {
     path: 'registro',
     component: Registro,
+  },
+  {
+    path: 'recuperar-contrasena',
+    component: RecuperarContrasena,
+  },
+  {
+    path: 'restablecer-contrasena',
+    component: RestablecerContrasena,
   },
   {
     path: 'habitaciones',
@@ -132,6 +143,12 @@ export const routes: Routes = [
     canActivate: [sesionGuard],
     data: { roles: ['CLIENTE'] },
     component: CrearReserva,
+  },
+  {
+    path: 'cliente/:id/reservas/:reservaId',
+    canActivate: [sesionGuard],
+    data: { roles: ['CLIENTE'] },
+    component: ReservaDetalleClientePage,
   },
   {
     path: 'cliente/:id/perfil',

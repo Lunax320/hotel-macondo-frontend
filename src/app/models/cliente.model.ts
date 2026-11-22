@@ -5,4 +5,5 @@ export interface Cliente {
   cedula: string;
   telefono: string;
   correo: string;
+  mensaje?: string;
 }

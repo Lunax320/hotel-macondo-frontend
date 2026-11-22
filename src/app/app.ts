@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { filter } from 'rxjs';
 import { Navbar } from './components/navbar/navbar';
 import { Footer } from './components/footer/footer';
 import { Toast } from './components/toast/toast';
+import { ToastService } from './services/toast.service';
 
 // Componente raiz: navbar y footer globales alrededor del router-outlet.
 @Component({
@@ -15,8 +17,19 @@ import { Toast } from './components/toast/toast';
 })
 export class App {
   private router = inject(Router);
+  private toast = inject(ToastService);
   protected mostrarNavbar = true;
   protected mostrarFooter = true;
+
+  constructor() {
+    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
+      const queryParams = this.router.parseUrl(this.router.url).queryParams;
+      if (queryParams['correoVerificado'] === 'true') {
+        this.toast.mostrar('Correo verificado. Ya puedes iniciar sesión.');
+        void this.router.navigateByUrl('/', { replaceUrl: true });
+      }
+    });
+  }
 
   // Se llama al cambiar de ruta: oculta navbar/footer en las secciones con menu propio.
   actualizarLayoutGlobal(): void {
