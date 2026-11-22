@@ -55,8 +55,8 @@
           @if (reserva.estado.toUpperCase() === 'ACTIVA' && (reserva.cuenta?.saldo ?? reserva.total) > 0) {
             <label for="monto-pago" class="mt-6 block text-sm text-white/80">Monto a pagar</label>
             <input id="monto-pago" type="number" min="1" [max]="reserva.cuenta?.saldo ?? reserva.total" [(ngModel)]="montoPago" class="mt-2 w-full rounded-lg border-0 bg-white px-3 py-2 text-gray-900" />
-            <p class="mt-2 text-xs text-white/70">Este pago de tarjeta se registra en modo de simulación escolar.</p>
-            <button type="button" (click)="pagar()" [disabled]="pagando || montoPago <= 0 || montoPago > (reserva.cuenta?.saldo ?? reserva.total)" class="mt-5 w-full rounded-lg bg-[var(--dorado)] px-5 py-3 font-bold text-[var(--azul-oscuro)] disabled:opacity-50">{{ pagando ? 'Registrando pago…' : 'Pagar saldo' }}</button>
+            <p class="mt-2 text-xs text-white/70">Serás dirigido a Wompi para completar el pago de forma segura.</p>
+            <button type="button" (click)="pagar()" [disabled]="pagando || montoPago <= 0 || montoPago > (reserva.cuenta?.saldo ?? reserva.total)" class="mt-5 w-full rounded-lg bg-[var(--dorado)] px-5 py-3 font-bold text-[var(--azul-oscuro)] disabled:opacity-50">{{ pagando ? 'Abriendo Wompi…' : 'Pagar con Wompi' }}</button>
           } @else if (reserva.estado.toUpperCase() !== 'ACTIVA') {
             <p class="mt-4 text-sm text-white/75">El pago estará disponible cuando la estadía esté en curso.</p>
           } @else {

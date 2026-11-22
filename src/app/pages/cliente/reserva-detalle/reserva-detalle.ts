@@ -29,6 +29,9 @@ export class ReservaDetalleClientePage implements OnInit {
   ngOnInit(): void {
     this.clienteId = Number(this.route.snapshot.params['id']);
     this.reservaId = Number(this.route.snapshot.params['reservaId']);
+    if (this.route.snapshot.queryParamMap.get('pago') === 'wompi') {
+      this.mensaje = 'Regresaste de Wompi. El pago se reflejará cuando el backend reciba la confirmación.';
+    }
     this.cargarDetalle();
   }
 
@@ -56,12 +59,10 @@ export class ReservaDetalleClientePage implements OnInit {
     this.error = '';
     this.mensaje = '';
     this.reservaService.pagarCuentaCliente(
-      this.clienteId, this.reservaId, this.montoPago, 'TARJETA_PRUEBA',
+      this.clienteId, this.reservaId, this.montoPago, 'WOMPI',
     ).subscribe({
-      next: () => {
-        this.mensaje = 'Pago de prueba registrado. El saldo de tu estadía se actualizó.';
-        this.pagando = false;
-        this.cargarDetalle();
+      next: (checkout) => {
+        window.location.assign(checkout.checkoutUrl);
       },
       error: (error: HttpErrorResponse) => {
         this.error = this.mensajeError(error);

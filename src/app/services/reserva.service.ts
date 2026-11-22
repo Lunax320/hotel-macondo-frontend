@@ -80,10 +80,10 @@ export class ReservaService {
     reservaId: number,
     monto: number,
     metodoPago: string,
-  ): Observable<PagoCliente> {
-    return this.http.post<PagoCliente>(
-      `${this.url}/cliente/${clienteId}/${reservaId}/pago`,
-      { monto, metodoPago },
+  ): Observable<{ referencia: string; checkoutUrl: string; monto: number; estado: string }> {
+    return this.http.post<{ referencia: string; checkoutUrl: string; monto: number; estado: string }>(
+      `${this.url}/cliente/${clienteId}/${reservaId}/pago/wompi`,
+      { monto },
     );
   }
 
