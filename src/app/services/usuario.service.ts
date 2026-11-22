@@ -42,6 +42,24 @@ export class UsuarioService {
     );
   }
 
+  solicitarRecuperacion(correo: string): Observable<{ mensaje: string }> {
+    return this.http.post<{ mensaje: string }>(`${this.url}/contrasena/solicitar-recuperacion`, {
+      correo,
+    });
+  }
+
+  restablecerContrasena(
+    token: string,
+    nuevaContrasena: string,
+    confirmarContrasena: string,
+  ): Observable<void> {
+    return this.http.post<void>(`${this.url}/contrasena/restablecer`, {
+      token,
+      nuevaContrasena,
+      confirmarContrasena,
+    });
+  }
+
   // La firma se verifica en el backend; aquí solo se comprueba el vencimiento.
   private tokenVigente(token: string): boolean {
     try {

@@ -6,6 +6,8 @@ import { Habitaciones } from './pages/landing/habitaciones/habitaciones';
 import { Landing } from './pages/landing/inicio/landing';
 import { Login } from './pages/autenticacion/login/login';
 import { Registro } from './pages/autenticacion/registro/registro';
+import { RecuperarContrasena } from './pages/autenticacion/recuperar-contrasena/recuperar-contrasena';
+import { RestablecerContrasena } from './pages/autenticacion/restablecer-contrasena/restablecer-contrasena';
 import { Servicios } from './pages/landing/servicios/servicios';
 import { AdminHabitaciones } from './pages/admin/habitaciones/admin-habitaciones';
 import { AdminHabitacionForm } from './pages/admin/habitacion-form/admin-habitacion-form';
@@ -44,6 +46,14 @@ export const routes: Routes = [
   {
     path: 'registro',
     component: Registro,
+  },
+  {
+    path: 'recuperar-contrasena',
+    component: RecuperarContrasena,
+  },
+  {
+    path: 'restablecer-contrasena',
+    component: RestablecerContrasena,
   },
   {
     path: 'habitaciones',
