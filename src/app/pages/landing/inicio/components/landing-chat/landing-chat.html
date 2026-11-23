@@ -1,0 +1,70 @@
+<div class="chat-widget">
+  @if (abierto) {
+    <section id="chat-panel" class="chat-panel" aria-label="Asistente de Hotel Macondo">
+      <header class="chat-header">
+        <div class="chat-avatar" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M4 19.5V8.2L12 4l8 4.2v11.3h-5.3v-6.2H9.3v6.2H4Z" />
+            <path d="M2.8 9 12 4l9.2 5" />
+          </svg>
+        </div>
+        <div class="chat-heading">
+          <h2>Asistente Macondo</h2>
+          <p><span></span> Estamos aquí para ayudarte</p>
+        </div>
+        <button
+          type="button"
+          class="chat-close"
+          aria-label="Cerrar chat"
+          (click)="abierto = false"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m6 6 12 12M18 6 6 18" />
+          </svg>
+        </button>
+      </header>
+
+      <div class="chat-content">
+        <p class="chat-time">ASISTENCIA HOTEL MACONDO</p>
+        <div class="message">
+          ¡Hola! Bienvenido a Hotel Macondo. ¿Qué te gustaría hacer?
+        </div>
+        <p class="chat-prompt">Puedes empezar por aquí:</p>
+        <nav class="chat-actions" aria-label="Opciones de ayuda">
+          <a routerLink="/habitaciones">Explorar habitaciones <span aria-hidden="true">→</span></a>
+          <a routerLink="/servicios">Conocer nuestros servicios <span aria-hidden="true">→</span></a>
+          <a routerLink="/promociones">Ver promociones <span aria-hidden="true">→</span></a>
+        </nav>
+      </div>
+
+      <div class="chat-footer">
+        <span>Elige una opción para continuar</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 3v18M5 14l7 7 7-7" />
+        </svg>
+      </div>
+    </section>
+  }
+
+  <button
+    type="button"
+    class="chat-toggle"
+    [class.chat-toggle-open]="abierto"
+    [attr.aria-expanded]="abierto"
+    aria-controls="chat-panel"
+    [attr.aria-label]="abierto ? 'Cerrar asistente de chat' : 'Abrir asistente de chat'"
+    (click)="abierto = !abierto"
+  >
+    @if (abierto) {
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="m6 6 12 12M18 6 6 18" />
+      </svg>
+    } @else {
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H6l-3 2v-6.5a7.5 7.5 0 1 1 17-3Z" />
+        <path d="M8 11h.01M12 11h.01M16 11h.01" />
+      </svg>
+      <span class="chat-toggle-label">¿Necesitas ayuda?</span>
+    }
+  </button>
+</div>
