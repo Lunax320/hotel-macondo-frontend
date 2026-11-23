@@ -24,25 +24,50 @@
         </button>
       </header>
 
-      <div class="chat-content">
+      <div class="chat-content" aria-live="polite">
         <p class="chat-time">ASISTENCIA HOTEL MACONDO</p>
-        <div class="message">
-          ¡Hola! Bienvenido a Hotel Macondo. ¿Qué te gustaría hacer?
-        </div>
-        <p class="chat-prompt">Puedes empezar por aquí:</p>
-        <nav class="chat-actions" aria-label="Opciones de ayuda">
-          <a routerLink="/habitaciones">Explorar habitaciones <span aria-hidden="true">→</span></a>
-          <a routerLink="/servicios">Conocer nuestros servicios <span aria-hidden="true">→</span></a>
-          <a routerLink="/promociones">Ver promociones <span aria-hidden="true">→</span></a>
-        </nav>
+        @for (mensajeChat of mensajes; track $index) {
+          <div class="message" [class.user-message]="mensajeChat.autor === 'usuario'">
+            {{ mensajeChat.texto }}
+          </div>
+          @if (mensajeChat.acciones.length) {
+            <nav class="chat-action-buttons" aria-label="Acciones recomendadas">
+              @for (accion of mensajeChat.acciones; track accion.id) {
+                <a class="chat-action-link" [routerLink]="accion.ruta">
+                  {{ accion.etiqueta }}
+                  <span aria-hidden="true">→</span>
+                </a>
+              }
+            </nav>
+          }
+        }
+        @if (enviando) {
+          <div class="message typing-message" role="status">Escribiendo...</div>
+        }
       </div>
 
-      <div class="chat-footer">
-        <span>Elige una opción para continuar</span>
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M12 3v18M5 14l7 7 7-7" />
-        </svg>
-      </div>
+      <form class="chat-form" (ngSubmit)="enviarMensaje()">
+        <label class="sr-only" for="chat-message">Escribe tu mensaje</label>
+        <input
+          id="chat-message"
+          name="mensaje"
+          type="text"
+          [(ngModel)]="mensaje"
+          placeholder="Escribe tu mensaje..."
+          maxlength="1000"
+          autocomplete="off"
+          [disabled]="enviando"
+        />
+        <button
+          type="submit"
+          aria-label="Enviar mensaje"
+          [disabled]="enviando || !mensaje.trim()"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m22 2-7 20-4-9-9-4 20-7ZM22 2 11 13" />
+          </svg>
+        </button>
+      </form>
     </section>
   }
 
