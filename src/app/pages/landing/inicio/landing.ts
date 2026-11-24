@@ -8,7 +8,6 @@ import { TipoHabitacion } from '../../../models/tipo-habitacion.model';
 import { Testimonio } from '../../../models/testimonio.model';
 import { CarruselServicios } from './components/carrusel-servicios/carrusel-servicios';
 import { LandingHero } from './components/landing-hero/landing-hero';
-import { BuscadorDisponibilidad } from './components/buscador-disponibilidad/buscador-disponibilidad';
 import { LandingHabitaciones } from './components/landing-habitaciones/landing-habitaciones';
 import { LandingTestimonios } from './components/landing-testimonios/landing-testimonios';
 import { LandingCta } from './components/landing-cta/landing-cta';
@@ -20,7 +19,6 @@ import { RouterLink } from '@angular/router';
 @Component({
   imports: [
     LandingHero,
-    BuscadorDisponibilidad,
     LandingHabitaciones,
     CarruselServicios,
     LandingTestimonios,

@@ -1,34 +1,33 @@
 <section class="habitaciones" id="habitaciones" aria-labelledby="titulo-habitaciones">
-  <div class="mx-auto max-w-6xl px-5">
-    <header class="mb-7 flex flex-wrap items-end justify-between gap-5 sm:mb-9">
-      <div>
-        <h2 id="titulo-habitaciones" class="font-serif text-3xl text-[var(--azul-oscuro)] sm:text-5xl">
-          Nuestras habitaciones
-        </h2>
-        <p class="mt-3 max-w-lg text-[var(--texto)]">
-          Encuentra el espacio que mejor se ajuste a tu estadía.
-        </p>
-      </div>
-      @if ((tiposHabitacion()?.length ?? 0) > 1) {
-        <div class="flex gap-2" role="group" aria-label="Navegar habitaciones">
-          <button class="control" type="button" aria-label="Habitación anterior"
-            aria-controls="carrusel-habitaciones" (click)="desplazar(carrusel, -1)">
-            <i class="bi bi-chevron-left" aria-hidden="true"></i>
-          </button>
-          <button class="control" type="button" aria-label="Habitación siguiente"
-            aria-controls="carrusel-habitaciones" (click)="desplazar(carrusel, 1)">
-            <i class="bi bi-chevron-right" aria-hidden="true"></i>
-          </button>
-        </div>
-      }
+  <div class="mx-auto max-w-7xl px-2 sm:px-5">
+    <header class="mb-7 px-3 text-center sm:mb-9">
+      <h2 id="titulo-habitaciones" class="font-serif text-3xl text-[var(--azul-oscuro)] sm:text-5xl">
+        Nuestras habitaciones
+      </h2>
+      <p class="mx-auto mt-3 max-w-lg text-[var(--texto)]">
+        Encuentra el espacio que mejor se ajuste a tu estadía.
+      </p>
     </header>
 
-    <ul #carrusel id="carrusel-habitaciones" class="carrusel" aria-labelledby="titulo-habitaciones" tabindex="0">
-      @for (tipo of tiposHabitacion(); track tipo.id) {
-        <li>
-          <app-landing-habitacion-card class="block h-full" [tipoHabitacion]="tipo"></app-landing-habitacion-card>
-        </li>
+    @let total = tiposHabitacion()?.length ?? 0;
+    <div class="pista" [class.pista--navegable]="total > 1" [attr.data-total]="total">
+      @if (total > 1) {
+        <button class="control control--anterior" type="button" aria-label="Habitación anterior"
+          aria-controls="carrusel-habitaciones" (click)="desplazar(carrusel, -1)">
+          <i class="bi bi-chevron-left" aria-hidden="true"></i>
+        </button>
+        <button class="control control--siguiente" type="button" aria-label="Habitación siguiente"
+          aria-controls="carrusel-habitaciones" (click)="desplazar(carrusel, 1)">
+          <i class="bi bi-chevron-right" aria-hidden="true"></i>
+        </button>
       }
-    </ul>
+      <ul #carrusel id="carrusel-habitaciones" class="carrusel" aria-labelledby="titulo-habitaciones" tabindex="0">
+        @for (tipo of tiposHabitacion(); track tipo.id) {
+          <li>
+            <app-landing-habitacion-card class="block h-full" [tipoHabitacion]="tipo"></app-landing-habitacion-card>
+          </li>
+        }
+      </ul>
+    </div>
   </div>
 </section>

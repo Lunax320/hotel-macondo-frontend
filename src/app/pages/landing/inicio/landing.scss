@@ -1,5 +1,21 @@
+:host {
+  display: block;
+  --fondo-habitaciones: #f8efdf;
+  --fondo-promociones: #fff9ee;
+  --fondo-servicios: #050e18;
+}
+
 .promociones {
-  background: linear-gradient(180deg, #f8efdf, #fff9ee);
+  background: linear-gradient(180deg, var(--fondo-habitaciones), var(--fondo-promociones));
+}
+
+.recorrido {
+  display: block;
+  --fondo-anterior: var(--fondo-habitaciones);
+}
+
+.promociones + .recorrido {
+  --fondo-anterior: var(--fondo-promociones);
 }
 
 .oferta {

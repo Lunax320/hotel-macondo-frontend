@@ -1,5 +1,4 @@
 <app-landing-hero></app-landing-hero>
-<app-buscador-disponibilidad [tiposHabitacion]="tiposHabitacion"></app-buscador-disponibilidad>
 <app-landing-habitaciones [tiposHabitacion]="tiposHabitacion"></app-landing-habitaciones>
 @if (promociones.length) {
   <section class="promociones px-5 pb-16 pt-6 sm:pb-20 sm:pt-9" aria-labelledby="titulo-ofertas">
@@ -41,7 +40,7 @@
     </div>
   </section>
 }
-<app-landing-recorrido></app-landing-recorrido>
+<app-landing-recorrido class="recorrido"></app-landing-recorrido>
 <app-carrusel-servicios></app-carrusel-servicios>
 <app-landing-testimonios [testimonios]="testimonios"></app-landing-testimonios>
 <app-landing-cta></app-landing-cta>
