@@ -79,11 +79,21 @@ export class ReservaService {
     clienteId: number,
     reservaId: number,
     monto: number,
-    metodoPago: string,
   ): Observable<{ referencia: string; checkoutUrl: string; monto: number; estado: string }> {
     return this.http.post<{ referencia: string; checkoutUrl: string; monto: number; estado: string }>(
-      `${this.url}/cliente/${clienteId}/${reservaId}/pago/wompi`,
+      `${this.url}/cliente/${clienteId}/${reservaId}/pago/mercadopago`,
       { monto },
+    );
+  }
+
+  confirmarPagoMercadoPago(
+    clienteId: number,
+    reservaId: number,
+    orderId: string,
+  ): Observable<{ estado: string; mensaje: string }> {
+    return this.http.post<{ estado: string; mensaje: string }>(
+      `${this.url}/cliente/${clienteId}/${reservaId}/pago/mercadopago/confirmar`,
+      { orderId },
     );
   }
 

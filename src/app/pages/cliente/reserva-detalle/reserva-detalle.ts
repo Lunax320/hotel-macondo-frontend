@@ -29,10 +29,24 @@ export class ReservaDetalleClientePage implements OnInit {
   ngOnInit(): void {
     this.clienteId = Number(this.route.snapshot.params['id']);
     this.reservaId = Number(this.route.snapshot.params['reservaId']);
-    if (this.route.snapshot.queryParamMap.get('pago') === 'wompi') {
-      this.mensaje = 'Regresaste de Wompi. El pago se reflejará cuando el backend reciba la confirmación.';
+    if (this.route.snapshot.queryParamMap.get('pago') === 'mercadopago') {
+      const orderId = this.route.snapshot.queryParamMap.get('order_id');
+      this.mensaje = 'Regresaste de Mercado Pago. Estamos confirmando el resultado del pago.';
+      if (orderId) this.confirmarPago(orderId);
     }
     this.cargarDetalle();
+  }
+
+  private confirmarPago(orderId: string): void {
+    this.reservaService.confirmarPagoMercadoPago(this.clienteId, this.reservaId, orderId).subscribe({
+      next: (resultado) => {
+        this.mensaje = resultado.mensaje;
+        this.cargarDetalle();
+      },
+      error: () => {
+        this.mensaje = 'No pudimos consultar el pago ahora. Si fue aprobado, el sistema actualizará la cuenta al recibir la notificación de Mercado Pago.';
+      },
+    });
   }
 
   cargarDetalle(): void {
@@ -59,7 +73,7 @@ export class ReservaDetalleClientePage implements OnInit {
     this.error = '';
     this.mensaje = '';
     this.reservaService.pagarCuentaCliente(
-      this.clienteId, this.reservaId, this.montoPago, 'WOMPI',
+      this.clienteId, this.reservaId, this.montoPago,
     ).subscribe({
       next: (checkout) => {
         window.location.assign(checkout.checkoutUrl);
