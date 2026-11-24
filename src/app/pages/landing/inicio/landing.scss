@@ -1,0 +1,23 @@
+:host {
+  display: block;
+  --fondo-habitaciones: #f8efdf;
+  --fondo-promociones: #fff9ee;
+  --fondo-servicios: #050e18;
+}
+
+.promociones {
+  background: linear-gradient(180deg, var(--fondo-habitaciones), var(--fondo-promociones));
+}
+
+.recorrido {
+  display: block;
+  --fondo-anterior: var(--fondo-habitaciones);
+}
+
+.promociones + .recorrido {
+  --fondo-anterior: var(--fondo-promociones);
+}
+
+.oferta {
+  box-shadow: 0 0.5rem 1.5rem rgb(70 54 18 / 6%);
+}

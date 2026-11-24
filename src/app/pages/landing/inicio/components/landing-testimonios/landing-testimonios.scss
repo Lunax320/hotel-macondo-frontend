@@ -48,3 +48,16 @@
     transition: none;
   }
 }
+.testimonios {
+  position: relative;
+  background: linear-gradient(180deg, #f3e8d6, #fff9ee 72%);
+}
+
+.testimonios::before {
+  content: '';
+  position: absolute;
+  inset: -1px 0 auto;
+  height: clamp(0.75rem, 3vw, 1.75rem);
+  border-radius: 0 0 50% 50% / 0 0 100% 100%;
+  background: var(--fondo-servicios, #050e18);
+}

@@ -1,22 +1,33 @@
-<section class="bg-[var(--crema)] py-20 mt-16" id="habitaciones">
-  <div class="container mx-auto px-4">
-    <div class="text-center mb-16">
-      <p class="text-[var(--azul)] text-[0.8rem] font-bold tracking-[3px] uppercase block mb-2">
-        Hospedaje
-      </p>
-      <h2 class="text-4xl md:text-5xl font-serif font-bold text-[var(--azul-oscuro)] mb-4">
-        Nuestras Habitaciones
+<section class="habitaciones" id="habitaciones" aria-labelledby="titulo-habitaciones">
+  <div class="mx-auto max-w-7xl px-2 sm:px-5">
+    <header class="mb-5 px-3 text-center sm:mb-7">
+      <h2 id="titulo-habitaciones" class="font-serif text-3xl text-[var(--azul-oscuro)] sm:text-5xl">
+        Nuestras habitaciones
       </h2>
-      <p class="max-w-2xl mx-auto text-[var(--texto)]">
-        Cada espacio es un portal a otro mundo, diseñado para que el tiempo se detenga y la magia
-        comience.
+      <p class="mx-auto mt-3 max-w-lg text-[var(--texto)]">
+        Encuentra el espacio que mejor se ajuste a tu estadía.
       </p>
-    </div>
+    </header>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      @for (tipo of tiposHabitacion(); track tipo.id) {
-        <app-landing-habitacion-card [tipoHabitacion]="tipo"></app-landing-habitacion-card>
+    @let total = tiposHabitacion()?.length ?? 0;
+    <div class="pista" [class.pista--navegable]="total > 1" [attr.data-total]="total">
+      @if (total > 1) {
+        <button class="control control--anterior" type="button" aria-label="Habitación anterior"
+          aria-controls="carrusel-habitaciones" (click)="desplazar(carrusel, -1)">
+          <i class="bi bi-chevron-left" aria-hidden="true"></i>
+        </button>
+        <button class="control control--siguiente" type="button" aria-label="Habitación siguiente"
+          aria-controls="carrusel-habitaciones" (click)="desplazar(carrusel, 1)">
+          <i class="bi bi-chevron-right" aria-hidden="true"></i>
+        </button>
       }
+      <ul #carrusel id="carrusel-habitaciones" class="carrusel" aria-labelledby="titulo-habitaciones" tabindex="0">
+        @for (tipo of tiposHabitacion(); track tipo.id) {
+          <li>
+            <app-landing-habitacion-card class="block h-full" [tipoHabitacion]="tipo"></app-landing-habitacion-card>
+          </li>
+        }
+      </ul>
     </div>
   </div>
 </section>

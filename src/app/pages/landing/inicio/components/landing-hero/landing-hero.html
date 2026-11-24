@@ -1,23 +1,25 @@
 <header
   id="inicio"
-  class="min-h-screen flex flex-col justify-center items-center text-center relative overflow-hidden"
+  class="relative isolate flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 text-center"
 >
-  <!-- Video de fondo generado con HyperFrames. Silenciado para que el autoplay funcione. -->
-  <video
-    #video
-    class="absolute inset-0 w-full h-full object-cover -z-10"
-    autoplay
-    [muted]="true"
-    loop
-    playsinline
-    preload="auto"
-    (canplay)="reproducir($event)"
-    poster="/images/Playa.avif"
-    aria-hidden="true"
-  >
-    <source src="/video/hero-macondo.webm?v=natural3" type="video/webm" />
-    <source src="/video/hero-macondo.mp4?v=natural3" type="video/mp4" />
-  </video>
+  @if (animarFondo) {
+    <video
+      class="pointer-events-none absolute inset-0 -z-10 h-full w-full object-cover"
+      autoplay
+      [muted]="true"
+      loop
+      playsinline
+      preload="auto"
+      (canplay)="reproducir($event)"
+      poster="/images/Playa.avif"
+      aria-hidden="true"
+    >
+      <source src="/video/hero-macondo.webm?v=natural3" type="video/webm" />
+      <source src="/video/hero-macondo.mp4?v=natural3" type="video/mp4" />
+    </video>
+  } @else {
+    <img src="/images/Playa.avif" alt="" class="absolute inset-0 -z-10 h-full w-full object-cover" />
+  }
   <div class="absolute inset-0 -z-10 bg-[linear-gradient(rgba(10,25,45,0.55),rgba(10,25,45,0.85))]"></div>
 
   <div class="[&>img]:w-20 [&>img]:h-20 md:[&>img]:w-24 md:[&>img]:h-24 mb-4 mx-auto">
@@ -38,12 +40,4 @@
     Reservar Ahora
   </a>
 
-  <button
-    type="button"
-    class="absolute bottom-6 right-6 rounded-full bg-white/20 px-4 py-2 text-sm font-semibold text-white backdrop-blur hover:bg-white/30"
-    (click)="alternarVideo(video)"
-    aria-label="Pausar o reproducir el video de fondo"
-  >
-    Pausar / reproducir
-  </button>
 </header>

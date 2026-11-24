@@ -1,0 +1,14 @@
+.invitacion-recorrido {
+  position: relative;
+  padding-block: clamp(3.75rem, 7vw, 6rem);
+  background: linear-gradient(180deg, #204254, var(--azul-oscuro) 42%, var(--fondo-servicios, #050e18));
+}
+
+.invitacion-recorrido::before {
+  content: '';
+  position: absolute;
+  inset: -1px 0 auto;
+  height: clamp(0.75rem, 3vw, 1.75rem);
+  border-radius: 0 0 50% 50% / 0 0 100% 100%;
+  background: var(--fondo-anterior, #fff9ee);
+}

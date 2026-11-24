@@ -8,17 +8,9 @@ import { RouterLink } from '@angular/router';
   templateUrl: './landing-hero.html',
 })
 export class LandingHero {
-  // Algunos navegadores ignoran autoplay: al estar listo el video se reproduce a la fuerza (silenciado)
+  readonly animarFondo = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   reproducir(evento: Event): void {
     (evento.target as HTMLVideoElement).play().catch(() => {});
-  }
-
-  // Pausa o reanuda el video de fondo al hacer clic en el botón del hero
-  alternarVideo(video: HTMLVideoElement): void {
-    if (video.paused) {
-      video.play();
-    } else {
-      video.pause();
-    }
   }
 }

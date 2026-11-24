@@ -1,0 +1,9 @@
+#servicios::before {
+  content: '';
+  position: absolute;
+  z-index: 15;
+  inset: -1px 0 auto;
+  height: clamp(2.5rem, 8vw, 6rem);
+  background: linear-gradient(180deg, var(--fondo-servicios, #050e18), transparent);
+  pointer-events: none;
+}

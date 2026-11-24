@@ -1,4 +1,4 @@
-<div class="overflow-x-auto rounded-2xl bg-white shadow-sm">
+<div class="overflow-x-auto rounded-2xl border border-[#e4e9ed] bg-white shadow-sm">
   <table class="w-full min-w-[960px] text-left">
     <thead class="bg-[var(--crema)] text-sm uppercase tracking-wider text-[var(--azul-oscuro)]">
       <tr>
@@ -9,7 +9,7 @@
         <th scope="col" class="px-6 py-4">Capacidad</th>
         <th scope="col" class="px-6 py-4">Precio / noche</th>
         <th scope="col" class="px-6 py-4">Estado</th>
-        <th scope="col" class="sticky right-0 shadow-[-6px_0_6px_-4px_rgba(0,0,0,0.12)] z-10 bg-[var(--crema)] px-6 py-4 text-right">Acciones</th>
+        <th scope="col" class="bg-[var(--crema)] px-5 py-4 text-right sm:sticky sm:right-0 sm:z-10">Acciones</th>
       </tr>
     </thead>
     <tbody>
@@ -50,7 +50,7 @@
               {{ habitacion.estado === 'DISPONIBLE' ? 'Disponible' : 'No disponible' }}
             </span>
           </td>
-          <td class="sticky right-0 shadow-[-6px_0_6px_-4px_rgba(0,0,0,0.12)] z-[1] min-w-[15rem] bg-white px-6 py-4 text-right">
+          <td class="min-w-[13rem] bg-white px-5 py-4 sm:sticky sm:right-0 sm:z-[1] sm:shadow-[-6px_0_6px_-4px_rgba(0,0,0,0.12)]">
             <app-habitacion-acciones
               [habitacion]="habitacion"
               (cambioEstadoSolicitado)="cambiarEstado($event)"

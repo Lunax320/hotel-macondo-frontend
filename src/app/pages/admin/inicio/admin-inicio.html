@@ -19,10 +19,10 @@
       <h2 id="t-kpi" class="mb-3 font-serif text-xl font-bold text-[var(--azul-oscuro)]">Indicadores de hoy</h2>
       <div class="grid grid-cols-1 gap-4 min-[480px]:grid-cols-2 xl:grid-cols-5">
         @for (k of kpis; track k.nombre) {
-          <div class="min-w-0 rounded-2xl bg-[var(--crema-claro)] p-5 shadow-sm">
+          <div class="min-w-0 rounded-2xl border border-[#eee6d6] bg-[#fcfaf5] p-5">
             <div class="flex items-center justify-between gap-2">
               <span class="text-[0.7rem] font-bold uppercase tracking-[2px] text-[var(--azul)]">{{ k.nombre }}</span>
-              <i class="bi {{ k.icono }} text-xl text-[var(--dorado-oscuro)]"></i>
+              <i class="bi {{ k.icono }} grid size-9 shrink-0 place-items-center rounded-xl bg-[#f5ead4] text-lg text-[var(--azul-oscuro)]" aria-hidden="true"></i>
             </div>
             @if (k.error) {
               <p class="mt-3 text-sm text-red-700">{{ k.error }}</p>
@@ -34,33 +34,49 @@
           </div>
         }
       </div>
-      <p class="mt-2 text-xs text-gray-500">
-        Ocupadas = habitaciones con una reserva activa. Reservas del mes = reservas no canceladas que inician este mes. No se muestran ingresos: el backend no los entrega.
-      </p>
     </section>
 
-    <section class="mb-10 min-w-0 rounded-2xl border border-gray-200 p-5" aria-labelledby="t-ocu">
-      <h2 id="t-ocu" class="mb-4 font-serif text-xl font-bold text-[var(--azul-oscuro)]">Ocupación de los próximos 7 días</h2>
+    <section class="mb-10 min-w-0 rounded-2xl border border-[#dfe8ee] bg-[#fafdff] p-4 sm:p-6" aria-labelledby="t-ocu">
+      <h2 id="t-ocu" class="font-serif text-xl font-bold text-[var(--azul-oscuro)] sm:text-2xl">Ocupación de los próximos 7 días</h2>
+      <p class="mb-5 mt-1 text-sm text-[var(--texto)]">Habitaciones por noche</p>
       @if (errores.reservas || errores.habitaciones) {
         <p class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-700" role="alert">No se pudo cargar esta información.</p>
       } @else if (!reservasCargadas || totalHabitaciones === null) {
         <div class="h-40 animate-pulse rounded bg-gray-200" aria-label="Cargando"></div>
       } @else if (totalHabitaciones === 0) {
         <p class="text-sm text-gray-500">No hay habitaciones registradas.</p>
+      } @else if (picoOcupacion === 0) {
+        <p class="rounded-xl border border-[#dfe8ee] bg-white px-4 py-5 text-sm">No hay habitaciones con reservas activas o confirmadas para estos días.</p>
       } @else {
-        <ul class="grid grid-cols-7 gap-1 sm:gap-3">
-          @for (d of dias; track d.etiqueta) {
-            <li class="flex min-w-0 flex-col items-center">
-              <span class="text-xs font-bold text-[var(--azul-oscuro)]">{{ d.ocupadas }}</span>
-              <div class="flex h-32 w-full items-end rounded bg-gray-100" role="img"
-                [attr.aria-label]="d.etiqueta + ': ' + d.ocupadas + ' de ' + totalHabitaciones + ' habitaciones ocupadas'">
-                <div class="w-full rounded bg-[var(--azul)]" [style.height.%]="alto(d)"></div>
-              </div>
-              <span class="mt-1 text-[0.65rem] text-gray-600 sm:text-xs">{{ d.etiqueta }}</span>
-            </li>
-          }
+        <div class="mb-6 flex flex-wrap gap-3">
+          <p class="rounded-lg bg-white px-3 py-2 text-sm text-[var(--texto)]"><strong class="text-[var(--azul-oscuro)]">{{ ocupacionMedia }}%</strong> de ocupación media</p>
+          <p class="rounded-lg bg-white px-3 py-2 text-sm text-[var(--texto)]"><strong class="text-[var(--azul-oscuro)]">{{ picoOcupacion }} de {{ totalHabitaciones }}</strong> habitaciones en el día de mayor ocupación</p>
+        </div>
+        <div class="grafico-ocupacion">
+          <div class="eje-ocupacion" aria-hidden="true">
+            @for (marca of marcasOcupacion; track marca) { <span>{{ marca }}</span> }
+          </div>
+          <ul class="columnas-ocupacion">
+            @for (dia of dias; track dia.etiqueta) {
+              <li>
+                <div class="pista-ocupacion" role="img"
+                  [attr.aria-label]="dia.etiqueta + ': ' + dia.ocupadas + ' habitaciones, ' + dia.activas + ' activas y ' + (dia.ocupadas - dia.activas) + ' confirmadas'">
+                  @if (dia.ocupadas > 0) {
+                    <div class="barra-ocupacion" [style.height.%]="100 * dia.ocupadas / escalaOcupacion">
+                      <span class="total-columna" aria-hidden="true">{{ dia.ocupadas }}</span>
+                      <span class="segmento-activo" [style.height.%]="100 * dia.activas / dia.ocupadas"></span>
+                    </div>
+                  }
+                </div>
+                <span class="fecha-ocupacion">{{ dia.etiqueta }}</span>
+              </li>
+            }
+          </ul>
+        </div>
+        <ul class="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs text-[var(--azul-oscuro)]">
+          <li class="flex items-center gap-2"><span class="size-2.5 rounded-full bg-[var(--azul)]" aria-hidden="true"></span>Activas</li>
+          <li class="flex items-center gap-2"><span class="size-2.5 rounded-full bg-[#d7ad54]" aria-hidden="true"></span>Confirmadas</li>
         </ul>
-        <p class="mt-2 text-xs text-gray-500">Habitaciones con reserva activa o confirmada por noche, de {{ totalHabitaciones }} en total.</p>
       }
     </section>
 
@@ -83,9 +99,6 @@
           </div>
         }
       </div>
-      <p class="mt-2 text-xs text-gray-500">
-        Los clientes registrados no se muestran: el backend no tiene un listado de clientes.
-      </p>
     </section>
 
     <div class="mb-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -151,7 +164,7 @@
               <li>
                 <div class="mb-1 flex justify-between text-sm">
                   <span>{{ b.etiqueta }}</span>
-                  <strong class="text-[var(--azul-oscuro)]">{{ b.cantidad }}</strong>
+                  <span><strong class="text-[var(--azul-oscuro)]">{{ b.cantidad }}</strong><span class="ml-2 text-xs text-gray-600">{{ b.porcentaje }}%</span></span>
                 </div>
                 <div class="h-3 overflow-hidden rounded-full bg-gray-100" role="img" [attr.aria-label]="b.etiqueta + ': ' + b.cantidad">
                   <div class="h-full rounded-full {{ b.color }}" [style.width.%]="b.porcentaje"></div>

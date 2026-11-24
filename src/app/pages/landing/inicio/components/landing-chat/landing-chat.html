@@ -1,0 +1,95 @@
+<div class="chat-widget">
+  @if (abierto) {
+    <section id="chat-panel" class="chat-panel" aria-label="Asistente de Hotel Macondo">
+      <header class="chat-header">
+        <div class="chat-avatar" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M4 19.5V8.2L12 4l8 4.2v11.3h-5.3v-6.2H9.3v6.2H4Z" />
+            <path d="M2.8 9 12 4l9.2 5" />
+          </svg>
+        </div>
+        <div class="chat-heading">
+          <h2>Asistente Macondo</h2>
+          <p><span></span> Estamos aquí para ayudarte</p>
+        </div>
+        <button
+          type="button"
+          class="chat-close"
+          aria-label="Cerrar chat"
+          (click)="abierto = false"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m6 6 12 12M18 6 6 18" />
+          </svg>
+        </button>
+      </header>
+
+      <div class="chat-content" aria-live="polite">
+        <p class="chat-time">ASISTENCIA HOTEL MACONDO</p>
+        @for (mensajeChat of mensajes; track $index) {
+          <div class="message" [class.user-message]="mensajeChat.autor === 'usuario'">
+            {{ mensajeChat.texto }}
+          </div>
+          @if (mensajeChat.acciones.length) {
+            <nav class="chat-action-buttons" aria-label="Acciones recomendadas">
+              @for (accion of mensajeChat.acciones; track accion.id) {
+                <a class="chat-action-link" [routerLink]="accion.ruta">
+                  {{ accion.etiqueta }}
+                  <span aria-hidden="true">→</span>
+                </a>
+              }
+            </nav>
+          }
+        }
+        @if (enviando) {
+          <div class="message typing-message" role="status">Escribiendo...</div>
+        }
+      </div>
+
+      <form class="chat-form" (ngSubmit)="enviarMensaje()">
+        <label class="sr-only" for="chat-message">Escribe tu mensaje</label>
+        <input
+          id="chat-message"
+          name="mensaje"
+          type="text"
+          [(ngModel)]="mensaje"
+          placeholder="Escribe tu mensaje..."
+          maxlength="1000"
+          autocomplete="off"
+          [disabled]="enviando"
+        />
+        <button
+          type="submit"
+          aria-label="Enviar mensaje"
+          [disabled]="enviando || !mensaje.trim()"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m22 2-7 20-4-9-9-4 20-7ZM22 2 11 13" />
+          </svg>
+        </button>
+      </form>
+    </section>
+  }
+
+  <button
+    type="button"
+    class="chat-toggle"
+    [class.chat-toggle-open]="abierto"
+    [attr.aria-expanded]="abierto"
+    aria-controls="chat-panel"
+    [attr.aria-label]="abierto ? 'Cerrar asistente de chat' : 'Abrir asistente de chat'"
+    (click)="abierto = !abierto"
+  >
+    @if (abierto) {
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="m6 6 12 12M18 6 6 18" />
+      </svg>
+    } @else {
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H6l-3 2v-6.5a7.5 7.5 0 1 1 17-3Z" />
+        <path d="M8 11h.01M12 11h.01M16 11h.01" />
+      </svg>
+      <span class="chat-toggle-label">¿Necesitas ayuda?</span>
+    }
+  </button>
+</div>

@@ -1,33 +1,24 @@
-@if (habitacion().tipoHabitacion.id) {
-  <a
-    class="btn-secundario inline-block rounded-lg h-8 inline-flex items-center px-3 text-sm font-medium"
-    [routerLink]="['/habitaciones', habitacion().tipoHabitacion.id]"
-    target="_blank"
-    [attr.aria-label]="'Ver tipo de la habitación ' + habitacion().numero + ' (abre en pestaña nueva)'"
-  >
-    Ver
+@let cuarto = habitacion();
+@let disponible = cuarto.estado === 'DISPONIBLE';
+<div class="acciones" role="group" [attr.aria-label]="'Acciones de la habitación ' + cuarto.numero">
+  @if (cuarto.tipoHabitacion.id) {
+    <a class="accion" [routerLink]="['/habitaciones', cuarto.tipoHabitacion.id]" target="_blank"
+      rel="noopener" title="Ver tipo de habitación" aria-label="Ver tipo de habitación (pestaña nueva)">
+      <i class="bi bi-eye" aria-hidden="true"></i>
+    </a>
+  }
+  <a class="accion" [routerLink]="['/admin/habitaciones/editar', cuarto.id]"
+    title="Editar habitación" aria-label="Editar habitación">
+    <i class="bi bi-pencil" aria-hidden="true"></i>
   </a>
-}
-<a
-  class="btn-secundario ml-2 inline-block rounded-lg h-8 inline-flex items-center px-3 text-sm font-medium"
-  [routerLink]="['/admin/habitaciones/editar', habitacion().id]"
-  [attr.aria-label]="'Editar habitación ' + habitacion().numero"
->
-  Editar
-</a>
-<button
-  class="btn-secundario-borde ml-2 inline-block rounded-lg h-8 inline-flex items-center px-3 text-sm font-medium"
-  type="button"
-  (click)="cambioEstadoSolicitado.emit(habitacion())"
-  [attr.aria-label]="(habitacion().estado === 'DISPONIBLE' ? 'Deshabilitar' : 'Habilitar') + ' habitación ' + habitacion().numero"
->
-  {{ habitacion().estado === 'DISPONIBLE' ? 'Deshabilitar' : 'Habilitar' }}
-</button>
-<button
-  class="btn-destructivo ml-2 rounded-lg h-8 inline-flex items-center px-3 text-sm font-medium"
-  type="button"
-  (click)="eliminacionSolicitada.emit(habitacion())"
-  [attr.aria-label]="'Eliminar habitación ' + habitacion().numero"
->
-  Eliminar
-</button>
+  <button class="accion" [class.accion--habilitar]="!disponible" type="button"
+    [title]="disponible ? 'Deshabilitar habitación' : 'Habilitar habitación'"
+    [attr.aria-label]="disponible ? 'Deshabilitar habitación' : 'Habilitar habitación'"
+    (click)="cambioEstadoSolicitado.emit(cuarto)">
+    <i class="bi" [class.bi-slash-circle]="disponible" [class.bi-check-circle]="!disponible" aria-hidden="true"></i>
+  </button>
+  <button class="accion accion--eliminar" type="button" title="Eliminar habitación"
+    aria-label="Eliminar habitación" (click)="eliminacionSolicitada.emit(cuarto)">
+    <i class="bi bi-trash" aria-hidden="true"></i>
+  </button>
+</div>

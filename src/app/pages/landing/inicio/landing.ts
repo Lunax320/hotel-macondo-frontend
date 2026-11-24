@@ -6,9 +6,9 @@ import { ComentarioService } from '../../../services/comentario.service';
 import { ToastService } from '../../../services/toast.service';
 import { TipoHabitacion } from '../../../models/tipo-habitacion.model';
 import { Testimonio } from '../../../models/testimonio.model';
+import { BuscadorDisponibilidad } from './components/buscador-disponibilidad/buscador-disponibilidad';
 import { CarruselServicios } from './components/carrusel-servicios/carrusel-servicios';
 import { LandingHero } from './components/landing-hero/landing-hero';
-import { BuscadorDisponibilidad } from './components/buscador-disponibilidad/buscador-disponibilidad';
 import { LandingHabitaciones } from './components/landing-habitaciones/landing-habitaciones';
 import { LandingTestimonios } from './components/landing-testimonios/landing-testimonios';
 import { LandingCta } from './components/landing-cta/landing-cta';
@@ -16,6 +16,7 @@ import { LandingRecorrido } from './components/landing-recorrido/landing-recorri
 import { Promocion } from '../../../models/promocion.model';
 import { PromocionService } from '../../../services/promocion.service';
 import { RouterLink } from '@angular/router';
+import { LandingChat } from './components/landing-chat/landing-chat';
 
 @Component({
   imports: [
@@ -26,6 +27,7 @@ import { RouterLink } from '@angular/router';
     LandingTestimonios,
     LandingCta,
     LandingRecorrido,
+    LandingChat,
     RouterLink,
     CommonModule,
   ],

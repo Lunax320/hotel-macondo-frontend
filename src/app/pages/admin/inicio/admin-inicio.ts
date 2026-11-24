@@ -29,12 +29,14 @@ interface TarjetaDato {
 interface DiaOcupacion {
   etiqueta: string;
   ocupadas: number;
+  activas: number;
 }
 
 // Resume la información administrativa del hotel.
 @Component({
   imports: [AdminSidebar, TarjetaResumen, BienvenidaAdmin, RouterLink],
   selector: 'app-admin-inicio',
+  styleUrl: './admin-inicio.scss',
   templateUrl: './admin-inicio.html',
   changeDetection: ChangeDetectionStrategy.Eager,
 })
@@ -87,9 +89,24 @@ export class AdminInicio implements OnInit {
     ];
   }
 
-  // Altura de la barra en % del total de habitaciones (el total puede llegar después que las reservas).
-  alto(d: DiaOcupacion): number {
-    return this.totalHabitaciones ? Math.min(100, Math.round((d.ocupadas / this.totalHabitaciones) * 100)) : 0;
+  get picoOcupacion(): number {
+    return Math.max(0, ...this.dias.map((dia) => dia.ocupadas));
+  }
+
+  get ocupacionMedia(): number {
+    const nochesDisponibles = (this.totalHabitaciones ?? 0) * this.dias.length;
+    if (nochesDisponibles === 0) return 0;
+    const nochesOcupadas = this.dias.reduce((total, dia) => total + dia.ocupadas, 0);
+    return Math.round((nochesOcupadas / nochesDisponibles) * 100);
+  }
+
+  get escalaOcupacion(): number {
+    return Math.max(4, Math.ceil(this.picoOcupacion / 4) * 4);
+  }
+
+  get marcasOcupacion(): number[] {
+    const paso = this.escalaOcupacion / 4;
+    return [4 * paso, 3 * paso, 2 * paso, paso, 0];
   }
 
   reintentar(): void {
@@ -155,9 +172,11 @@ export class AdminInicio implements OnInit {
       .sort((a, b) => a.fechaInicio.localeCompare(b.fechaInicio));
     this.salidas = this.reservas.filter((r) => estado(r) === 'ACTIVA' && r.fechaFin === hoy);
 
-    // El backend solo conoce DISPONIBLE/NO_DISPONIBLE; "ocupada" = habitación con una reserva ACTIVA.
+    // Una salida el mismo día no ocupa esa noche.
     this.habitacionesOcupadas = new Set(
-      this.reservas.filter((r) => estado(r) === 'ACTIVA' && r.habitacion).map((r) => r.habitacion!.id),
+      this.reservas
+        .filter((r) => estado(r) === 'ACTIVA' && r.habitacion && r.fechaInicio <= hoy && hoy < r.fechaFin)
+        .map((r) => r.habitacion!.id),
     ).size;
 
     this.reservasActivas = this.reservas.filter((r) => estado(r) === 'ACTIVA').length;
@@ -167,13 +186,16 @@ export class AdminInicio implements OnInit {
     // Ocupación por día: habitaciones distintas con reserva ACTIVA/CONFIRMADA que cubre la noche (inicio <= día < fin).
     this.dias = Array.from({ length: 7 }, (_, i) => {
       const dia = this.fechaLocal(i);
-      const ocupadas = new Set(
-        this.reservas
-          .filter((r) => ['ACTIVA', 'CONFIRMADA'].includes(estado(r)) && r.habitacion && r.fechaInicio <= dia && dia < r.fechaFin)
-          .map((r) => r.habitacion!.id),
+      const reservasDelDia = this.reservas.filter(
+        (r) => ['ACTIVA', 'CONFIRMADA'].includes(estado(r)) && r.habitacion
+          && r.fechaInicio <= dia && dia < r.fechaFin,
+      );
+      const ocupadas = new Set(reservasDelDia.map((r) => r.habitacion!.id)).size;
+      const activas = new Set(
+        reservasDelDia.filter((r) => estado(r) === 'ACTIVA').map((r) => r.habitacion!.id),
       ).size;
       const [, m, d] = dia.split('-');
-      return { etiqueta: `${d}/${m}`, ocupadas };
+      return { etiqueta: `${d}/${m}`, ocupadas, activas };
     });
 
     const defs: [string, string, string][] = [
