@@ -6,6 +6,7 @@ import { ComentarioService } from '../../../services/comentario.service';
 import { ToastService } from '../../../services/toast.service';
 import { TipoHabitacion } from '../../../models/tipo-habitacion.model';
 import { Testimonio } from '../../../models/testimonio.model';
+import { BuscadorDisponibilidad } from './components/buscador-disponibilidad/buscador-disponibilidad';
 import { CarruselServicios } from './components/carrusel-servicios/carrusel-servicios';
 import { LandingHero } from './components/landing-hero/landing-hero';
 import { LandingHabitaciones } from './components/landing-habitaciones/landing-habitaciones';
@@ -19,6 +20,7 @@ import { RouterLink } from '@angular/router';
 @Component({
   imports: [
     LandingHero,
+    BuscadorDisponibilidad,
     LandingHabitaciones,
     CarruselServicios,
     LandingTestimonios,

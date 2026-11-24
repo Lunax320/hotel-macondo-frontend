@@ -1,5 +1,6 @@
 .habitaciones {
-  padding-block: clamp(3rem, 7vw, 6rem);
+  padding-block-start: clamp(2rem, 4.5vw, 3.75rem);
+  padding-block-end: clamp(2rem, 4vw, 3.5rem);
   background: linear-gradient(180deg, var(--crema-claro), var(--fondo-habitaciones, #f8efdf));
 }
 

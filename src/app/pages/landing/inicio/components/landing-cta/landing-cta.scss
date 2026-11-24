@@ -1,0 +1,32 @@
+.escapada {
+  position: relative;
+  isolation: isolate;
+  padding-block: clamp(2rem, 4vw, 3.75rem);
+  border-block-start: 1px solid #e9dbc3;
+  background: linear-gradient(110deg, #fcf0dc, var(--crema) 55%, #f1d8a5);
+}
+
+.escapada__reserva {
+  background: var(--azul-oscuro);
+  color: #fff;
+  transition: background-color 150ms ease;
+}
+
+.escapada__reserva:hover {
+  background: var(--azul);
+}
+
+@media (min-width: 768px) {
+  .escapada__contenido {
+    width: 60%;
+  }
+
+  .escapada::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0 0 0 52%;
+    background: url('/images/PlayaPriv.avif') center 55% / cover;
+    mask-image: linear-gradient(to right, transparent, #000 45%);
+  }
+}

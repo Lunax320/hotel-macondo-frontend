@@ -1,14 +1,16 @@
-<section class="border-y border-[#d6e4e7] bg-gradient-to-b from-[#f4f8f8] to-[#e8f1f2] px-5 py-10 sm:py-14" aria-labelledby="titulo-escapada">
-  <div class="mx-auto flex max-w-xl flex-col items-center text-center">
-    <h2 id="titulo-escapada" class="mb-3 font-serif text-3xl font-bold text-[var(--azul-oscuro)] sm:text-4xl">
-      ¿Listo para tu escapada?
-    </h2>
-    <p class="mb-6 max-w-lg text-[var(--texto)] sm:text-lg">
-      El mar te espera. Déjate envolver por la magia del Caribe colombiano en un hotel que nació de
-      los sueños de García Márquez.
-    </p>
-    <a routerLink="/habitaciones" class="inline-flex min-h-12 items-center justify-center rounded-xl bg-[var(--dorado)] px-7 font-bold text-[var(--azul-oscuro)] transition hover:bg-[#ffe497]">
-      Reservar ahora
-    </a>
+<section class="escapada px-5" aria-labelledby="titulo-escapada">
+  <div class="mx-auto max-w-6xl">
+    <div class="escapada__contenido">
+      <h2 id="titulo-escapada" class="mb-2 font-serif text-3xl font-bold text-[var(--azul-oscuro)] sm:text-4xl lg:text-5xl">
+        ¿Listo para tu escapada?
+      </h2>
+      <p class="mb-5 max-w-md text-[var(--texto)] sm:text-lg">
+        El mar te espera. Déjate envolver por la magia del Caribe colombiano en un hotel que nació de
+        los sueños de García Márquez.
+      </p>
+      <a routerLink="/habitaciones" class="escapada__reserva inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-6 font-bold">
+        Reservar ahora <i class="bi bi-arrow-right" aria-hidden="true"></i>
+      </a>
+    </div>
   </div>
 </section>
