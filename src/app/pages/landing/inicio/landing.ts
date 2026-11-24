@@ -16,6 +16,7 @@ import { LandingRecorrido } from './components/landing-recorrido/landing-recorri
 import { Promocion } from '../../../models/promocion.model';
 import { PromocionService } from '../../../services/promocion.service';
 import { RouterLink } from '@angular/router';
+import { LandingChat } from './components/landing-chat/landing-chat';
 
 @Component({
   imports: [
@@ -26,6 +27,7 @@ import { RouterLink } from '@angular/router';
     LandingTestimonios,
     LandingCta,
     LandingRecorrido,
+    LandingChat,
     RouterLink,
     CommonModule,
   ],
