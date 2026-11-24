@@ -7,6 +7,8 @@ export interface ReservaDetalleCliente {
   estado: string;
   precioNoche: number;
   total: number;
+  codigoPromocional?: string | null;
+  descuentoPromocional?: number | null;
   habitacion: string | null;
   tipoHabitacion: string | null;
   cuenta: {

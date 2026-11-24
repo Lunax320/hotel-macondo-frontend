@@ -1,0 +1,55 @@
+.habitaciones {
+  padding-block: clamp(3rem, 7vw, 6rem);
+  background: linear-gradient(180deg, var(--crema-claro), #f8efdf);
+}
+
+.carrusel {
+  --espacio: 1rem;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min(84%, 25rem);
+  gap: var(--espacio);
+  padding: 0.25rem 0 1rem;
+  margin: 0;
+  list-style: none;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: #b7a37f transparent;
+}
+
+.carrusel > li {
+  min-width: 0;
+  scroll-snap-align: start;
+}
+
+.control {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  border-radius: 50%;
+  border: 1px solid #cab893;
+  background: #fffcf7;
+  color: var(--azul-oscuro);
+  cursor: pointer;
+  transition: background-color 150ms, color 150ms;
+}
+
+.control:hover {
+  background: var(--azul-oscuro);
+  color: white;
+}
+
+@media (min-width: 640px) {
+  .carrusel { grid-auto-columns: calc((100% - var(--espacio)) / 2); }
+}
+
+@media (min-width: 1024px) {
+  .carrusel { grid-auto-columns: calc((100% - 2 * var(--espacio)) / 3); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carrusel { scroll-behavior: auto; }
+}

@@ -1,8 +1,8 @@
 @if (tipoHabitacion(); as tipo) {
   <article
-    class="bg-white rounded-[16px] overflow-hidden shadow-[0_8px_24px_rgba(0,0,0,0.08)] hover:shadow-[0_16px_34px_rgba(0,0,0,0.16)] hover:-translate-y-2 transition-all duration-300 relative flex flex-col h-full"
+    class="relative flex h-full flex-col overflow-hidden rounded-2xl border border-[#eadfcf] bg-white"
   >
-    <img [src]="tipo.imagen" class="h-[200px] w-full object-cover" [alt]="tipo.nombre" />
+    <img [src]="imagen()" class="aspect-[16/10] w-full object-cover" [alt]="'Habitación ' + tipo.nombre" loading="lazy" decoding="async" />
 
     <span
       class="absolute top-[14px] left-[14px] bg-[var(--dorado)] text-[var(--azul-oscuro)] text-[0.7rem] font-bold tracking-[1px] px-[0.8rem] py-[0.3rem] rounded-[20px]"
@@ -18,7 +18,7 @@
         {{ tipo.descripcion }}
       </p>
 
-      <div class="flex justify-between items-end mt-auto">
+      <div class="mt-auto flex flex-wrap items-end justify-between gap-3">
         <div>
           <small class="uppercase text-gray-400 text-xs font-bold">Desde</small><br />
           <span class="font-serif text-[1.4rem] font-bold text-[var(--azul-oscuro)]">

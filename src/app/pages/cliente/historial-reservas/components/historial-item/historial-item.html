@@ -97,6 +97,19 @@
         {{ reserva().total | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}
       </dd>
     </div>
+    @if ((reserva().descuentoPromocional ?? 0) > 0) {
+      <div class="rounded-lg bg-emerald-50 px-3 py-2 text-emerald-900 sm:col-span-2">
+        <dt class="font-bold">
+          <i class="bi bi-ticket-perforated mr-1" aria-hidden="true"></i>
+          @if (reserva().codigoPromocional; as codigo) {
+            Cupón {{ codigo }} aplicado
+          } @else {
+            Descuento aplicado
+          }
+        </dt>
+        <dd class="m-0">Ahorraste {{ reserva().descuentoPromocional | currency: 'COP' : 'symbol-narrow' : '1.0-0' : 'es-CO' }}</dd>
+      </div>
+    }
     <div>
       <dt class="text-[0.7rem] uppercase tracking-wider text-gray-500">Método de pago</dt>
       <dd class="m-0 font-semibold text-gray-500">No registrado</dd>

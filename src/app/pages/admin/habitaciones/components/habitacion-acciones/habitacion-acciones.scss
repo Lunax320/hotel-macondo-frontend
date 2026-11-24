@@ -1,0 +1,38 @@
+.acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.375rem;
+}
+
+.accion {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 2.5rem;
+  block-size: 2.5rem;
+  border-radius: 0.625rem;
+  border: 1px solid #dbe4eb;
+  background: #f3f7fa;
+  color: var(--azul-oscuro);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 150ms, color 150ms;
+}
+
+.accion:hover {
+  background: var(--azul-oscuro);
+  color: white;
+}
+
+.accion--habilitar {
+  color: #176344;
+}
+
+.accion--eliminar {
+  border-color: #f2d5d3;
+  background: #fff5f4;
+  color: #a62822;
+}
+
+.accion--eliminar:hover {
+  background: #a62822;
+}
